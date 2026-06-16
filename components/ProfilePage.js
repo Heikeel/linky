@@ -141,11 +141,11 @@ function ThemeGradient({ profile, links, isOwner, username }) {
   const gap    = profile.link_gap ?? 9
 
   return (
-    <main className="min-h-screen flex flex-col items-center relative overflow-hidden" style={{ background: '#f5f5f7' }}>
+    <main className="min-h-screen flex flex-col items-center justify-center py-10 px-4 relative overflow-hidden" style={{ background: '#f5f5f7' }}>
       <AnimatedBg motion={profile.bg_motion} accent={accent} dark={false} />
-      <div className="w-full max-w-sm relative z-10">
+      <div className="w-full max-w-sm relative z-10 rounded-3xl overflow-hidden shadow-xl" style={{ background: '#fff' }}>
         <div className="w-full h-36" style={{ background: `linear-gradient(135deg, ${accent}, #a855f7)` }}></div>
-        <div className="flex flex-col items-center px-5 pb-14" style={{ background: '#fff' }}>
+        <div className="flex flex-col items-center px-5 pb-12" style={{ background: '#fff' }}>
           <div className="flex justify-center -mt-12 mb-3">
             {profile.avatar_url ? (
               <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" />
