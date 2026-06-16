@@ -1,6 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { PALETTES_LIGHT, PALETTES_DARK } from '@/lib/networks'
+import { adjustLightness } from '@/lib/colorUtils'
 
 const THEMES = [
   { id: 'light',    label: 'Minimalista',      desc: 'Fondo claro · limpio' },
@@ -20,13 +22,27 @@ const FIELDS = [
 
 export default function ColorsTab({ data, onChange }) {
   const theme = data.theme || 'light'
-
-  function applyPalette(p) {
-    onChange({ accent: p.accent, bg: p.bg, card: p.card, text_color: p.textColor, muted: p.muted })
-  }
+  const [brightness, setBrightness] = useState(0)
+  const [basePalette, setBasePalette] = useState(null)
 
   const palettes = theme === 'dark' ? PALETTES_DARK : PALETTES_LIGHT
   const showPalettes = theme === 'light' || theme === 'gradient' || theme === 'dark'
+
+  function applyPalette(p) {
+    setBasePalette(p)
+    setBrightness(0)
+    onChange({ accent: p.accent, bg: p.bg, card: p.card, text_color: p.textColor, muted: p.muted })
+  }
+
+  function handleBrightness(val) {
+    setBrightness(val)
+    if (!basePalette) return
+    onChange({
+      bg:   adjustLightness(basePalette.bg,   val),
+      card: adjustLightness(basePalette.card, val),
+      muted: adjustLightness(basePalette.muted, val),
+    })
+  }
 
   return (
     <div className="flex flex-col gap-5">
@@ -36,7 +52,7 @@ export default function ColorsTab({ data, onChange }) {
           {THEMES.map(t => (
             <button
               key={t.id}
-              onClick={() => onChange({ theme: t.id })}
+              onClick={() => { onChange({ theme: t.id }); setBasePalette(null); setBrightness(0) }}
               className={`flex items-center justify-between px-3 py-2.5 rounded-xl border transition-all text-left ${
                 theme === t.id
                   ? 'border-purple-400 bg-purple-50'
@@ -56,21 +72,47 @@ export default function ColorsTab({ data, onChange }) {
       </div>
 
       {showPalettes && (
-        <div className="border-t border-gray-100 pt-4">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            {theme === 'dark' ? 'Paletas oscuras' : 'Paletas de colores'}
-          </p>
-          <div className="flex gap-2 flex-wrap">
-            {palettes.map(p => (
-              <button
-                key={p.name}
-                onClick={() => applyPalette(p)}
-                title={p.name}
-                className="w-8 h-8 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200"
-                style={{ background: p.accent }}
-              />
-            ))}
+        <div className="border-t border-gray-100 pt-4 flex flex-col gap-4">
+          <div>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              {theme === 'dark' ? 'Paletas oscuras' : 'Paletas de colores'}
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {palettes.map(p => (
+                <button
+                  key={p.name}
+                  onClick={() => applyPalette(p)}
+                  title={p.name}
+                  className="w-8 h-8 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200"
+                  style={{ background: p.accent }}
+                />
+              ))}
+            </div>
           </div>
+
+          {basePalette && (
+            <div className="bg-gray-50 rounded-xl px-3 py-3 border border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Intensidad</p>
+                <span className="text-xs text-gray-400 font-mono">
+                  {brightness > 0 ? `+${brightness}` : brightness}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400">Oscuro</span>
+                <input
+                  type="range"
+                  min={-40}
+                  max={40}
+                  step={1}
+                  value={brightness}
+                  onChange={e => handleBrightness(parseInt(e.target.value))}
+                  className="flex-1 accent-purple-500"
+                />
+                <span className="text-xs text-gray-400">Claro</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

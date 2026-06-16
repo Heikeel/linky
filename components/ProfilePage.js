@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { safeIconColor } from '@/lib/colorUtils'
 
 function ShareButton({ dark }) {
   const [copied, setCopied] = useState(false)
@@ -105,7 +106,7 @@ function ThemeDark({ profile, links, isOwner, username }) {
             <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
               className={`flex items-center gap-3 px-4 py-3.5 anim-${anim} transition-all`}
               style={{ borderRadius: radius, textDecoration: 'none', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.09)' }}>
-              <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: link.color }} aria-hidden="true"></i>
+              <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: safeIconColor(link.color, '#0f0f13') }} aria-hidden="true"></i>
               <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.88)' }}>{link.name}</span>
               <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.2)' }} aria-hidden="true"></i>
             </a>
@@ -264,7 +265,7 @@ function ThemeTornasol({ profile, links, isOwner, username }) {
                 <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
                   className={`glass-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
                   style={{ borderRadius: radius, textDecoration: 'none' }}>
-                  <i className={`ti ${link.icon} text-xl flex-shrink-0 link-icon-shine`} style={{ color: link.color }} aria-hidden="true"></i>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0 link-icon-shine`} style={{ color: safeIconColor(link.color, '#0f0c29') }} aria-hidden="true"></i>
                   <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
                   <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
                 </a>

@@ -1,5 +1,7 @@
 'use client'
 
+import { safeIconColor } from '@/lib/colorUtils'
+
 export default function PhonePreview({ profile, links }) {
   const theme     = profile.theme || 'light'
   const accent    = profile.accent     || '#6c63ff'
@@ -77,7 +79,7 @@ export default function PhonePreview({ profile, links }) {
               : links.map(link => (
                 <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
                   style={{ background: darkCard, borderRadius: radius, border: '1px solid rgba(255,255,255,0.07)' }}>
-                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: link.color }} aria-hidden="true"></i>
+                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: safeIconColor(link.color, darkBg) }} aria-hidden="true"></i>
                   <span className="text-xs font-semibold flex-1" style={{ color: darkText }}>{link.name}</span>
                   <i className="ti ti-chevron-right text-xs" style={{ color: '#555' }} aria-hidden="true"></i>
                 </div>
@@ -132,7 +134,7 @@ export default function PhonePreview({ profile, links }) {
               : links.map(link => (
                 <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
                   style={{ background: 'rgba(167,139,250,0.12)', borderRadius: radius, border: '1px solid rgba(167,139,250,0.25)' }}>
-                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: link.color }} aria-hidden="true"></i>
+                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: safeIconColor(link.color, '#0a0a1a') }} aria-hidden="true"></i>
                   <span className="text-xs font-semibold flex-1" style={{ color: '#e8d5ff' }}>{link.name}</span>
                   <i className="ti ti-chevron-right text-xs" style={{ color: '#6b5a8a' }} aria-hidden="true"></i>
                 </div>
