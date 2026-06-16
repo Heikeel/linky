@@ -1,10 +1,21 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-export default function AuthCallbackPage() {
+function Spinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f4f3ff 0%, #ede9ff 100%)' }}>
+      <div className="text-center">
+        <div className="w-10 h-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-500 text-sm">Iniciando sesión...</p>
+      </div>
+    </div>
+  )
+}
+
+function CallbackHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -28,12 +39,13 @@ export default function AuthCallbackPage() {
     handleCallback()
   }, [router, searchParams])
 
+  return <Spinner />
+}
+
+export default function AuthCallbackPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f4f3ff 0%, #ede9ff 100%)' }}>
-      <div className="text-center">
-        <div className="w-10 h-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-500 text-sm">Iniciando sesión...</p>
-      </div>
-    </div>
+    <Suspense fallback={<Spinner />}>
+      <CallbackHandler />
+    </Suspense>
   )
 }
