@@ -21,7 +21,12 @@ export async function proxy(request) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data?.user ?? null
+  } catch {}
+
   const { pathname } = request.nextUrl
 
   if (!user && pathname.startsWith('/dashboard')) {
