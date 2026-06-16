@@ -1,21 +1,17 @@
 'use client'
 
 import { useRef } from 'react'
-import { createClient } from '@/lib/supabase/client'
 
 export default function ProfileTab({ data, onChange, userId }) {
   const fileRef = useRef()
 
-  async function handlePhoto(e) {
+  function handlePhoto(e) {
     const file = e.target.files?.[0]
     if (!file) return
-    const supabase = createClient()
-    const ext = file.name.split('.').pop()
-    const path = `${userId}/avatar.${ext}`
-    const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
-    if (error) { alert('Error subiendo foto: ' + error.message); return }
-    const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path)
-    onChange({ avatar_url: urlData.publicUrl + '?t=' + Date.now() })
+    if (file.size > 2 * 1024 * 1024) { alert('La foto debe ser menor a 2MB'); return }
+    const reader = new FileReader()
+    reader.onload = ev => onChange({ avatar_url: ev.target.result })
+    reader.readAsDataURL(file)
   }
 
   return (

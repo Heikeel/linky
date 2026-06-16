@@ -2,6 +2,13 @@
 
 import { PALETTES } from '@/lib/networks'
 
+const THEMES = [
+  { id: 'light',    label: 'Minimalista',      desc: 'Fondo claro · limpio' },
+  { id: 'dark',     label: 'Dark mode',        desc: 'Fondo oscuro · elegante' },
+  { id: 'gradient', label: 'Degradado',        desc: 'Header colorido · amigable' },
+  { id: 'tornasol', label: 'Burbuja tornasol', desc: 'Iridiscente · holográfico' },
+]
+
 export default function ColorsTab({ data, onChange }) {
   function applyPalette(p) {
     onChange({ accent: p.accent, bg: p.bg, card: p.card, text_color: p.textColor, muted: p.muted })
@@ -18,6 +25,31 @@ export default function ColorsTab({ data, onChange }) {
   return (
     <div className="flex flex-col gap-5">
       <div>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Diseño de página</p>
+        <div className="flex flex-col gap-2">
+          {THEMES.map(t => (
+            <button
+              key={t.id}
+              onClick={() => onChange({ theme: t.id })}
+              className={`flex items-center justify-between px-3 py-2.5 rounded-xl border transition-all text-left ${
+                (data.theme || 'light') === t.id
+                  ? 'border-purple-400 bg-purple-50'
+                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+              }`}
+            >
+              <div>
+                <p className={`text-sm font-semibold ${(data.theme || 'light') === t.id ? 'text-purple-700' : 'text-gray-700'}`}>{t.label}</p>
+                <p className="text-xs text-gray-400">{t.desc}</p>
+              </div>
+              {(data.theme || 'light') === t.id && (
+                <i className="ti ti-check text-purple-500 text-base" aria-hidden="true"></i>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="border-t border-gray-100 pt-1">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Paletas rápidas</p>
         <div className="flex gap-2 flex-wrap">
           {PALETTES.map(p => (
@@ -32,8 +64,8 @@ export default function ColorsTab({ data, onChange }) {
         </div>
       </div>
 
-      <div className="border-t border-gray-100 pt-5">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Personalizar</p>
+      <div className="border-t border-gray-100 pt-4">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Personalizar colores</p>
         <div className="flex flex-col gap-2">
           {fields.map(f => (
             <div key={f.key} className="flex items-center justify-between px-3 py-2.5 border border-gray-200 rounded-xl bg-gray-50">

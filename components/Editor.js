@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import PhonePreview from '@/components/PhonePreview'
@@ -23,6 +23,9 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
   const [links, setLinks] = useState(initialLinks || [])
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [origin, setOrigin] = useState('')
+
+  useEffect(() => { setOrigin(window.location.origin) }, [])
 
   function updateProfile(changes) {
     setProfile(prev => ({ ...prev, ...changes }))
@@ -50,6 +53,7 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
         animation:     profile.animation,
         border_radius: profile.border_radius,
         link_gap:      profile.link_gap,
+        theme:         profile.theme || 'light',
       })
       .eq('id', userId)
 
@@ -92,7 +96,7 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
     router.push('/login')
   }
 
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/${profile.username}`
+  const shareUrl = `${origin}/${profile.username}`
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#f8f7ff' }}>
