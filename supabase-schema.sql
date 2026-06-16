@@ -14,6 +14,7 @@ create table public.profiles (
   muted text default '#888888',
   icon_color text,
   theme text default 'light',
+  bg_motion text default 'none',
   animation text default 'bounce',
   border_radius int default 12,
   link_gap int default 9,

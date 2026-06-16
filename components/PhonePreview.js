@@ -1,6 +1,7 @@
 'use client'
 
 import { safeIconColor } from '@/lib/colorUtils'
+import AnimatedBg from '@/components/AnimatedBg'
 
 export default function PhonePreview({ profile, links }) {
   const theme     = profile.theme || 'light'
@@ -67,14 +68,15 @@ export default function PhonePreview({ profile, links }) {
       const darkText = profile.text_color || '#eeeeee'
       const darkMuted = profile.muted || '#aaaaaa'
       return (
-        <div className="p-4 pb-6" style={{ background: darkBg, minHeight: 520 }}>
-          <div className="text-center mb-5">
+        <div className="p-4 pb-6 relative overflow-hidden" style={{ background: darkBg, minHeight: 520 }}>
+          <AnimatedBg motion={profile.bg_motion} accent={accent} dark={true} />
+          <div className="text-center mb-5 relative z-10">
             <Avatar size={16} border="rgba(255,255,255,0.15)" />
             <p className="text-sm font-bold" style={{ color: darkText }}>{name}</p>
             {username && <p className="text-xs font-semibold mt-0.5" style={{ color: accent }}>@{username}</p>}
             {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: darkMuted }}>{bio}</p>}
           </div>
-          <div className="flex flex-col" style={{ gap }}>
+          <div className="flex flex-col relative z-10" style={{ gap }}>
             {links.length === 0
               ? <div className="text-center py-6 text-xs" style={{ color: darkMuted }}>Añade links desde &quot;Links&quot;</div>
               : links.map(link => (
@@ -93,14 +95,15 @@ export default function PhonePreview({ profile, links }) {
 
     if (theme === 'gradient') {
       return (
-        <div style={{ background: bg, minHeight: 520 }}>
-          <div className="p-4 pb-5 text-center" style={{ background: `linear-gradient(135deg, ${accent}, ${accent}bb)` }}>
+        <div className="relative overflow-hidden" style={{ background: bg, minHeight: 520 }}>
+          <AnimatedBg motion={profile.bg_motion} accent={accent} dark={false} />
+          <div className="p-4 pb-5 text-center relative z-10" style={{ background: `linear-gradient(135deg, ${accent}, ${accent}bb)` }}>
             <Avatar size={16} border="rgba(255,255,255,0.5)" />
             <p className="text-sm font-bold text-white">{name}</p>
             {username && <p className="text-xs font-semibold mt-0.5 text-white/70">@{username}</p>}
             {bio && <p className="text-xs mt-1.5 leading-relaxed px-2 text-white/80">{bio}</p>}
           </div>
-          <div className="p-4">
+          <div className="p-4 relative z-10">
             <Links />
           </div>
         </div>
@@ -225,14 +228,15 @@ export default function PhonePreview({ profile, links }) {
 
     // light (default)
     return (
-      <div className="p-4 pb-6" style={{ background: bg, minHeight: 520 }}>
-        <div className="text-center mb-5">
+      <div className="p-4 pb-6 relative overflow-hidden" style={{ background: bg, minHeight: 520 }}>
+        <AnimatedBg motion={profile.bg_motion} accent={accent} dark={false} />
+        <div className="text-center mb-5 relative z-10">
           <Avatar size={16} border="rgba(255,255,255,0.4)" />
           <p className="text-sm font-bold" style={{ color: textColor }}>{name}</p>
           {username && <p className="text-xs font-semibold mt-0.5" style={{ color: accent }}>@{username}</p>}
           {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: muted }}>{bio}</p>}
         </div>
-        <Links />
+        <div className="relative z-10"><Links /></div>
       </div>
     )
   }

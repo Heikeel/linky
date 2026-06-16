@@ -27,6 +27,12 @@ const FIELDS = [
 
 const ANIMATED_IDS = ANIMATED_THEMES.map(t => t.id)
 
+const BG_MOTIONS = [
+  { id: 'aurora',  label: 'Aurora',   icon: 'ti-sparkles' },
+  { id: 'bubbles', label: 'Burbujas', icon: 'ti-circles' },
+  { id: 'waves',   label: 'Ondas',    icon: 'ti-ripple' },
+]
+
 export default function ColorsTab({ data, onChange }) {
   const theme = data.theme || 'light'
   const [brightness, setBrightness] = useState(0)
@@ -35,6 +41,9 @@ export default function ColorsTab({ data, onChange }) {
   const palettes = theme === 'dark' ? PALETTES_DARK : PALETTES_LIGHT
   const showPalettes = theme === 'light' || theme === 'gradient' || theme === 'dark'
   const iconOverride = !!data.icon_color
+  const isAnimatedTheme = ANIMATED_IDS.includes(theme)
+  const bgMotion = data.bg_motion || 'none'
+  const motionOn = bgMotion !== 'none'
 
   function selectTheme(id) {
     onChange({ theme: id })
@@ -165,6 +174,43 @@ export default function ColorsTab({ data, onChange }) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Fondo animado (solo en temas estáticos; los de "Con movimiento" ya se mueven) */}
+      {!isAnimatedTheme && (
+        <div className="border-t border-gray-100 pt-4">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Fondo animado</p>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <span className="text-xs text-gray-400">{motionOn ? 'Activado' : 'Desactivado'}</span>
+              <button
+                onClick={() => onChange({ bg_motion: motionOn ? 'none' : 'aurora' })}
+                className={`relative w-9 h-5 rounded-full transition-colors ${motionOn ? 'bg-purple-500' : 'bg-gray-300'}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${motionOn ? 'translate-x-4' : ''}`} />
+              </button>
+            </label>
+          </div>
+          <p className="text-xs text-gray-400 mb-3">Movimiento real detrás de tus links</p>
+          {motionOn && (
+            <div className="grid grid-cols-3 gap-2">
+              {BG_MOTIONS.map(m => (
+                <button
+                  key={m.id}
+                  onClick={() => onChange({ bg_motion: m.id })}
+                  className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all ${
+                    bgMotion === m.id
+                      ? 'border-purple-400 bg-purple-50 text-purple-600'
+                      : 'border-gray-200 bg-gray-50 text-gray-500 hover:border-gray-300'
+                  }`}
+                >
+                  <i className={`ti ${m.icon} text-xl`} aria-hidden="true"></i>
+                  <span className="text-xs font-medium">{m.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { safeIconColor, generateStars } from '@/lib/colorUtils'
+import AnimatedBg from '@/components/AnimatedBg'
 
 function ShareButton({ dark }) {
   const [copied, setCopied] = useState(false)
@@ -34,8 +35,9 @@ function ThemeLight({ profile, links, isOwner, username }) {
   const gap    = profile.link_gap ?? 9
 
   return (
-    <main className="min-h-screen flex flex-col items-center py-14 px-4" style={{ background: '#f5f5f7' }}>
-      <div className="w-full max-w-sm">
+    <main className="min-h-screen flex flex-col items-center py-14 px-4 relative overflow-hidden" style={{ background: '#f5f5f7' }}>
+      <AnimatedBg motion={profile.bg_motion} accent={accent} dark={false} />
+      <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
           {profile.avatar_url ? (
             <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-sm" />
@@ -86,8 +88,9 @@ function ThemeDark({ profile, links, isOwner, username }) {
   const gap    = profile.link_gap ?? 9
 
   return (
-    <main className="min-h-screen flex flex-col items-center py-14 px-4" style={{ background: '#0f0f13' }}>
-      <div className="w-full max-w-sm">
+    <main className="min-h-screen flex flex-col items-center py-14 px-4 relative overflow-hidden" style={{ background: '#0f0f13' }}>
+      <AnimatedBg motion={profile.bg_motion} accent={accent} dark={true} />
+      <div className="w-full max-w-sm relative z-10">
         <div className="text-center mb-8">
           {profile.avatar_url ? (
             <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover mx-auto mb-4" style={{ border: '3px solid rgba(255,255,255,0.12)' }} />
@@ -138,8 +141,9 @@ function ThemeGradient({ profile, links, isOwner, username }) {
   const gap    = profile.link_gap ?? 9
 
   return (
-    <main className="min-h-screen flex flex-col items-center" style={{ background: '#f5f5f7' }}>
-      <div className="w-full max-w-sm">
+    <main className="min-h-screen flex flex-col items-center relative overflow-hidden" style={{ background: '#f5f5f7' }}>
+      <AnimatedBg motion={profile.bg_motion} accent={accent} dark={false} />
+      <div className="w-full max-w-sm relative z-10">
         <div className="w-full h-36" style={{ background: `linear-gradient(135deg, ${accent}, #a855f7)` }}></div>
         <div className="flex flex-col items-center px-5 pb-14" style={{ background: '#fff' }}>
           <div className="flex justify-center -mt-12 mb-3">

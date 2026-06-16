@@ -51,6 +51,7 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
         text_color:    profile.text_color,
         muted:         profile.muted,
         icon_color:    profile.icon_color || null,
+        bg_motion:     profile.bg_motion || 'none',
         animation:     profile.animation,
         border_radius: profile.border_radius,
         link_gap:      profile.link_gap,
