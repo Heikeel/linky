@@ -4,7 +4,8 @@ import Editor from '@/components/Editor'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data } = await supabase.auth.getUser()
+  const user = data?.user ?? null
 
   if (!user) redirect('/login')
 

@@ -23,7 +23,8 @@ export default async function PublicProfilePage({ params }) {
 
   if (!profile) notFound()
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
+  const user = authData?.user ?? null
   const isOwner = user?.id === profile.id
 
   const { data: links } = await supabase
