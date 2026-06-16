@@ -78,12 +78,9 @@ export default function ColorsTab({ data, onChange }) {
             : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
         }`}
       >
-        <div className="flex items-center gap-2">
-          {t.emoji && <span className="text-base">{t.emoji}</span>}
-          <div>
-            <p className={`text-sm font-semibold ${theme === t.id ? 'text-purple-700' : 'text-gray-700'}`}>{t.label}</p>
-            <p className="text-xs text-gray-400">{t.desc}</p>
-          </div>
+        <div>
+          <p className={`text-sm font-semibold ${theme === t.id ? 'text-purple-700' : 'text-gray-700'}`}>{t.label}</p>
+          <p className="text-xs text-gray-400">{t.desc}</p>
         </div>
         {theme === t.id && <i className="ti ti-check text-purple-500 text-base" aria-hidden="true"></i>}
       </button>
@@ -154,7 +151,7 @@ export default function ColorsTab({ data, onChange }) {
       {ANIMATED_IDS.includes(theme) && (
         <div className="border-t border-gray-100 pt-4">
           <p className="text-xs text-gray-400 text-center py-2">
-            Este diseño usa colores fijos animados ✨
+            Este diseño usa colores fijos animados
           </p>
         </div>
       )}
