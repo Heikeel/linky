@@ -8,7 +8,7 @@ export default function ProfileTab({ data, onChange, userId }) {
   function handlePhoto(e) {
     const file = e.target.files?.[0]
     if (!file) return
-    if (file.size > 2 * 1024 * 1024) { alert('La foto debe ser menor a 2MB'); return }
+    if (file.size > 20 * 1024 * 1024) { alert('La foto debe ser menor a 20MB'); return }
     const reader = new FileReader()
     reader.onload = ev => onChange({ avatar_url: ev.target.result })
     reader.readAsDataURL(file)
@@ -35,7 +35,7 @@ export default function ProfileTab({ data, onChange, userId }) {
         <div>
           <p className="text-sm font-semibold text-gray-700">Foto de perfil</p>
           <p className="text-xs text-gray-400 mt-1">Haz clic en el avatar para subir tu foto</p>
-          <p className="text-xs text-gray-400">JPG, PNG — máx. 2MB</p>
+          <p className="text-xs text-gray-400">JPG, PNG — máx. 20MB</p>
         </div>
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
       </div>
