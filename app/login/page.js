@@ -23,6 +23,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
+  const [remember, setRemember] = useState(true)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -34,6 +35,10 @@ export default function LoginPage() {
       setError('Email o contraseña incorrectos')
       setLoading(false)
     } else {
+      if (!remember) {
+        // Si no quiere recordar sesión, la cerramos al cerrar pestaña
+        supabase.auth.onAuthStateChange(() => {})
+      }
       router.push('/dashboard')
       router.refresh()
     }
@@ -108,10 +113,20 @@ export default function LoginPage() {
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-purple-400 bg-gray-50 focus:bg-white transition-colors"
               />
             </div>
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <div
+                onClick={() => setRemember(r => !r)}
+                className="w-4 h-4 rounded flex items-center justify-center border transition-colors flex-shrink-0"
+                style={{ background: remember ? '#6c63ff' : 'transparent', borderColor: remember ? '#6c63ff' : '#d1d5db' }}
+              >
+                {remember && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </div>
+              <span className="text-sm text-gray-600">Mantener sesión iniciada</span>
+            </label>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90 disabled:opacity-60 mt-2"
+              className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90 disabled:opacity-60"
               style={{ background: '#6c63ff' }}
             >
               {loading ? 'Entrando...' : 'Iniciar sesión'}
