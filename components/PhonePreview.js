@@ -16,6 +16,7 @@ export default function PhonePreview({ profile, links }) {
   const name     = profile.name || 'Tu nombre'
   const username = profile.username || ''
   const bio      = profile.bio || ''
+  const iconOverride = profile.icon_color || null
 
   function Avatar({ size = 16, border = 'rgba(255,255,255,0.4)' }) {
     if (profile.avatar_url) {
@@ -50,7 +51,7 @@ export default function PhonePreview({ profile, links }) {
             className={`flex items-center gap-2.5 px-3 py-2.5 border anim-${anim}`}
             style={{ background: card, borderRadius: radius, borderColor: 'rgba(0,0,0,0.04)', borderWidth: 1 }}
           >
-            <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: link.color }} aria-hidden="true"></i>
+            <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || link.color }} aria-hidden="true"></i>
             <span className="text-xs font-semibold flex-1" style={{ color: textColor }}>{link.name}</span>
             <i className="ti ti-chevron-right text-xs" style={{ color: '#ccc' }} aria-hidden="true"></i>
           </div>
@@ -79,7 +80,7 @@ export default function PhonePreview({ profile, links }) {
               : links.map(link => (
                 <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
                   style={{ background: darkCard, borderRadius: radius, border: '1px solid rgba(255,255,255,0.07)' }}>
-                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: safeIconColor(link.color, darkBg) }} aria-hidden="true"></i>
+                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, darkBg) }} aria-hidden="true"></i>
                   <span className="text-xs font-semibold flex-1" style={{ color: darkText }}>{link.name}</span>
                   <i className="ti ti-chevron-right text-xs" style={{ color: '#555' }} aria-hidden="true"></i>
                 </div>
@@ -134,12 +135,89 @@ export default function PhonePreview({ profile, links }) {
               : links.map(link => (
                 <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
                   style={{ background: 'rgba(167,139,250,0.12)', borderRadius: radius, border: '1px solid rgba(167,139,250,0.25)' }}>
-                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: safeIconColor(link.color, '#0a0a1a') }} aria-hidden="true"></i>
+                  <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#0a0a1a') }} aria-hidden="true"></i>
                   <span className="text-xs font-semibold flex-1" style={{ color: '#e8d5ff' }}>{link.name}</span>
                   <i className="ti ti-chevron-right text-xs" style={{ color: '#6b5a8a' }} aria-hidden="true"></i>
                 </div>
               ))
             }
+          </div>
+        </div>
+      )
+    }
+
+    if (theme === 'cosmos') {
+      const starBg = `radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+                      radial-gradient(1px 1px at 80px 90px, #fff, transparent),
+                      radial-gradient(1px 1px at 130px 50px, #fff, transparent),
+                      radial-gradient(2px 2px at 50px 160px, #fff, transparent),
+                      radial-gradient(1px 1px at 160px 200px, #fff, transparent),
+                      radial-gradient(1px 1px at 30px 250px, #fff, transparent),
+                      radial-gradient(2px 2px at 190px 320px, #fff, transparent),
+                      radial-gradient(1px 1px at 100px 400px, #fff, transparent),
+                      radial-gradient(1px 1px at 210px 460px, #fff, transparent)`
+      return (
+        <div className="relative overflow-hidden" style={{ background: 'radial-gradient(ellipse at 20% 20%, #1a0b3e 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, #0d1b4b 0%, transparent 50%), #05060f', minHeight: 520 }}>
+          <div className="absolute inset-0" style={{ background: starBg, opacity: 0.8 }}></div>
+          <div className="relative z-10 p-4 pb-6">
+            <div className="text-center mb-5">
+              <Avatar size={16} border="rgba(167,139,250,0.5)" />
+              <p className="text-sm font-bold" style={{ color: '#d8c9ff' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,255,255,0.55)' }}>{bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links.length === 0
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Añade links desde &quot;Links&quot;</div>
+                : links.map(link => (
+                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                    style={{ background: 'rgba(255,255,255,0.05)', borderRadius: radius, border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#05060f') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (theme === 'cometas') {
+      const starBg = `radial-gradient(1px 1px at 25px 40px, #fff, transparent),
+                      radial-gradient(1px 1px at 90px 110px, #fff, transparent),
+                      radial-gradient(2px 2px at 150px 70px, #fff, transparent),
+                      radial-gradient(1px 1px at 60px 180px, #fff, transparent),
+                      radial-gradient(1px 1px at 200px 230px, #fff, transparent),
+                      radial-gradient(2px 2px at 40px 300px, #fff, transparent),
+                      radial-gradient(1px 1px at 170px 370px, #fff, transparent),
+                      radial-gradient(1px 1px at 110px 440px, #fff, transparent)`
+      return (
+        <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg,#080b1a 0%,#0d1330 50%,#10183d 100%)', minHeight: 520 }}>
+          <div className="absolute inset-0" style={{ background: starBg, opacity: 0.85 }}></div>
+          <div className="absolute" style={{ top: 60, right: 30, width: 70, height: 2, background: 'linear-gradient(90deg,#fff,transparent)', transform: 'rotate(-35deg)', filter: 'drop-shadow(0 0 4px #9bd3ff)' }}></div>
+          <div className="absolute" style={{ top: 200, right: 120, width: 50, height: 2, background: 'linear-gradient(90deg,#fff,transparent)', transform: 'rotate(-35deg)', filter: 'drop-shadow(0 0 4px #9bd3ff)' }}></div>
+          <div className="relative z-10 p-4 pb-6">
+            <div className="text-center mb-5">
+              <Avatar size={16} border="rgba(56,189,248,0.5)" />
+              <p className="text-sm font-bold" style={{ color: '#e0f2fe' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: '#38bdf8' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,255,255,0.55)' }}>{bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links.length === 0
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Añade links desde &quot;Links&quot;</div>
+                : links.map(link => (
+                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                    style={{ background: 'rgba(255,255,255,0.05)', borderRadius: radius, border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#080b1a') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                  </div>
+                ))
+              }
+            </div>
           </div>
         </div>
       )

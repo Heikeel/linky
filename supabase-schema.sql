@@ -12,6 +12,8 @@ create table public.profiles (
   card text default '#ffffff',
   text_color text default '#1a1a2e',
   muted text default '#888888',
+  icon_color text,
+  theme text default 'light',
   animation text default 'bounce',
   border_radius int default 12,
   link_gap int default 9,

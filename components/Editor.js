@@ -50,6 +50,7 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
         card:          profile.card,
         text_color:    profile.text_color,
         muted:         profile.muted,
+        icon_color:    profile.icon_color || null,
         animation:     profile.animation,
         border_radius: profile.border_radius,
         link_gap:      profile.link_gap,

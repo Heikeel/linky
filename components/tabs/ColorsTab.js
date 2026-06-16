@@ -1,15 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { PALETTES_LIGHT, PALETTES_DARK } from '@/lib/networks'
+import { PALETTES_LIGHT, PALETTES_DARK, NEUTRALS } from '@/lib/networks'
 import { adjustLightness } from '@/lib/colorUtils'
 
 const THEMES = [
   { id: 'light',    label: 'Minimalista',      desc: 'Fondo claro · limpio' },
   { id: 'dark',     label: 'Dark mode',        desc: 'Fondo oscuro · elegante' },
   { id: 'gradient', label: 'Degradado',        desc: 'Header colorido · amigable' },
-  { id: 'tornasol', label: 'Burbuja tornasol', desc: 'Iridiscente · holográfico' },
   { id: 'custom',   label: 'Personalizado',    desc: 'Elige cada color tú mismo' },
+]
+
+const ANIMATED_THEMES = [
+  { id: 'tornasol', label: 'Burbuja tornasol', desc: 'Iridiscente · holográfico', emoji: '🫧' },
+  { id: 'cosmos',   label: 'Galaxia',          desc: 'Nebulosa · estrellas',      emoji: '🌌' },
+  { id: 'cometas',  label: 'Meteoros',         desc: 'Cielo nocturno · cometas',  emoji: '☄️' },
 ]
 
 const FIELDS = [
@@ -20,6 +25,8 @@ const FIELDS = [
   { key: 'muted',      label: 'Texto suave',   hint: 'Bio y subtítulos' },
 ]
 
+const ANIMATED_IDS = ANIMATED_THEMES.map(t => t.id)
+
 export default function ColorsTab({ data, onChange }) {
   const theme = data.theme || 'light'
   const [brightness, setBrightness] = useState(0)
@@ -27,6 +34,13 @@ export default function ColorsTab({ data, onChange }) {
 
   const palettes = theme === 'dark' ? PALETTES_DARK : PALETTES_LIGHT
   const showPalettes = theme === 'light' || theme === 'gradient' || theme === 'dark'
+  const iconOverride = !!data.icon_color
+
+  function selectTheme(id) {
+    onChange({ theme: id })
+    setBasePalette(null)
+    setBrightness(0)
+  }
 
   function applyPalette(p) {
     setBasePalette(p)
@@ -34,14 +48,33 @@ export default function ColorsTab({ data, onChange }) {
     onChange({ accent: p.accent, bg: p.bg, card: p.card, text_color: p.textColor, muted: p.muted })
   }
 
+  // La intensidad solo cambia el FONDO, nunca el color de los botones/tarjetas
   function handleBrightness(val) {
     setBrightness(val)
     if (!basePalette) return
-    onChange({
-      bg:   adjustLightness(basePalette.bg,   val),
-      card: adjustLightness(basePalette.card, val),
-      muted: adjustLightness(basePalette.muted, val),
-    })
+    onChange({ bg: adjustLightness(basePalette.bg, val) })
+  }
+
+  function ThemeButton({ t }) {
+    return (
+      <button
+        onClick={() => selectTheme(t.id)}
+        className={`flex items-center justify-between px-3 py-2.5 rounded-xl border transition-all text-left ${
+          theme === t.id
+            ? 'border-purple-400 bg-purple-50'
+            : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          {t.emoji && <span className="text-base">{t.emoji}</span>}
+          <div>
+            <p className={`text-sm font-semibold ${theme === t.id ? 'text-purple-700' : 'text-gray-700'}`}>{t.label}</p>
+            <p className="text-xs text-gray-400">{t.desc}</p>
+          </div>
+        </div>
+        {theme === t.id && <i className="ti ti-check text-purple-500 text-base" aria-hidden="true"></i>}
+      </button>
+    )
   }
 
   return (
@@ -49,25 +82,14 @@ export default function ColorsTab({ data, onChange }) {
       <div>
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Diseño de página</p>
         <div className="flex flex-col gap-2">
-          {THEMES.map(t => (
-            <button
-              key={t.id}
-              onClick={() => { onChange({ theme: t.id }); setBasePalette(null); setBrightness(0) }}
-              className={`flex items-center justify-between px-3 py-2.5 rounded-xl border transition-all text-left ${
-                theme === t.id
-                  ? 'border-purple-400 bg-purple-50'
-                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
-              }`}
-            >
-              <div>
-                <p className={`text-sm font-semibold ${theme === t.id ? 'text-purple-700' : 'text-gray-700'}`}>{t.label}</p>
-                <p className="text-xs text-gray-400">{t.desc}</p>
-              </div>
-              {theme === t.id && (
-                <i className="ti ti-check text-purple-500 text-base" aria-hidden="true"></i>
-              )}
-            </button>
-          ))}
+          {THEMES.map(t => <ThemeButton key={t.id} t={t} />)}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Con movimiento ✨</p>
+        <div className="flex flex-col gap-2">
+          {ANIMATED_THEMES.map(t => <ThemeButton key={t.id} t={t} />)}
         </div>
       </div>
 
@@ -93,7 +115,7 @@ export default function ColorsTab({ data, onChange }) {
           {basePalette && (
             <div className="bg-gray-50 rounded-xl px-3 py-3 border border-gray-200">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Intensidad</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Intensidad del fondo</p>
                 <span className="text-xs text-gray-400 font-mono">
                   {brightness > 0 ? `+${brightness}` : brightness}
                 </span>
@@ -116,10 +138,10 @@ export default function ColorsTab({ data, onChange }) {
         </div>
       )}
 
-      {theme === 'tornasol' && (
+      {ANIMATED_IDS.includes(theme) && (
         <div className="border-t border-gray-100 pt-4">
           <p className="text-xs text-gray-400 text-center py-2">
-            El diseño Burbuja tornasol usa colores fijos iridiscentes ✨
+            Este diseño usa colores fijos animados ✨
           </p>
         </div>
       )}
@@ -145,6 +167,60 @@ export default function ColorsTab({ data, onChange }) {
           ))}
         </div>
       )}
+
+      {/* Colores neutros — texto y logos */}
+      <div className="border-t border-gray-100 pt-4 flex flex-col gap-4">
+        <div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Color del texto</p>
+          <p className="text-xs text-gray-400 mb-3">Tonos neutros para títulos y links</p>
+          <div className="flex gap-2 flex-wrap">
+            {NEUTRALS.map(n => (
+              <button
+                key={n.value}
+                onClick={() => onChange({ text_color: n.value })}
+                title={n.name}
+                className={`w-8 h-8 rounded-full border-2 shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200 ${
+                  data.text_color === n.value ? 'border-purple-500 ring-purple-300' : 'border-white'
+                }`}
+                style={{ background: n.value }}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Color de los logos</p>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <span className="text-xs text-gray-400">{iconOverride ? 'Activado' : 'Por marca'}</span>
+              <button
+                onClick={() => onChange({ icon_color: iconOverride ? null : '#6b7280' })}
+                className={`relative w-9 h-5 rounded-full transition-colors ${iconOverride ? 'bg-purple-500' : 'bg-gray-300'}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${iconOverride ? 'translate-x-4' : ''}`} />
+              </button>
+            </label>
+          </div>
+          <p className="text-xs text-gray-400 mb-3">
+            {iconOverride ? 'Todos los logos en un mismo color' : 'Cada red social usa su color original'}
+          </p>
+          {iconOverride && (
+            <div className="flex gap-2 flex-wrap">
+              {NEUTRALS.map(n => (
+                <button
+                  key={n.value}
+                  onClick={() => onChange({ icon_color: n.value })}
+                  title={n.name}
+                  className={`w-8 h-8 rounded-full border-2 shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200 ${
+                    data.icon_color === n.value ? 'border-purple-500 ring-purple-300' : 'border-white'
+                  }`}
+                  style={{ background: n.value }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
