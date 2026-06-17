@@ -24,8 +24,17 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [origin, setOrigin] = useState('')
+  const [darkEditor, setDarkEditor] = useState(() =>
+    typeof window !== 'undefined' && localStorage.getItem('linky-editor-dark') === 'true'
+  )
 
   useEffect(() => { setOrigin(window.location.origin) }, [])
+
+  function toggleDark() {
+    const next = !darkEditor
+    setDarkEditor(next)
+    localStorage.setItem('linky-editor-dark', next)
+  }
 
   function updateProfile(changes) {
     setProfile(prev => ({ ...prev, ...changes }))
@@ -99,89 +108,133 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
   }
 
   const shareUrl = `${origin}/${profile.username}`
+  const D = darkEditor
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: '#f8f7ff' }}>
-      <aside className="w-96 flex-shrink-0 bg-white border-r border-gray-100 flex flex-col h-full">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <div className="text-lg font-bold" style={{ color: '#6c63ff' }}>
-            Linky
+    <>
+      {D && (
+        <style>{`
+          .editor-dark aside .bg-white       { background: #1e1e2a !important; }
+          .editor-dark aside .bg-gray-50     { background: #232330 !important; }
+          .editor-dark aside .bg-gray-100    { background: #2a2a38 !important; }
+          .editor-dark aside .border-gray-100 { border-color: rgba(255,255,255,0.06) !important; }
+          .editor-dark aside .border-gray-200 { border-color: rgba(255,255,255,0.1) !important; }
+          .editor-dark aside .ring-gray-200  { --tw-ring-color: rgba(255,255,255,0.1) !important; }
+          .editor-dark aside .text-gray-900  { color: #e8eaf6 !important; }
+          .editor-dark aside .text-gray-800  { color: #d0d4e8 !important; }
+          .editor-dark aside .text-gray-700  { color: #c4c8e0 !important; }
+          .editor-dark aside .text-gray-600  { color: #a4a8c4 !important; }
+          .editor-dark aside .text-gray-500  { color: #8488a8 !important; }
+          .editor-dark aside .text-gray-400  { color: #64688a !important; }
+          .editor-dark aside .hover\:bg-gray-50:hover  { background: #2a2a38 !important; }
+          .editor-dark aside .hover\:bg-gray-100:hover { background: #303044 !important; }
+          .editor-dark aside input[type=text],
+          .editor-dark aside input[type=url],
+          .editor-dark aside textarea {
+            background: #232330 !important;
+            color: #d0d4e8 !important;
+            border-color: rgba(255,255,255,0.1) !important;
+          }
+          .editor-dark aside input::placeholder,
+          .editor-dark aside textarea::placeholder { color: rgba(180,185,220,0.35) !important; }
+          .editor-dark aside .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important; }
+        `}</style>
+      )}
+
+      <div className={`flex h-screen overflow-hidden${D ? ' editor-dark' : ''}`} style={{ background: D ? '#0f0f13' : '#f8f7ff' }}>
+        <aside className="w-96 flex-shrink-0 flex flex-col h-full" style={{ background: D ? '#1a1a22' : '#ffffff', borderRight: `1px solid ${D ? 'rgba(255,255,255,0.07)' : '#f3f4f6'}` }}>
+
+          <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `1px solid ${D ? 'rgba(255,255,255,0.07)' : '#f3f4f6'}` }}>
+            <div className="text-lg font-bold" style={{ color: '#6c63ff' }}>Linky</div>
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={toggleDark}
+                title={D ? 'Modo claro' : 'Modo oscuro'}
+                className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+                style={{ background: D ? 'rgba(255,255,255,0.08)' : '#f3f4f6', color: D ? 'rgba(255,255,255,0.55)' : '#9ca3af' }}
+              >
+                <i className={`ti ${D ? 'ti-sun' : 'ti-moon'} text-sm`} aria-hidden="true"></i>
+              </button>
+              <a
+                href={`/${profile.username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1"
+                style={{ color: D ? 'rgba(255,255,255,0.55)' : '#6b7280', border: `1px solid ${D ? 'rgba(255,255,255,0.12)' : '#e5e7eb'}` }}
+              >
+                <i className="ti ti-external-link text-sm" aria-hidden="true"></i> Ver
+              </a>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="px-3 py-1.5 text-xs font-semibold text-white rounded-lg transition-all disabled:opacity-60 flex items-center gap-1"
+                style={{ background: saved ? '#00b894' : '#6c63ff' }}
+              >
+                {saving ? (
+                  <><i className="ti ti-loader-2 animate-spin text-sm" aria-hidden="true"></i> Guardando</>
+                ) : saved ? (
+                  <><i className="ti ti-check text-sm" aria-hidden="true"></i> Guardado</>
+                ) : (
+                  <><i className="ti ti-device-floppy text-sm" aria-hidden="true"></i> Guardar</>
+                )}
+              </button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <a
-              href={`/${profile.username}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3 py-1.5 text-xs font-semibold text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-1"
-            >
-              <i className="ti ti-external-link text-sm" aria-hidden="true"></i> Ver
-            </a>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-3 py-1.5 text-xs font-semibold text-white rounded-lg transition-all disabled:opacity-60 flex items-center gap-1"
-              style={{ background: saved ? '#00b894' : '#6c63ff' }}
-            >
-              {saving ? (
-                <><i className="ti ti-loader-2 animate-spin text-sm" aria-hidden="true"></i> Guardando</>
-              ) : saved ? (
-                <><i className="ti ti-check text-sm" aria-hidden="true"></i> Guardado</>
-              ) : (
-                <><i className="ti ti-device-floppy text-sm" aria-hidden="true"></i> Guardar</>
-              )}
+
+          <div className="flex px-2" style={{ borderBottom: `1px solid ${D ? 'rgba(255,255,255,0.07)' : '#f3f4f6'}` }}>
+            {TABS.map(t => (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium transition-all border-b-2 ${
+                  tab === t.id
+                    ? 'border-purple-500 text-purple-500'
+                    : `border-transparent ${D ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`
+                }`}
+              >
+                <i className={`ti ${t.icon} text-base`} aria-hidden="true"></i>
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-5">
+            {tab === 'profile' && <ProfileTab data={profile} onChange={updateProfile} userId={userId} />}
+            {tab === 'links'   && <LinksTab links={links} onLinksChange={handleLinksChange} />}
+            {tab === 'colors'  && <ColorsTab data={profile} onChange={updateProfile} />}
+            {tab === 'motion'  && <MotionTab data={profile} onChange={updateProfile} />}
+          </div>
+
+          <div className="p-4 flex items-center justify-between" style={{ borderTop: `1px solid ${D ? 'rgba(255,255,255,0.07)' : '#f3f4f6'}` }}>
+            <div className="flex items-center gap-2 min-w-0">
+              <i className="ti ti-link text-sm flex-shrink-0" style={{ color: D ? 'rgba(255,255,255,0.18)' : '#d1d5db' }} aria-hidden="true"></i>
+              <span className="text-xs truncate" style={{ color: D ? 'rgba(255,255,255,0.32)' : '#9ca3af' }}>/{profile.username}</span>
+            </div>
+            <button onClick={handleLogout} className="text-xs flex items-center gap-1 flex-shrink-0 transition-colors hover:text-red-400" style={{ color: D ? 'rgba(255,255,255,0.32)' : '#9ca3af' }}>
+              <i className="ti ti-logout text-sm" aria-hidden="true"></i> Salir
             </button>
           </div>
-        </div>
+        </aside>
 
-        <div className="flex border-b border-gray-100 px-2">
-          {TABS.map(t => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium transition-all border-b-2 ${
-                tab === t.id ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-400 hover:text-gray-600'
-              }`}
-            >
-              <i className={`ti ${t.icon} text-base`} aria-hidden="true"></i>
-              {t.label}
-            </button>
-          ))}
-        </div>
+        <main className="flex-1 flex items-center justify-center p-8 overflow-y-auto" style={{ background: D ? '#13131a' : '#ede9ff' }}>
+          <div className="flex flex-col items-center gap-6">
+            <PhonePreview profile={profile} links={links} />
 
-        <div className="flex-1 overflow-y-auto p-5">
-          {tab === 'profile' && <ProfileTab data={profile} onChange={updateProfile} userId={userId} />}
-          {tab === 'links'   && <LinksTab links={links} onLinksChange={handleLinksChange} />}
-          {tab === 'colors'  && <ColorsTab data={profile} onChange={updateProfile} />}
-          {tab === 'motion'  && <MotionTab data={profile} onChange={updateProfile} />}
-        </div>
-
-        <div className="border-t border-gray-100 p-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            <i className="ti ti-link text-gray-300 text-sm flex-shrink-0" aria-hidden="true"></i>
-            <span className="text-xs text-gray-400 truncate">/{profile.username}</span>
+            <div className="flex items-center gap-2 rounded-xl px-4 py-2.5 border shadow-sm"
+              style={{ background: D ? '#1a1a22' : '#ffffff', borderColor: D ? 'rgba(255,255,255,0.08)' : '#e5e7eb' }}>
+              <span className="text-xs font-mono" style={{ color: D ? 'rgba(255,255,255,0.4)' : '#9ca3af' }}>{shareUrl}</span>
+              <button
+                onClick={() => { navigator.clipboard.writeText(shareUrl); setSaved(true); setTimeout(() => setSaved(false), 1500) }}
+                className="ml-1 hover:text-purple-500 transition-colors"
+                style={{ color: D ? 'rgba(255,255,255,0.28)' : '#9ca3af' }}
+                title="Copiar link"
+              >
+                <i className="ti ti-copy text-sm" aria-hidden="true"></i>
+              </button>
+            </div>
           </div>
-          <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1 flex-shrink-0">
-            <i className="ti ti-logout text-sm" aria-hidden="true"></i> Salir
-          </button>
-        </div>
-      </aside>
-
-      <main className="flex-1 flex items-center justify-center p-8 overflow-y-auto" style={{ background: '#ede9ff' }}>
-        <div className="flex flex-col items-center gap-6">
-          <PhonePreview profile={profile} links={links} />
-
-          <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-2.5 border border-gray-200 shadow-sm">
-            <span className="text-xs text-gray-400 font-mono">{shareUrl}</span>
-            <button
-              onClick={() => { navigator.clipboard.writeText(shareUrl); setSaved(true); setTimeout(() => setSaved(false), 1500) }}
-              className="ml-1 text-gray-400 hover:text-purple-500 transition-colors"
-              title="Copiar link"
-            >
-              <i className="ti ti-copy text-sm" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   )
 }
