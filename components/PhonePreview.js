@@ -226,29 +226,28 @@ export default function PhonePreview({ profile, links }) {
       )
     }
 
-    if (theme === 'neon') {
+    if (theme === 'matrix') {
       return (
-        <div className="relative overflow-hidden" style={{ background: '#070710', minHeight: 520 }}>
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'linear-gradient(rgba(0,245,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.04) 1px,transparent 1px)',
-            backgroundSize: '30px 30px',
-          }}></div>
+        <div className="relative overflow-hidden" style={{ background: '#000000', minHeight: 520 }}>
+          <div className="absolute inset-0" style={{ opacity: 0.5, fontFamily: 'Courier New, monospace', fontSize: 11, lineHeight: 1.6, color: '#00ff41', whiteSpace: 'pre', pointerEvents: 'none', padding: '0 2px', overflow: 'hidden' }}>
+            {'1 0 1 1 0 1 0 0 1 1 0 1 0 1 1 0 1 0 0 1 1 0 1 0 1 1 0 1 0 0 1\n0 1 0 0 1 1 0 1 0 1 1 0 0 1 0 1 1 0 1 0 0 1 0 1 1 0 1 0 1 0 1\n1 1 0 1 0 0 1 0 1 1 0 1 1 0 0 1 0 1 0 1 1 0 0 1 0 1 1 0 1 0 0\n0 0 1 0 1 1 0 1 0 0 1 1 0 1 0 1 0 1 1 0 1 0 0 1 1 0 1 0 1 1 0\n1 0 0 1 0 1 1 0 1 0 0 1 1 0 1 0 1 1 0 1 0 0 1 1 0 1 0 0 1 0 1\n0 1 1 0 1 0 1 1 0 0 1 0 1 0 1 1 0 0 1 0 1 0 0 1 1 0 1 0 1 1 0\n1 0 1 0 0 1 1 0 1 1 0 0 1 0 1 0 0 1 1 0 1 0 1 1 0 0 1 0 1 0 1\n0 1 0 1 1 0 0 1 0 1 0 1 1 0 0 1 0 1 1 0 0 1 0 1 0 1 1 0 0 1 0\n1 1 0 0 1 0 1 0 1 1 0 1 0 0 1 0 1 1 0 1 0 1 0 0 1 1 0 1 0 0 1\n0 0 1 1 0 1 0 1 0 0 1 0 1 1 0 1 0 0 1 1 0 1 0 1 0 0 1 0 1 1 0\n1 0 1 0 1 0 1 1 0 1 0 0 1 0 1 0 1 0 0 1 1 0 1 0 1 1 0 0 1 0 1\n0 1 0 0 1 1 0 0 1 0 1 0 1 1 0 1 0 1 0 0 1 1 0 1 0 1 1 0 1 0 0\n1 1 0 1 0 1 0 0 1 1 0 0 1 0 1 1 0 0 1 0 1 0 0 1 1 0 1 0 1 1 0\n0 0 1 0 1 0 1 1 0 0 1 1 0 1 0 1 0 1 1 0 0 1 0 1 0 0 1 1 0 1 0\n1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1'}
+          </div>
           <div className="relative z-10 p-4 pb-6">
             <div className="text-center mb-5">
-              <Avatar size={16} border="rgba(0,245,255,0.6)" />
-              <p className="text-sm font-bold text-white">{name}</p>
-              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: '#00f5ff' }}>@{username}</p>}
-              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(0,245,255,0.45)' }}>{bio}</p>}
+              <Avatar size={16} border="rgba(0,255,65,0.55)" />
+              <p className="text-sm font-bold" style={{ color: '#00ff41', fontFamily: 'Courier New, monospace', textShadow: '0 0 8px #00ff41' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(0,255,65,0.55)', fontFamily: 'Courier New, monospace' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(0,255,65,0.4)', fontFamily: 'Courier New, monospace' }}>{bio}</p>}
             </div>
             <div className="flex flex-col" style={{ gap }}>
               {links.length === 0
-                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(0,245,255,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(0,255,65,0.3)' }}>Añade links desde &quot;Links&quot;</div>
                 : links.map(link => (
                   <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
-                    style={{ background: 'rgba(0,245,255,0.04)', borderRadius: radius, border: '1px solid rgba(0,245,255,0.22)', boxShadow: '0 0 8px rgba(0,245,255,0.15)' }}>
-                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#070710') }} aria-hidden="true"></i>
-                    <span className="text-xs font-semibold flex-1 text-white">{link.name}</span>
-                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(0,245,255,0.3)' }} aria-hidden="true"></i>
+                    style={{ background: 'rgba(0,255,65,0.04)', borderRadius: radius, border: '1px solid rgba(0,255,65,0.2)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#000000') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(0,255,65,0.9)' }}>{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(0,255,65,0.3)' }} aria-hidden="true"></i>
                   </div>
                 ))
               }
@@ -288,59 +287,28 @@ export default function PhonePreview({ profile, links }) {
       )
     }
 
-    if (theme === 'vaporwave') {
+    if (theme === 'olas') {
       return (
-        <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg,#0f0221 0%,#1a0533 50%,#0f0a1e 100%)', minHeight: 520 }}>
-          <div className="absolute" style={{ top: 20, left: '50%', transform: 'translateX(-50%)', width: 160, height: 80, overflow: 'hidden', borderRadius: '80px 80px 0 0', background: 'linear-gradient(180deg,#ff71ce,#f9c846,#ff8a00)', boxShadow: '0 0 40px rgba(255,113,206,0.4)' }}>
-            <div className="absolute inset-0" style={{ background: 'repeating-linear-gradient(transparent,transparent 10px,#0f0221 10px,#0f0221 12px)' }}></div>
-          </div>
-          <div className="absolute" style={{ bottom: 0, left: 0, right: 0, height: '35%', background: 'repeating-linear-gradient(90deg,rgba(1,205,254,0.12) 0px,rgba(1,205,254,0.12) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(0deg,rgba(1,205,254,0.12) 0px,rgba(1,205,254,0.12) 1px,transparent 1px,transparent 28px)', transform: 'perspective(180px) rotateX(42deg)', transformOrigin: 'bottom center' }}></div>
-          <div className="relative z-10 pt-24 px-4 pb-6">
-            <div className="text-center mb-5">
-              <Avatar size={16} border="rgba(255,113,206,0.6)" />
-              <p className="text-sm font-bold" style={{ color: '#ff71ce' }}>{name}</p>
-              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: '#01cdfe', textShadow: '0 0 8px #01cdfe' }}>@{username}</p>}
-              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,200,240,0.65)' }}>{bio}</p>}
-            </div>
-            <div className="flex flex-col" style={{ gap }}>
-              {links.length === 0
-                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,113,206,0.3)' }}>Añade links desde &quot;Links&quot;</div>
-                : links.map(link => (
-                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
-                    style={{ background: 'rgba(255,113,206,0.07)', borderRadius: radius, border: '1px solid rgba(255,113,206,0.22)' }}>
-                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#0f0221') }} aria-hidden="true"></i>
-                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,230,255,0.9)' }}>{link.name}</span>
-                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,113,206,0.4)' }} aria-hidden="true"></i>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    if (theme === 'bosque') {
-      return (
-        <div className="relative overflow-hidden" style={{ background: 'radial-gradient(ellipse at 30% 15%,#1a4a1a,transparent 55%),radial-gradient(ellipse at 70% 85%,#0a3010,transparent 55%),#050e07', minHeight: 520 }}>
-          <div className="absolute" style={{ top: -100, left: -60, width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle,rgba(40,180,60,0.18),transparent 70%)' }}></div>
-          <div className="absolute" style={{ bottom: -80, right: -40, width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle,rgba(20,120,40,0.2),transparent 70%)' }}></div>
+        <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg,#020d1f 0%,#061528 45%,#0a2a50 100%)', minHeight: 520 }}>
+          <div className="absolute" style={{ bottom: 0, left: '-10%', width: '120%', height: 140, background: 'rgba(10,80,140,0.3)', borderRadius: '55% 45% 0 0' }}></div>
+          <div className="absolute" style={{ bottom: 0, left: '-10%', width: '120%', height: 100, background: 'rgba(0,140,160,0.22)', borderRadius: '45% 55% 0 0' }}></div>
+          <div className="absolute" style={{ bottom: 0, left: '-10%', width: '120%', height: 60, background: 'rgba(80,210,220,0.12)', borderRadius: '50% 50% 0 0' }}></div>
           <div className="relative z-10 p-4 pb-6">
             <div className="text-center mb-5">
-              <Avatar size={16} border="rgba(100,255,100,0.4)" />
-              <p className="text-sm font-bold" style={{ color: '#a7f3d0' }}>{name}</p>
-              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(160,255,160,0.7)' }}>@{username}</p>}
-              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(180,240,180,0.6)' }}>{bio}</p>}
+              <Avatar size={16} border="rgba(56,189,248,0.5)" />
+              <p className="text-sm font-bold" style={{ color: '#7dd3fc' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(125,211,252,0.7)' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(186,230,253,0.6)' }}>{bio}</p>}
             </div>
             <div className="flex flex-col" style={{ gap }}>
               {links.length === 0
-                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(100,200,100,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(125,211,252,0.3)' }}>Añade links desde &quot;Links&quot;</div>
                 : links.map(link => (
                   <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
-                    style={{ background: 'rgba(40,160,60,0.07)', borderRadius: radius, border: '1px solid rgba(80,180,80,0.16)' }}>
-                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#050e07') }} aria-hidden="true"></i>
-                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(220,255,220,0.9)' }}>{link.name}</span>
-                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(100,200,100,0.4)' }} aria-hidden="true"></i>
+                    style={{ background: 'rgba(0,100,160,0.12)', borderRadius: radius, border: '1px solid rgba(80,180,240,0.18)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#020d1f') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(186,230,253,0.9)' }}>{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(125,211,252,0.35)' }} aria-hidden="true"></i>
                   </div>
                 ))
               }

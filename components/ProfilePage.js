@@ -301,22 +301,35 @@ const STARS_SMALL  = generateStars(120, 2000, 2000, 7)
 const STARS_MEDIUM = generateStars(50, 2000, 2000, 31)
 const STARS_BIG    = generateStars(20, 2000, 2000, 97)
 
-// Luciérnagas para ThemeBosque — posiciones fijas para evitar hydration mismatch
-const FIREFLIES = [
-  { left: '8%',  top: '20%', dur: 3.2, delay: 0    },
-  { left: '22%', top: '45%', dur: 4.1, delay: 1.2  },
-  { left: '15%', top: '70%', dur: 3.8, delay: 0.5  },
-  { left: '55%', top: '15%', dur: 4.5, delay: 2.1  },
-  { left: '72%', top: '38%', dur: 3.1, delay: 0.8  },
-  { left: '88%', top: '60%', dur: 4.8, delay: 1.7  },
-  { left: '38%', top: '80%', dur: 3.5, delay: 3.0  },
-  { left: '65%', top: '75%', dur: 4.2, delay: 0.3  },
-  { left: '42%', top: '30%', dur: 3.7, delay: 2.5  },
-  { left: '80%', top: '25%', dur: 4.0, delay: 1.0  },
-  { left: '28%', top: '55%', dur: 3.3, delay: 1.8  },
-  { left: '90%', top: '85%', dur: 4.6, delay: 0.6  },
-  { left: '5%',  top: '88%', dur: 3.9, delay: 3.5  },
-  { left: '48%', top: '60%', dur: 4.3, delay: 2.9  },
+// Columnas de binarios para ThemeMatrix — posiciones fijas (sin hydration mismatch)
+const MATRIX_STREAMS = [
+  { left: '3%',  str: '1\n0\n1\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n1\n0\n1\n0', dur: 3.5, delay: 0,   bright: true  },
+  { left: '8%',  str: '0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n1\n0\n0\n1\n0\n1\n1\n0', dur: 4.2, delay: 0.8, bright: false },
+  { left: '14%', str: '1\n1\n0\n1\n0\n0\n1\n0\n1\n1\n0\n1\n1\n0\n0\n1\n0\n1', dur: 3.0, delay: 1.5, bright: false },
+  { left: '20%', str: '0\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n0\n1', dur: 4.8, delay: 0.3, bright: true  },
+  { left: '27%', str: '1\n0\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n1', dur: 3.7, delay: 2.2, bright: false },
+  { left: '34%', str: '0\n1\n1\n0\n1\n0\n1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n0', dur: 4.1, delay: 0.6, bright: false },
+  { left: '41%', str: '1\n0\n1\n0\n0\n1\n1\n0\n1\n1\n0\n0\n1\n0\n1\n0\n0\n1', dur: 3.3, delay: 1.0, bright: true  },
+  { left: '48%', str: '0\n1\n0\n1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n0\n1\n0\n1', dur: 4.5, delay: 1.8, bright: false },
+  { left: '55%', str: '1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n0\n1\n1', dur: 3.8, delay: 0.4, bright: false },
+  { left: '62%', str: '0\n0\n1\n1\n0\n1\n0\n1\n0\n0\n1\n0\n1\n1\n0\n1\n0\n0', dur: 4.0, delay: 2.8, bright: true  },
+  { left: '69%', str: '1\n0\n1\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n0\n1\n0\n1\n0', dur: 3.2, delay: 1.2, bright: false },
+  { left: '76%', str: '0\n1\n0\n0\n1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n1\n0\n1', dur: 4.6, delay: 0.7, bright: false },
+  { left: '83%', str: '1\n1\n0\n1\n0\n1\n0\n0\n1\n1\n0\n0\n1\n0\n1\n1\n0\n0', dur: 3.6, delay: 2.0, bright: true  },
+  { left: '90%', str: '0\n0\n1\n0\n1\n0\n1\n1\n0\n0\n1\n1\n0\n1\n0\n1\n0\n1', dur: 4.3, delay: 0.9, bright: false },
+  { left: '96%', str: '1\n0\n0\n1\n1\n0\n1\n0\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0', dur: 3.9, delay: 1.6, bright: false },
+]
+
+// Burbujas para ThemeOlas — posiciones fijas
+const OLAS_BUBBLES = [
+  { left: '8%',  size: 12, dur: 8,  delay: 0   },
+  { left: '22%', size: 18, dur: 11, delay: 1.5  },
+  { left: '40%', size: 8,  dur: 7,  delay: 3.0  },
+  { left: '58%', size: 22, dur: 13, delay: 0.8  },
+  { left: '72%', size: 10, dur: 9,  delay: 2.2  },
+  { left: '85%', size: 16, dur: 10, delay: 1.0  },
+  { left: '30%', size: 14, dur: 12, delay: 4.5  },
+  { left: '65%', size: 6,  dur: 8,  delay: 2.8  },
 ]
 
 function ThemeCosmos({ profile, links, isOwner, username }) {
@@ -493,79 +506,77 @@ function ThemeCometas({ profile, links, isOwner, username }) {
   )
 }
 
-function ThemeNeon({ profile, links, isOwner, username }) {
+function ThemeMatrix({ profile, links, isOwner, username }) {
   const anim   = profile.animation || 'bounce'
   const radius = profile.border_radius ?? 12
   const gap    = profile.link_gap ?? 9
-  const iconColor = c => profile.icon_color || safeIconColor(c, '#070710')
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#000000')
 
   return (
     <>
       <style>{`
-        @keyframes neon-pulse { 0%,100%{box-shadow:0 0 5px #00f5ff30,0 0 20px #00f5ff15} 50%{box-shadow:0 0 15px #00f5ff70,0 0 40px #00f5ff35} }
-        @keyframes neon-text-glow { 0%,100%{text-shadow:0 0 7px #fff,0 0 15px #00f5ff,0 0 35px #00f5ff} 50%{text-shadow:0 0 7px #fff,0 0 20px #00f5ff,0 0 60px #00f5ff,0 0 90px #00f5ff80} }
-        @keyframes neon-scan { 0%{top:-10%} 100%{top:110%} }
-        @keyframes neon-grid-move { from{background-position:0 0} to{background-position:0 40px} }
-        .neon-bg { background:#070710; min-height:100vh; }
-        .neon-grid { position:fixed;inset:0;pointer-events:none;z-index:0;
-          background-image:linear-gradient(rgba(0,245,255,0.04) 1px,transparent 1px),
-                           linear-gradient(90deg,rgba(0,245,255,0.04) 1px,transparent 1px);
-          background-size:40px 40px;
-          animation:neon-grid-move 5s linear infinite; }
-        .neon-scan { position:fixed;left:0;right:0;height:60px;pointer-events:none;z-index:3;
-          background:linear-gradient(transparent,rgba(0,245,255,0.04),transparent);
-          animation:neon-scan 7s linear infinite; }
-        .neon-name { color:#ffffff; animation:neon-text-glow 3s ease-in-out infinite; }
-        .neon-user { color:#00f5ff; text-shadow:0 0 10px #00f5ff; }
-        .neon-card { background:rgba(0,245,255,0.03);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-          border:1px solid rgba(0,245,255,0.2);transition:all .3s;
-          animation:neon-pulse 4s ease-in-out infinite; }
-        .neon-card:hover { background:rgba(0,245,255,0.09);border-color:rgba(0,245,255,0.6); }
-        .neon-avatar { border:2px solid #00f5ff;box-shadow:0 0 20px #00f5ff60; }
+        @keyframes matrix-fall { from { top: -30%; } to { top: 115%; } }
+        @keyframes matrix-glow { 0%,100%{text-shadow:0 0 8px #00ff41,0 0 20px #00ff41} 50%{text-shadow:0 0 14px #00ff41,0 0 35px #00ff41,0 0 55px #00ff4155} }
+        .matrix-bg { background:#000000; min-height:100vh; }
+        .matrix-stream { position:fixed;font-family:'Courier New',monospace;font-size:13px;line-height:1.6;text-align:center;white-space:pre;pointer-events:none;z-index:1;user-select:none; }
+        .matrix-card { background:rgba(0,255,65,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(0,255,65,0.18);transition:all .3s; }
+        .matrix-card:hover { background:rgba(0,255,65,0.09);border-color:rgba(0,255,65,0.4); }
+        .matrix-name { color:#00ff41;font-family:'Courier New',monospace;animation:matrix-glow 3s ease-in-out infinite; }
+        .matrix-user { color:rgba(0,255,65,0.55);font-family:'Courier New',monospace; }
       `}</style>
 
-      <div className="neon-bg relative overflow-hidden">
-        <div className="neon-grid"></div>
-        <div className="neon-scan"></div>
+      <div className="matrix-bg relative overflow-hidden">
+        {MATRIX_STREAMS.map((s, i) => (
+          <div key={i} className="matrix-stream" style={{
+            left: s.left,
+            color: s.bright ? '#00ff41' : '#009922',
+            opacity: s.bright ? 0.85 : 0.4,
+            textShadow: s.bright ? '0 0 8px #00ff41' : 'none',
+            animation: `matrix-fall ${s.dur}s linear infinite`,
+            animationDelay: `${s.delay}s`,
+          }}>
+            {s.str}
+          </div>
+        ))}
 
         <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
           <div className="w-full max-w-sm">
             <div className="text-center mb-10">
               <div className="flex justify-center mb-5">
                 {profile.avatar_url ? (
-                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover neon-avatar" />
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '2px solid rgba(0,255,65,0.55)', boxShadow: '0 0 22px rgba(0,255,65,0.4)' }} />
                 ) : (
-                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white neon-avatar" style={{ background: '#0a1a3a' }}>
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold" style={{ background: '#001400', border: '2px solid rgba(0,255,65,0.5)', color: '#00ff41', fontFamily: 'Courier New, monospace', boxShadow: '0 0 22px rgba(0,255,65,0.4)' }}>
                     {(profile.name || username).charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
-              <h1 className="neon-name text-2xl font-bold mb-1">{profile.name || username}</h1>
-              <p className="neon-user text-sm font-semibold mb-4">@{username}</p>
-              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(0,245,255,0.45)' }}>{profile.bio}</p>}
+              <h1 className="matrix-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="matrix-user text-sm font-semibold mb-4">@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(0,255,65,0.4)', fontFamily: 'Courier New, monospace' }}>{profile.bio}</p>}
             </div>
 
             <div className="flex flex-col" style={{ gap }}>
               {links?.map(link => (
                 <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
-                  className={`neon-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  className={`matrix-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
                   style={{ borderRadius: radius, textDecoration: 'none' }}>
                   <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
-                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
-                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(0,245,255,0.3)' }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(0,255,65,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(0,255,65,0.3)' }} aria-hidden="true"></i>
                 </a>
               ))}
-              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(0,245,255,0.3)' }}>Sin links por ahora</p>}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(0,255,65,0.3)', fontFamily: 'Courier New, monospace' }}>Sin links por ahora</p>}
             </div>
 
             <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
               <ShareButton dark={true} />
               {isOwner ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,245,255,0.12)', color: '#00f5ff', border: '1px solid rgba(0,245,255,0.4)' }}>
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,255,65,0.1)', color: '#00ff41', border: '1px solid rgba(0,255,65,0.35)', fontFamily: 'Courier New, monospace' }}>
                   <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
                 </Link>
               ) : (
-                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,245,255,0.08)', color: 'rgba(0,245,255,0.7)', border: '1px solid rgba(0,245,255,0.2)' }}>
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,255,65,0.06)', color: 'rgba(0,255,65,0.7)', border: '1px solid rgba(0,255,65,0.2)' }}>
                   Crear mi Linky →
                 </a>
               )}
@@ -664,147 +675,50 @@ function ThemeSunset({ profile, links, isOwner, username }) {
   )
 }
 
-function ThemeVaporwave({ profile, links, isOwner, username }) {
+function ThemeOlas({ profile, links, isOwner, username }) {
   const anim   = profile.animation || 'bounce'
   const radius = profile.border_radius ?? 12
   const gap    = profile.link_gap ?? 9
-  const iconColor = c => profile.icon_color || safeIconColor(c, '#0f0221')
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#020d1f')
 
   return (
     <>
       <style>{`
-        @keyframes vw-glow { 0%,100%{opacity:0.75} 50%{opacity:1} }
-        @keyframes vw-scan { 0%{top:-5%} 100%{top:105%} }
-        @keyframes vw-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        .vw-bg {
-          background:linear-gradient(180deg,#0f0221 0%,#1a0533 45%,#0f0a1e 100%);
+        @keyframes wave-ola1 { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-35px)} }
+        @keyframes wave-ola2 { 0%,100%{transform:translateX(0)} 50%{transform:translateX(28px)} }
+        @keyframes bubble-rise { 0%{transform:translateY(0);opacity:0} 10%{opacity:0.65} 85%{opacity:0.35} 100%{transform:translateY(-105vh);opacity:0} }
+        @keyframes olas-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes olas-glow { 0%,100%{opacity:0.6} 50%{opacity:1} }
+        .olas-bg {
+          background:linear-gradient(180deg,#020d1f 0%,#061528 40%,#082040 75%,#0a2a50 100%);
           min-height:100vh;
         }
-        .vw-sun { position:fixed;top:64px;left:50%;transform:translateX(-50%);
-          width:220px;height:110px;overflow:hidden;border-radius:110px 110px 0 0;
-          background:linear-gradient(180deg,#ff71ce,#f9c846,#ff8a00);
-          pointer-events:none;z-index:0;
-          box-shadow:0 0 70px rgba(255,113,206,0.55);
-          animation:vw-glow 4s ease-in-out infinite; }
-        .vw-sun::after { content:'';position:absolute;inset:0;
-          background:repeating-linear-gradient(transparent,transparent 13px,#0f0221 13px,#0f0221 15px); }
-        .vw-grid { position:fixed;bottom:0;left:0;right:0;height:52vh;
-          pointer-events:none;z-index:0;
-          background:
-            linear-gradient(transparent 0%,rgba(255,113,206,0.12) 100%),
-            repeating-linear-gradient(90deg,rgba(1,205,254,0.14) 0px,rgba(1,205,254,0.14) 1px,transparent 1px,transparent 55px),
-            repeating-linear-gradient(0deg,rgba(1,205,254,0.14) 0px,rgba(1,205,254,0.14) 1px,transparent 1px,transparent 36px);
-          transform:perspective(280px) rotateX(44deg);
-          transform-origin:bottom center; }
-        .vw-scan { position:fixed;left:0;right:0;height:2px;
-          background:rgba(255,113,206,0.07);pointer-events:none;z-index:3;
-          animation:vw-scan 9s linear infinite; }
-        .vw-name { background:linear-gradient(90deg,#ff71ce,#01cdfe,#b4a0ff,#ff71ce);background-size:200% auto;
-          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-          animation:vw-shimmer 5s linear infinite; }
-        .vw-card { background:rgba(255,113,206,0.06);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-          border:1px solid rgba(255,113,206,0.2);transition:all .3s; }
-        .vw-card:hover { background:rgba(1,205,254,0.1);border-color:rgba(1,205,254,0.4); }
+        .olas-deep { position:fixed;inset:0;pointer-events:none;z-index:0;
+          background:radial-gradient(ellipse at 50% 70%,rgba(0,100,180,0.15) 0%,transparent 65%);
+          animation:olas-glow 8s ease-in-out infinite; }
+        .olas-wave { position:fixed;bottom:0;left:-10%;width:120%;border-radius:55% 45% 0 0;pointer-events:none;z-index:0; }
+        .ow1 { height:220px;background:rgba(10,80,140,0.3);animation:wave-ola1 8s ease-in-out infinite; }
+        .ow2 { height:170px;background:rgba(0,140,160,0.22);animation:wave-ola2 10s ease-in-out infinite; }
+        .ow3 { height:120px;background:rgba(20,180,190,0.15);animation:wave-ola1 7s ease-in-out infinite reverse; }
+        .ow4 { height:70px;background:rgba(80,210,220,0.1);animation:wave-ola2 12s ease-in-out infinite; }
+        .olas-bubble { position:fixed;border-radius:50%;background:rgba(100,200,255,0.18);pointer-events:none;z-index:1;border:1px solid rgba(100,220,255,0.3); }
+        .olas-card { background:rgba(0,100,160,0.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(80,180,240,0.15);transition:all .3s; }
+        .olas-card:hover { background:rgba(0,150,200,0.18);border-color:rgba(100,220,255,0.3);transform:translateY(-1px); }
+        .olas-name { background:linear-gradient(90deg,#7dd3fc,#38bdf8,#bae6fd,#7dd3fc);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:olas-shimmer 5s linear infinite; }
       `}</style>
 
-      <div className="vw-bg relative overflow-hidden">
-        <div className="vw-sun"></div>
-        <div className="vw-grid"></div>
-        <div className="vw-scan"></div>
-
-        <div className="relative z-10 flex flex-col items-center pt-52 pb-14 px-4 min-h-screen">
-          <div className="w-full max-w-sm">
-            <div className="text-center mb-10">
-              <div className="flex justify-center mb-5">
-                {profile.avatar_url ? (
-                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(255,113,206,0.6)', boxShadow: '0 0 25px rgba(255,113,206,0.5), 0 0 50px rgba(1,205,254,0.25)' }} />
-                ) : (
-                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'linear-gradient(135deg,#ff71ce,#01cdfe)', boxShadow: '0 0 25px rgba(255,113,206,0.5)' }}>
-                    {(profile.name || username).charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <h1 className="vw-name text-2xl font-bold mb-1">{profile.name || username}</h1>
-              <p className="text-sm font-semibold mb-4" style={{ color: '#01cdfe', textShadow: '0 0 10px #01cdfe' }}>@{username}</p>
-              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,200,240,0.65)' }}>{profile.bio}</p>}
-            </div>
-
-            <div className="flex flex-col" style={{ gap }}>
-              {links?.map(link => (
-                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
-                  className={`vw-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
-                  style={{ borderRadius: radius, textDecoration: 'none' }}>
-                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
-                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,230,255,0.9)' }}>{link.name}</span>
-                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,113,206,0.4)' }} aria-hidden="true"></i>
-                </a>
-              ))}
-              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,113,206,0.3)' }}>Sin links por ahora</p>}
-            </div>
-
-            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
-              <ShareButton dark={true} />
-              {isOwner ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,113,206,0.15)', color: '#ff71ce', border: '1px solid rgba(255,113,206,0.4)' }}>
-                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
-                </Link>
-              ) : (
-                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,113,206,0.1)', color: 'rgba(255,200,240,0.7)', border: '1px solid rgba(255,113,206,0.25)' }}>
-                  Crear mi Linky →
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
-
-function ThemeBosque({ profile, links, isOwner, username }) {
-  const anim   = profile.animation || 'bounce'
-  const radius = profile.border_radius ?? 12
-  const gap    = profile.link_gap ?? 9
-  const iconColor = c => profile.icon_color || safeIconColor(c, '#061208')
-
-  return (
-    <>
-      <style>{`
-        @keyframes firefly { 0%,100%{opacity:0;transform:scale(0.4)} 50%{opacity:1;transform:scale(1)} }
-        @keyframes bosque-drift { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(10px,-8px) scale(1.05)} 66%{transform:translate(-7px,6px) scale(0.97)} }
-        @keyframes bosque-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        .bosque-bg {
-          background:radial-gradient(ellipse at 25% 10%,#1a4a1a 0%,transparent 55%),
-                     radial-gradient(ellipse at 75% 90%,#0a3010 0%,transparent 55%),
-                     #050e07;
-          min-height:100vh;
-        }
-        .bosque-mist { position:fixed;inset:0;pointer-events:none;z-index:0;
-          background:radial-gradient(ellipse at 50% 55%,rgba(80,180,80,0.07) 0%,transparent 65%);
-          animation:bosque-drift 22s ease-in-out infinite; }
-        .bosque-blob1 { position:fixed;top:-140px;left:-80px;width:420px;height:420px;border-radius:50%;
-          background:radial-gradient(circle,rgba(40,180,60,0.2),transparent 70%);pointer-events:none;z-index:0; }
-        .bosque-blob2 { position:fixed;bottom:-110px;right:-60px;width:380px;height:380px;border-radius:50%;
-          background:radial-gradient(circle,rgba(20,120,40,0.22),transparent 70%);pointer-events:none;z-index:0; }
-        .bosque-firefly { position:fixed;width:5px;height:5px;border-radius:50%;background:#c8ff80;pointer-events:none;z-index:1;
-          box-shadow:0 0 6px 2px #aaff40,0 0 14px 5px rgba(140,255,40,0.28); }
-        .bosque-name { background:linear-gradient(90deg,#a7f3d0,#6ee7b7,#d1fae5,#a7f3d0);background-size:200% auto;
-          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-          animation:bosque-shimmer 6s linear infinite; }
-        .bosque-card { background:rgba(40,160,60,0.06);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-          border:1px solid rgba(80,180,80,0.15);transition:all .3s; }
-        .bosque-card:hover { background:rgba(70,200,80,0.12);border-color:rgba(140,255,80,0.3);transform:translateY(-1px); }
-      `}</style>
-
-      <div className="bosque-bg relative overflow-hidden">
-        <div className="bosque-mist"></div>
-        <div className="bosque-blob1"></div>
-        <div className="bosque-blob2"></div>
-        {FIREFLIES.map((f, i) => (
-          <div key={i} className="bosque-firefly" style={{
-            left: f.left, top: f.top,
-            animation: `firefly ${f.dur}s ease-in-out infinite`,
-            animationDelay: `${f.delay}s`,
+      <div className="olas-bg relative overflow-hidden">
+        <div className="olas-deep"></div>
+        <div className="olas-wave ow1"></div>
+        <div className="olas-wave ow2"></div>
+        <div className="olas-wave ow3"></div>
+        <div className="olas-wave ow4"></div>
+        {OLAS_BUBBLES.map((b, i) => (
+          <div key={i} className="olas-bubble" style={{
+            left: b.left, bottom: 0,
+            width: b.size, height: b.size,
+            animation: `bubble-rise ${b.dur}s ease-in infinite`,
+            animationDelay: `${b.delay}s`,
           }}></div>
         ))}
 
@@ -813,39 +727,39 @@ function ThemeBosque({ profile, links, isOwner, username }) {
             <div className="text-center mb-10">
               <div className="flex justify-center mb-5">
                 {profile.avatar_url ? (
-                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(100,255,100,0.4)', boxShadow: '0 0 28px rgba(80,220,80,0.45)' }} />
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(56,189,248,0.5)', boxShadow: '0 0 28px rgba(56,189,248,0.4)' }} />
                 ) : (
-                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'radial-gradient(circle,#2d8a3a,#1a5225)', boxShadow: '0 0 28px rgba(80,220,80,0.45)' }}>
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'radial-gradient(circle,#0369a1,#0c4a6e)', boxShadow: '0 0 28px rgba(56,189,248,0.4)' }}>
                     {(profile.name || username).charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
-              <h1 className="bosque-name text-2xl font-bold mb-1">{profile.name || username}</h1>
-              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(160,255,160,0.7)' }}>@{username}</p>
-              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(180,240,180,0.6)' }}>{profile.bio}</p>}
+              <h1 className="olas-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(125,211,252,0.7)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(186,230,253,0.6)' }}>{profile.bio}</p>}
             </div>
 
             <div className="flex flex-col" style={{ gap }}>
               {links?.map(link => (
                 <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
-                  className={`bosque-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  className={`olas-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
                   style={{ borderRadius: radius, textDecoration: 'none' }}>
                   <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
-                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(220,255,220,0.9)' }}>{link.name}</span>
-                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(100,200,100,0.4)' }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(186,230,253,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(125,211,252,0.35)' }} aria-hidden="true"></i>
                 </a>
               ))}
-              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(100,200,100,0.3)' }}>Sin links por ahora</p>}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(125,211,252,0.3)' }}>Sin links por ahora</p>}
             </div>
 
             <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
               <ShareButton dark={true} />
               {isOwner ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(70,200,70,0.15)', color: '#a7f3d0', border: '1px solid rgba(100,200,100,0.3)' }}>
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(56,189,248,0.15)', color: '#7dd3fc', border: '1px solid rgba(56,189,248,0.35)' }}>
                   <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
                 </Link>
               ) : (
-                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(70,200,70,0.1)', color: 'rgba(180,255,180,0.7)', border: '1px solid rgba(100,200,100,0.2)' }}>
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(56,189,248,0.1)', color: 'rgba(125,211,252,0.7)', border: '1px solid rgba(56,189,248,0.2)' }}>
                   Crear mi Linky →
                 </a>
               )}
@@ -864,9 +778,8 @@ export default function ProfilePage({ profile, links, isOwner, username }) {
   if (theme === 'tornasol')  return <ThemeTornasol  profile={profile} links={links} isOwner={isOwner} username={username} />
   if (theme === 'cosmos')    return <ThemeCosmos    profile={profile} links={links} isOwner={isOwner} username={username} />
   if (theme === 'cometas')   return <ThemeCometas   profile={profile} links={links} isOwner={isOwner} username={username} />
-  if (theme === 'neon')      return <ThemeNeon      profile={profile} links={links} isOwner={isOwner} username={username} />
+  if (theme === 'matrix')    return <ThemeMatrix    profile={profile} links={links} isOwner={isOwner} username={username} />
   if (theme === 'sunset')    return <ThemeSunset    profile={profile} links={links} isOwner={isOwner} username={username} />
-  if (theme === 'vaporwave') return <ThemeVaporwave profile={profile} links={links} isOwner={isOwner} username={username} />
-  if (theme === 'bosque')    return <ThemeBosque    profile={profile} links={links} isOwner={isOwner} username={username} />
+  if (theme === 'olas')      return <ThemeOlas      profile={profile} links={links} isOwner={isOwner} username={username} />
   return <ThemeLight profile={profile} links={links} isOwner={isOwner} username={username} />
 }
