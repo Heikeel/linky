@@ -301,24 +301,28 @@ const STARS_SMALL  = generateStars(120, 2000, 2000, 7)
 const STARS_MEDIUM = generateStars(50, 2000, 2000, 31)
 const STARS_BIG    = generateStars(20, 2000, 2000, 97)
 
-// Columnas de binarios para ThemeMatrix — posiciones fijas (sin hydration mismatch)
-const MATRIX_STREAMS = [
-  { left: '3%',  str: '1\n0\n1\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n1\n0\n1\n0', dur: 3.5, delay: 0,   bright: true  },
-  { left: '8%',  str: '0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n1\n0\n0\n1\n0\n1\n1\n0', dur: 4.2, delay: 0.8, bright: false },
-  { left: '14%', str: '1\n1\n0\n1\n0\n0\n1\n0\n1\n1\n0\n1\n1\n0\n0\n1\n0\n1', dur: 3.0, delay: 1.5, bright: false },
-  { left: '20%', str: '0\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n0\n1', dur: 4.8, delay: 0.3, bright: true  },
-  { left: '27%', str: '1\n0\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0\n1\n1', dur: 3.7, delay: 2.2, bright: false },
-  { left: '34%', str: '0\n1\n1\n0\n1\n0\n1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n0', dur: 4.1, delay: 0.6, bright: false },
-  { left: '41%', str: '1\n0\n1\n0\n0\n1\n1\n0\n1\n1\n0\n0\n1\n0\n1\n0\n0\n1', dur: 3.3, delay: 1.0, bright: true  },
-  { left: '48%', str: '0\n1\n0\n1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n0\n1\n0\n1', dur: 4.5, delay: 1.8, bright: false },
-  { left: '55%', str: '1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n0\n1\n1', dur: 3.8, delay: 0.4, bright: false },
-  { left: '62%', str: '0\n0\n1\n1\n0\n1\n0\n1\n0\n0\n1\n0\n1\n1\n0\n1\n0\n0', dur: 4.0, delay: 2.8, bright: true  },
-  { left: '69%', str: '1\n0\n1\n0\n1\n0\n1\n1\n0\n1\n0\n0\n1\n0\n1\n0\n1\n0', dur: 3.2, delay: 1.2, bright: false },
-  { left: '76%', str: '0\n1\n0\n0\n1\n1\n0\n0\n1\n0\n1\n0\n1\n1\n0\n1\n0\n1', dur: 4.6, delay: 0.7, bright: false },
-  { left: '83%', str: '1\n1\n0\n1\n0\n1\n0\n0\n1\n1\n0\n0\n1\n0\n1\n1\n0\n0', dur: 3.6, delay: 2.0, bright: true  },
-  { left: '90%', str: '0\n0\n1\n0\n1\n0\n1\n1\n0\n0\n1\n1\n0\n1\n0\n1\n0\n1', dur: 4.3, delay: 0.9, bright: false },
-  { left: '96%', str: '1\n0\n0\n1\n1\n0\n1\n0\n1\n0\n1\n0\n0\n1\n1\n0\n1\n0', dur: 3.9, delay: 1.6, bright: false },
-]
+// Generador determinista de streams binarios (mismo resultado server/client)
+function makeBinaryStream(seed, count) {
+  let s = seed
+  const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280 }
+  return Array.from({ length: count }, () => rand() > 0.5 ? '1' : '0').join('\n')
+}
+
+// 30 columnas de fondo tenues — cubren toda la pantalla densamente
+const MATRIX_BG_COLS = Array.from({ length: 30 }, (_, i) => ({
+  left:  `${1.2 + i * 3.3}%`,
+  str:   makeBinaryStream(i * 137 + 7, 32),
+  dur:   5.5 + (i % 6) * 1.1,
+  delay: (i * 0.43) % 6,
+}))
+
+// 12 highlights brillantes con rastro que se desvanece hacia arriba
+const MATRIX_HL_COLS = Array.from({ length: 12 }, (_, i) => ({
+  left:  `${4 + i * 8}%`,
+  str:   makeBinaryStream(i * 53 + 11, 7),
+  dur:   2.0 + (i % 4) * 0.85,
+  delay: (i * 0.68) % 5,
+}))
 
 // Burbujas para ThemeOlas — posiciones fijas
 const OLAS_BUBBLES = [
@@ -516,27 +520,36 @@ function ThemeMatrix({ profile, links, isOwner, username }) {
     <>
       <style>{`
         @keyframes matrix-fall { from { top: -30%; } to { top: 115%; } }
-        @keyframes matrix-glow { 0%,100%{text-shadow:0 0 8px #00ff41,0 0 20px #00ff41} 50%{text-shadow:0 0 14px #00ff41,0 0 35px #00ff41,0 0 55px #00ff4155} }
+        @keyframes matrix-glow { 0%,100%{text-shadow:0 0 8px #00ff41,0 0 20px #00ff41} 50%{text-shadow:0 0 14px #00ff41,0 0 40px #00ff41,0 0 60px #00ff4140} }
         .matrix-bg { background:#000000; min-height:100vh; }
-        .matrix-stream { position:fixed;font-family:'Courier New',monospace;font-size:13px;line-height:1.6;text-align:center;white-space:pre;pointer-events:none;z-index:1;user-select:none; }
-        .matrix-card { background:rgba(0,255,65,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(0,255,65,0.18);transition:all .3s; }
-        .matrix-card:hover { background:rgba(0,255,65,0.09);border-color:rgba(0,255,65,0.4); }
+        .matrix-col { position:fixed;font-family:'Courier New',monospace;font-size:13px;line-height:1.65;text-align:center;white-space:pre;pointer-events:none;user-select:none; }
+        .matrix-card { background:rgba(0,255,65,0.04);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(0,255,65,0.18);transition:all .3s; }
+        .matrix-card:hover { background:rgba(0,255,65,0.1);border-color:rgba(0,255,65,0.45); }
         .matrix-name { color:#00ff41;font-family:'Courier New',monospace;animation:matrix-glow 3s ease-in-out infinite; }
-        .matrix-user { color:rgba(0,255,65,0.55);font-family:'Courier New',monospace; }
+        .matrix-user { color:rgba(0,255,65,0.5);font-family:'Courier New',monospace; }
       `}</style>
 
       <div className="matrix-bg relative overflow-hidden">
-        {MATRIX_STREAMS.map((s, i) => (
-          <div key={i} className="matrix-stream" style={{
-            left: s.left,
-            color: s.bright ? '#00ff41' : '#009922',
-            opacity: s.bright ? 0.85 : 0.4,
-            textShadow: s.bright ? '0 0 8px #00ff41' : 'none',
-            animation: `matrix-fall ${s.dur}s linear infinite`,
-            animationDelay: `${s.delay}s`,
-          }}>
-            {s.str}
-          </div>
+
+        {/* Capa 1: 30 columnas tenues — pantalla llena de código */}
+        {MATRIX_BG_COLS.map((col, i) => (
+          <div key={`bg${i}`} className="matrix-col" style={{
+            left: col.left, color: '#00aa33', opacity: 0.14, zIndex: 1,
+            animation: `matrix-fall ${col.dur}s linear infinite`,
+            animationDelay: `${col.delay}s`,
+          }}>{col.str}</div>
+        ))}
+
+        {/* Capa 2: 12 highlights brillantes con rastro que se desvanece hacia arriba */}
+        {MATRIX_HL_COLS.map((col, i) => (
+          <div key={`hl${i}`} className="matrix-col" style={{
+            left: col.left, color: '#00ff41', opacity: 0.95, zIndex: 2,
+            textShadow: '0 0 8px #00ff41, 0 0 18px #00ff4180',
+            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 100%)',
+            maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0) 100%)',
+            animation: `matrix-fall ${col.dur}s linear infinite`,
+            animationDelay: `${col.delay}s`,
+          }}>{col.str}</div>
         ))}
 
         <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
