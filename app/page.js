@@ -1,9 +1,40 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 const ACCENT = '#6c63ff'
+
+// Revela su contenido con un fade + slide-up la primera vez que entra al viewport.
+function Reveal({ children, delay = 0, style }) {
+  const ref = useRef(null)
+  const [shown, setShown] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setShown(true); obs.disconnect() } },
+      { threshold: 0.15 }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        ...style,
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'translateY(0)' : 'translateY(40px)',
+        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 function PhoneMockup({ darkMode }) {
   const phoneBg    = darkMode ? '#1a1a2e' : '#fff'
@@ -53,13 +84,14 @@ function PhoneMockup({ darkMode }) {
   )
 }
 
+// Fondos coloridos variados estilo mosaico — sin nombres, puro color.
 const THEMES_SHOWCASE = [
-  { name: 'Minimalista', bg: '#f5f5f7', accent: '#6c63ff', dark: false },
-  { name: 'Dark mode',   bg: '#0f0f13', accent: '#6c63ff', dark: true  },
-  { name: 'Degradado',   bg: '#fff',    accent: '#a855f7', dark: false },
-  { name: 'Galaxia',     bg: '#05060f', accent: '#a78bfa', dark: true  },
-  { name: 'Meteoros',    bg: '#080b1a', accent: '#38bdf8', dark: true  },
-  { name: 'Tornasol',    bg: '#0f0c29', accent: '#ff0080', dark: true  },
+  { bg: 'linear-gradient(160deg, #ff6ec4, #7873f5)', accent: '#fff',    dark: true,  tilt: -4 },
+  { bg: 'linear-gradient(160deg, #11998e, #38ef7d)', accent: '#fff',    dark: true,  tilt:  3 },
+  { bg: '#f5f5f7',                                    accent: '#6c63ff', dark: false, tilt: -2 },
+  { bg: 'linear-gradient(160deg, #0f0c29, #302b63, #24243e)', accent: '#ff0080', dark: true, tilt: 4 },
+  { bg: 'linear-gradient(160deg, #f7971e, #ffd200)', accent: '#fff',    dark: true,  tilt:  2 },
+  { bg: 'linear-gradient(160deg, #2193b0, #6dd5ed)', accent: '#fff',    dark: true,  tilt: -3 },
 ]
 
 function ThemeCard({ theme }) {
@@ -68,20 +100,21 @@ function ThemeCard({ theme }) {
       width: 100, borderRadius: 20, padding: 12,
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       background: theme.bg, flexShrink: 0,
-      boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
-      border: theme.dark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.06)',
+      transform: `rotate(${theme.tilt}deg)`,
+      boxShadow: '0 12px 36px rgba(0,0,0,0.3)',
+      border: theme.dark ? '1px solid rgba(255,255,255,0.14)' : '1px solid rgba(0,0,0,0.06)',
+      transition: 'transform 0.3s ease',
     }}>
-      <div style={{ width: 36, height: 36, borderRadius: '50%', background: theme.accent, marginBottom: 8 }} />
-      <div style={{ width: 52, height: 7, borderRadius: 3, background: theme.dark ? 'rgba(255,255,255,0.7)' : '#1f2937', marginBottom: 4 }} />
-      <div style={{ width: 36, height: 5, borderRadius: 2.5, background: theme.dark ? 'rgba(255,255,255,0.3)' : '#9ca3af', marginBottom: 12 }} />
+      <div style={{ width: 36, height: 36, borderRadius: '50%', background: theme.dark ? 'rgba(255,255,255,0.85)' : theme.accent, marginBottom: 8 }} />
+      <div style={{ width: 52, height: 7, borderRadius: 3, background: theme.dark ? 'rgba(255,255,255,0.85)' : '#1f2937', marginBottom: 4 }} />
+      <div style={{ width: 36, height: 5, borderRadius: 2.5, background: theme.dark ? 'rgba(255,255,255,0.5)' : '#9ca3af', marginBottom: 12 }} />
       {[1, 2, 3].map(i => (
         <div key={i} style={{
           width: '100%', height: 22, borderRadius: 7, marginBottom: 6,
-          background: theme.dark ? 'rgba(255,255,255,0.07)' : '#f5f3ff',
-          border: theme.dark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e5e7eb',
+          background: theme.dark ? 'rgba(255,255,255,0.22)' : '#f5f3ff',
+          border: theme.dark ? '1px solid rgba(255,255,255,0.25)' : '1px solid #e5e7eb',
         }} />
       ))}
-      <div style={{ paddingTop: 8, fontSize: 9, fontWeight: 600, color: theme.dark ? 'rgba(255,255,255,0.4)' : '#6b7280', textAlign: 'center' }}>{theme.name}</div>
     </div>
   )
 }
@@ -143,7 +176,7 @@ export default function Home() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '90px 80px', maxWidth: 1200, margin: '0 auto', gap: 60,
       }}>
-        <div style={{ flex: 1 }}>
+        <Reveal style={{ flex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600,
@@ -169,32 +202,26 @@ export default function Home() {
             }}>
               Empezar gratis →
             </Link>
-            <Link href="/mike" style={{
-              padding: '16px 32px', borderRadius: 14, fontSize: 16, fontWeight: 600,
-              color: dark ? 'rgba(255,255,255,0.8)' : '#374151',
-              border: `1px solid ${border}`, background: cardBg, textDecoration: 'none',
-            }}>
-              Ver ejemplo
-            </Link>
           </div>
-        </div>
+        </Reveal>
 
-        <div style={{ flexShrink: 0, position: 'relative' }}>
+        <Reveal delay={200} style={{ flexShrink: 0, position: 'relative' }}>
           <div style={{
             position: 'absolute', inset: -40, borderRadius: '50%',
             background: `radial-gradient(circle, ${ACCENT}50 0%, transparent 70%)`,
             filter: 'blur(40px)',
           }} />
           <PhoneMockup darkMode={dark} />
-        </div>
+        </Reveal>
       </section>
 
       {/* ── SECCIÓN 2 — Crea en minutos ── */}
       <section style={{ background: dark ? '#1a1a2e' : ACCENT, padding: '80px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80 }}>
           {/* Editor mockup */}
+          <Reveal style={{ flex: 1 }}>
           <div style={{
-            flex: 1, borderRadius: 24, padding: 28,
+            borderRadius: 24, padding: 28,
             background: 'rgba(255,255,255,0.1)',
             border: '1px solid rgba(255,255,255,0.15)',
             display: 'flex', flexDirection: 'column', gap: 10,
@@ -220,8 +247,9 @@ export default function Home() {
               </div>
             ))}
           </div>
+          </Reveal>
 
-          <div style={{ flex: 1 }}>
+          <Reveal delay={150} style={{ flex: 1 }}>
             <h2 style={{ fontSize: 46, fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 18 }}>
               Crea y personaliza<br />en minutos
             </h2>
@@ -248,14 +276,14 @@ export default function Home() {
             }}>
               Empezar gratis →
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── SECCIÓN 3 — Temas ── */}
       <section style={{ background: dark ? '#0d0d18' : '#1a1a2e', padding: '80px', overflow: 'hidden' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60 }}>
-          <div style={{ flex: 1 }}>
+          <Reveal style={{ flex: 1 }}>
             <h2 style={{ fontSize: 46, fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 18 }}>
               Tu estilo,<br />
               <span style={{ color: ACCENT }}>tus reglas.</span>
@@ -270,10 +298,12 @@ export default function Home() {
             }}>
               Elegir mi tema →
             </Link>
-          </div>
+          </Reveal>
 
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', maxWidth: 560, justifyContent: 'flex-end' }}>
-            {THEMES_SHOWCASE.map(t => <ThemeCard key={t.name} theme={t} />)}
+            {THEMES_SHOWCASE.map((t, i) => (
+              <Reveal key={i} delay={i * 90}><ThemeCard theme={t} /></Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -300,8 +330,9 @@ export default function Home() {
               { num: '01', icon: 'ti-user-plus',  title: 'Crea tu cuenta',       desc: 'Regístrate gratis con email o Google. Elige tu nombre de usuario único.' },
               { num: '02', icon: 'ti-palette',    title: 'Personaliza tu página', desc: 'Agrega tus links, elige temas animados, colores y ajusta cada detalle.' },
               { num: '03', icon: 'ti-share',      title: 'Compártela',            desc: 'Pon tu link de Linky en el bio de todas tus redes sociales y listo.' },
-            ].map(step => (
-              <div key={step.num} style={{
+            ].map((step, i) => (
+              <Reveal key={step.num} delay={i * 130}>
+              <div style={{
                 padding: 32, borderRadius: 24, textAlign: 'left',
                 background: cardBg, border: `1px solid ${border}`,
                 boxShadow: dark ? 'none' : '0 4px 20px rgba(0,0,0,0.06)',
@@ -316,6 +347,7 @@ export default function Home() {
                 <h3 style={{ fontSize: 18, fontWeight: 700, color: text, marginBottom: 10 }}>{step.title}</h3>
                 <p style={{ fontSize: 14, color: muted, lineHeight: 1.65 }}>{step.desc}</p>
               </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -326,7 +358,7 @@ export default function Home() {
         padding: '80px', textAlign: 'center',
         background: dark ? '#1a1a2e' : 'linear-gradient(135deg, #f4f3ff, #ede9ff)',
       }}>
-        <div style={{ maxWidth: 580, margin: '0 auto' }}>
+        <Reveal style={{ maxWidth: 580, margin: '0 auto' }}>
           <h2 style={{ fontSize: 46, fontWeight: 800, color: text, lineHeight: 1.15, marginBottom: 18 }}>
             ¿Listo para tu<br />
             <span style={{ color: ACCENT }}>página Linky?</span>
@@ -341,7 +373,7 @@ export default function Home() {
           }}>
             Crear mi Linky gratis →
           </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ── FOOTER ── */}
