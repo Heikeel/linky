@@ -301,6 +301,24 @@ const STARS_SMALL  = generateStars(120, 2000, 2000, 7)
 const STARS_MEDIUM = generateStars(50, 2000, 2000, 31)
 const STARS_BIG    = generateStars(20, 2000, 2000, 97)
 
+// Luciérnagas para ThemeBosque — posiciones fijas para evitar hydration mismatch
+const FIREFLIES = [
+  { left: '8%',  top: '20%', dur: 3.2, delay: 0    },
+  { left: '22%', top: '45%', dur: 4.1, delay: 1.2  },
+  { left: '15%', top: '70%', dur: 3.8, delay: 0.5  },
+  { left: '55%', top: '15%', dur: 4.5, delay: 2.1  },
+  { left: '72%', top: '38%', dur: 3.1, delay: 0.8  },
+  { left: '88%', top: '60%', dur: 4.8, delay: 1.7  },
+  { left: '38%', top: '80%', dur: 3.5, delay: 3.0  },
+  { left: '65%', top: '75%', dur: 4.2, delay: 0.3  },
+  { left: '42%', top: '30%', dur: 3.7, delay: 2.5  },
+  { left: '80%', top: '25%', dur: 4.0, delay: 1.0  },
+  { left: '28%', top: '55%', dur: 3.3, delay: 1.8  },
+  { left: '90%', top: '85%', dur: 4.6, delay: 0.6  },
+  { left: '5%',  top: '88%', dur: 3.9, delay: 3.5  },
+  { left: '48%', top: '60%', dur: 4.3, delay: 2.9  },
+]
+
 function ThemeCosmos({ profile, links, isOwner, username }) {
   const accent = profile.accent || '#a78bfa'
   const anim   = profile.animation || 'bounce'
@@ -475,6 +493,370 @@ function ThemeCometas({ profile, links, isOwner, username }) {
   )
 }
 
+function ThemeNeon({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#070710')
+
+  return (
+    <>
+      <style>{`
+        @keyframes neon-pulse { 0%,100%{box-shadow:0 0 5px #00f5ff30,0 0 20px #00f5ff15} 50%{box-shadow:0 0 15px #00f5ff70,0 0 40px #00f5ff35} }
+        @keyframes neon-text-glow { 0%,100%{text-shadow:0 0 7px #fff,0 0 15px #00f5ff,0 0 35px #00f5ff} 50%{text-shadow:0 0 7px #fff,0 0 20px #00f5ff,0 0 60px #00f5ff,0 0 90px #00f5ff80} }
+        @keyframes neon-scan { 0%{top:-10%} 100%{top:110%} }
+        @keyframes neon-grid-move { from{background-position:0 0} to{background-position:0 40px} }
+        .neon-bg { background:#070710; min-height:100vh; }
+        .neon-grid { position:fixed;inset:0;pointer-events:none;z-index:0;
+          background-image:linear-gradient(rgba(0,245,255,0.04) 1px,transparent 1px),
+                           linear-gradient(90deg,rgba(0,245,255,0.04) 1px,transparent 1px);
+          background-size:40px 40px;
+          animation:neon-grid-move 5s linear infinite; }
+        .neon-scan { position:fixed;left:0;right:0;height:60px;pointer-events:none;z-index:3;
+          background:linear-gradient(transparent,rgba(0,245,255,0.04),transparent);
+          animation:neon-scan 7s linear infinite; }
+        .neon-name { color:#ffffff; animation:neon-text-glow 3s ease-in-out infinite; }
+        .neon-user { color:#00f5ff; text-shadow:0 0 10px #00f5ff; }
+        .neon-card { background:rgba(0,245,255,0.03);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+          border:1px solid rgba(0,245,255,0.2);transition:all .3s;
+          animation:neon-pulse 4s ease-in-out infinite; }
+        .neon-card:hover { background:rgba(0,245,255,0.09);border-color:rgba(0,245,255,0.6); }
+        .neon-avatar { border:2px solid #00f5ff;box-shadow:0 0 20px #00f5ff60; }
+      `}</style>
+
+      <div className="neon-bg relative overflow-hidden">
+        <div className="neon-grid"></div>
+        <div className="neon-scan"></div>
+
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover neon-avatar" />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white neon-avatar" style={{ background: '#0a1a3a' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="neon-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="neon-user text-sm font-semibold mb-4">@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(0,245,255,0.45)' }}>{profile.bio}</p>}
+            </div>
+
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`neon-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(0,245,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(0,245,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,245,255,0.12)', color: '#00f5ff', border: '1px solid rgba(0,245,255,0.4)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,245,255,0.08)', color: 'rgba(0,245,255,0.7)', border: '1px solid rgba(0,245,255,0.2)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeSunset({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+
+  return (
+    <>
+      <style>{`
+        @keyframes sunset-shift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes sunset-sway  { 0%,100%{transform:translateX(0) scaleY(1)} 50%{transform:translateX(-25px) scaleY(1.04)} }
+        @keyframes sunset-sway2 { 0%,100%{transform:translateX(0) scaleY(1)} 50%{transform:translateX(20px) scaleY(0.96)} }
+        @keyframes sun-pulse { 0%,100%{opacity:0.7} 50%{opacity:1} }
+        .sunset-bg {
+          background:linear-gradient(-45deg,#1a0533,#b5134f,#e84a0c,#f9a825,#e84a0c,#b5134f);
+          background-size:400% 400%;
+          animation:sunset-shift 18s ease infinite;
+          min-height:100vh;
+        }
+        .sunset-orb { position:fixed;top:-140px;left:50%;transform:translateX(-50%);
+          width:360px;height:360px;border-radius:50%;
+          background:radial-gradient(circle,rgba(255,200,80,0.55) 0%,rgba(255,100,30,0.25) 50%,transparent 70%);
+          filter:blur(25px);pointer-events:none;z-index:0;
+          animation:sun-pulse 5s ease-in-out infinite; }
+        .sunset-wave { position:fixed;bottom:0;left:-10%;width:120%;pointer-events:none;z-index:0;border-radius:50% 50% 0 0; }
+        .sw1 { height:180px;background:rgba(180,30,50,0.22);animation:sunset-sway 9s ease-in-out infinite; }
+        .sw2 { height:130px;background:rgba(220,60,20,0.18);animation:sunset-sway2 11s ease-in-out infinite; }
+        .sw3 { height:80px;background:rgba(150,20,60,0.18);animation:sunset-sway 8s ease-in-out infinite reverse; }
+        .sunset-card { background:rgba(255,255,255,0.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,200,150,0.22);transition:all .3s; }
+        .sunset-card:hover { background:rgba(255,255,255,0.22);transform:translateY(-1px); }
+        .sunset-name { color:#fff;text-shadow:0 2px 20px rgba(255,120,30,0.9); }
+      `}</style>
+
+      <div className="sunset-bg relative overflow-hidden">
+        <div className="sunset-orb"></div>
+        <div className="sunset-wave sw3"></div>
+        <div className="sunset-wave sw2"></div>
+        <div className="sunset-wave sw1"></div>
+
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(255,190,80,0.6)', boxShadow: '0 0 30px rgba(255,120,30,0.5)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'rgba(220,70,20,0.7)', border: '3px solid rgba(255,200,80,0.5)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="sunset-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,220,140,0.9)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,240,200,0.7)' }}>{profile.bio}</p>}
+            </div>
+
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`sunset-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: profile.icon_color || '#fff' }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.95)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,200,150,0.45)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,200,150,0.4)' }}>Sin links por ahora</p>}
+            </div>
+
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,255,255,0.18)', color: '#fff', border: '1px solid rgba(255,220,150,0.35)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,240,200,0.8)', border: '1px solid rgba(255,200,100,0.25)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeVaporwave({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#0f0221')
+
+  return (
+    <>
+      <style>{`
+        @keyframes vw-glow { 0%,100%{opacity:0.75} 50%{opacity:1} }
+        @keyframes vw-scan { 0%{top:-5%} 100%{top:105%} }
+        @keyframes vw-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .vw-bg {
+          background:linear-gradient(180deg,#0f0221 0%,#1a0533 45%,#0f0a1e 100%);
+          min-height:100vh;
+        }
+        .vw-sun { position:fixed;top:64px;left:50%;transform:translateX(-50%);
+          width:220px;height:110px;overflow:hidden;border-radius:110px 110px 0 0;
+          background:linear-gradient(180deg,#ff71ce,#f9c846,#ff8a00);
+          pointer-events:none;z-index:0;
+          box-shadow:0 0 70px rgba(255,113,206,0.55);
+          animation:vw-glow 4s ease-in-out infinite; }
+        .vw-sun::after { content:'';position:absolute;inset:0;
+          background:repeating-linear-gradient(transparent,transparent 13px,#0f0221 13px,#0f0221 15px); }
+        .vw-grid { position:fixed;bottom:0;left:0;right:0;height:52vh;
+          pointer-events:none;z-index:0;
+          background:
+            linear-gradient(transparent 0%,rgba(255,113,206,0.12) 100%),
+            repeating-linear-gradient(90deg,rgba(1,205,254,0.14) 0px,rgba(1,205,254,0.14) 1px,transparent 1px,transparent 55px),
+            repeating-linear-gradient(0deg,rgba(1,205,254,0.14) 0px,rgba(1,205,254,0.14) 1px,transparent 1px,transparent 36px);
+          transform:perspective(280px) rotateX(44deg);
+          transform-origin:bottom center; }
+        .vw-scan { position:fixed;left:0;right:0;height:2px;
+          background:rgba(255,113,206,0.07);pointer-events:none;z-index:3;
+          animation:vw-scan 9s linear infinite; }
+        .vw-name { background:linear-gradient(90deg,#ff71ce,#01cdfe,#b4a0ff,#ff71ce);background-size:200% auto;
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+          animation:vw-shimmer 5s linear infinite; }
+        .vw-card { background:rgba(255,113,206,0.06);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+          border:1px solid rgba(255,113,206,0.2);transition:all .3s; }
+        .vw-card:hover { background:rgba(1,205,254,0.1);border-color:rgba(1,205,254,0.4); }
+      `}</style>
+
+      <div className="vw-bg relative overflow-hidden">
+        <div className="vw-sun"></div>
+        <div className="vw-grid"></div>
+        <div className="vw-scan"></div>
+
+        <div className="relative z-10 flex flex-col items-center pt-52 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(255,113,206,0.6)', boxShadow: '0 0 25px rgba(255,113,206,0.5), 0 0 50px rgba(1,205,254,0.25)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'linear-gradient(135deg,#ff71ce,#01cdfe)', boxShadow: '0 0 25px rgba(255,113,206,0.5)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="vw-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: '#01cdfe', textShadow: '0 0 10px #01cdfe' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,200,240,0.65)' }}>{profile.bio}</p>}
+            </div>
+
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`vw-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,230,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,113,206,0.4)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,113,206,0.3)' }}>Sin links por ahora</p>}
+            </div>
+
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,113,206,0.15)', color: '#ff71ce', border: '1px solid rgba(255,113,206,0.4)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,113,206,0.1)', color: 'rgba(255,200,240,0.7)', border: '1px solid rgba(255,113,206,0.25)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeBosque({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#061208')
+
+  return (
+    <>
+      <style>{`
+        @keyframes firefly { 0%,100%{opacity:0;transform:scale(0.4)} 50%{opacity:1;transform:scale(1)} }
+        @keyframes bosque-drift { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(10px,-8px) scale(1.05)} 66%{transform:translate(-7px,6px) scale(0.97)} }
+        @keyframes bosque-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .bosque-bg {
+          background:radial-gradient(ellipse at 25% 10%,#1a4a1a 0%,transparent 55%),
+                     radial-gradient(ellipse at 75% 90%,#0a3010 0%,transparent 55%),
+                     #050e07;
+          min-height:100vh;
+        }
+        .bosque-mist { position:fixed;inset:0;pointer-events:none;z-index:0;
+          background:radial-gradient(ellipse at 50% 55%,rgba(80,180,80,0.07) 0%,transparent 65%);
+          animation:bosque-drift 22s ease-in-out infinite; }
+        .bosque-blob1 { position:fixed;top:-140px;left:-80px;width:420px;height:420px;border-radius:50%;
+          background:radial-gradient(circle,rgba(40,180,60,0.2),transparent 70%);pointer-events:none;z-index:0; }
+        .bosque-blob2 { position:fixed;bottom:-110px;right:-60px;width:380px;height:380px;border-radius:50%;
+          background:radial-gradient(circle,rgba(20,120,40,0.22),transparent 70%);pointer-events:none;z-index:0; }
+        .bosque-firefly { position:fixed;width:5px;height:5px;border-radius:50%;background:#c8ff80;pointer-events:none;z-index:1;
+          box-shadow:0 0 6px 2px #aaff40,0 0 14px 5px rgba(140,255,40,0.28); }
+        .bosque-name { background:linear-gradient(90deg,#a7f3d0,#6ee7b7,#d1fae5,#a7f3d0);background-size:200% auto;
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+          animation:bosque-shimmer 6s linear infinite; }
+        .bosque-card { background:rgba(40,160,60,0.06);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+          border:1px solid rgba(80,180,80,0.15);transition:all .3s; }
+        .bosque-card:hover { background:rgba(70,200,80,0.12);border-color:rgba(140,255,80,0.3);transform:translateY(-1px); }
+      `}</style>
+
+      <div className="bosque-bg relative overflow-hidden">
+        <div className="bosque-mist"></div>
+        <div className="bosque-blob1"></div>
+        <div className="bosque-blob2"></div>
+        {FIREFLIES.map((f, i) => (
+          <div key={i} className="bosque-firefly" style={{
+            left: f.left, top: f.top,
+            animation: `firefly ${f.dur}s ease-in-out infinite`,
+            animationDelay: `${f.delay}s`,
+          }}></div>
+        ))}
+
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(100,255,100,0.4)', boxShadow: '0 0 28px rgba(80,220,80,0.45)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'radial-gradient(circle,#2d8a3a,#1a5225)', boxShadow: '0 0 28px rgba(80,220,80,0.45)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="bosque-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(160,255,160,0.7)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(180,240,180,0.6)' }}>{profile.bio}</p>}
+            </div>
+
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`bosque-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(220,255,220,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(100,200,100,0.4)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(100,200,100,0.3)' }}>Sin links por ahora</p>}
+            </div>
+
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(70,200,70,0.15)', color: '#a7f3d0', border: '1px solid rgba(100,200,100,0.3)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(70,200,70,0.1)', color: 'rgba(180,255,180,0.7)', border: '1px solid rgba(100,200,100,0.2)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export default function ProfilePage({ profile, links, isOwner, username }) {
   const theme = profile.theme || 'light'
   if (theme === 'dark')      return <ThemeDark      profile={profile} links={links} isOwner={isOwner} username={username} />
@@ -482,5 +864,9 @@ export default function ProfilePage({ profile, links, isOwner, username }) {
   if (theme === 'tornasol')  return <ThemeTornasol  profile={profile} links={links} isOwner={isOwner} username={username} />
   if (theme === 'cosmos')    return <ThemeCosmos    profile={profile} links={links} isOwner={isOwner} username={username} />
   if (theme === 'cometas')   return <ThemeCometas   profile={profile} links={links} isOwner={isOwner} username={username} />
+  if (theme === 'neon')      return <ThemeNeon      profile={profile} links={links} isOwner={isOwner} username={username} />
+  if (theme === 'sunset')    return <ThemeSunset    profile={profile} links={links} isOwner={isOwner} username={username} />
+  if (theme === 'vaporwave') return <ThemeVaporwave profile={profile} links={links} isOwner={isOwner} username={username} />
+  if (theme === 'bosque')    return <ThemeBosque    profile={profile} links={links} isOwner={isOwner} username={username} />
   return <ThemeLight profile={profile} links={links} isOwner={isOwner} username={username} />
 }

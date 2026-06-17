@@ -226,6 +226,130 @@ export default function PhonePreview({ profile, links }) {
       )
     }
 
+    if (theme === 'neon') {
+      return (
+        <div className="relative overflow-hidden" style={{ background: '#070710', minHeight: 520 }}>
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'linear-gradient(rgba(0,245,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.04) 1px,transparent 1px)',
+            backgroundSize: '30px 30px',
+          }}></div>
+          <div className="relative z-10 p-4 pb-6">
+            <div className="text-center mb-5">
+              <Avatar size={16} border="rgba(0,245,255,0.6)" />
+              <p className="text-sm font-bold text-white">{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: '#00f5ff' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(0,245,255,0.45)' }}>{bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links.length === 0
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(0,245,255,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                : links.map(link => (
+                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                    style={{ background: 'rgba(0,245,255,0.04)', borderRadius: radius, border: '1px solid rgba(0,245,255,0.22)', boxShadow: '0 0 8px rgba(0,245,255,0.15)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#070710') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1 text-white">{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(0,245,255,0.3)' }} aria-hidden="true"></i>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (theme === 'sunset') {
+      return (
+        <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#8b1a4a,#c2185b,#e84a0c,#f9a825)', minHeight: 520 }}>
+          <div className="absolute" style={{ top: -100, left: '50%', transform: 'translateX(-50%)', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle,rgba(255,210,80,0.5) 0%,transparent 65%)', filter: 'blur(20px)' }}></div>
+          <div className="absolute" style={{ bottom: 0, left: '-10%', width: '120%', height: 120, background: 'rgba(140,20,40,0.25)', borderRadius: '50% 50% 0 0' }}></div>
+          <div className="relative z-10 p-4 pb-6">
+            <div className="text-center mb-5">
+              <Avatar size={16} border="rgba(255,200,80,0.6)" />
+              <p className="text-sm font-bold text-white" style={{ textShadow: '0 2px 12px rgba(255,100,20,0.8)' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,220,140,0.9)' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,240,200,0.7)' }}>{bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links.length === 0
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,200,150,0.4)' }}>Añade links desde &quot;Links&quot;</div>
+                : links.map(link => (
+                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                    style={{ background: 'rgba(255,255,255,0.14)', borderRadius: radius, border: '1px solid rgba(255,200,150,0.22)', backdropFilter: 'blur(12px)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0 text-white`} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1 text-white">{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,200,150,0.45)' }} aria-hidden="true"></i>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (theme === 'vaporwave') {
+      return (
+        <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg,#0f0221 0%,#1a0533 50%,#0f0a1e 100%)', minHeight: 520 }}>
+          <div className="absolute" style={{ top: 20, left: '50%', transform: 'translateX(-50%)', width: 160, height: 80, overflow: 'hidden', borderRadius: '80px 80px 0 0', background: 'linear-gradient(180deg,#ff71ce,#f9c846,#ff8a00)', boxShadow: '0 0 40px rgba(255,113,206,0.4)' }}>
+            <div className="absolute inset-0" style={{ background: 'repeating-linear-gradient(transparent,transparent 10px,#0f0221 10px,#0f0221 12px)' }}></div>
+          </div>
+          <div className="absolute" style={{ bottom: 0, left: 0, right: 0, height: '35%', background: 'repeating-linear-gradient(90deg,rgba(1,205,254,0.12) 0px,rgba(1,205,254,0.12) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(0deg,rgba(1,205,254,0.12) 0px,rgba(1,205,254,0.12) 1px,transparent 1px,transparent 28px)', transform: 'perspective(180px) rotateX(42deg)', transformOrigin: 'bottom center' }}></div>
+          <div className="relative z-10 pt-24 px-4 pb-6">
+            <div className="text-center mb-5">
+              <Avatar size={16} border="rgba(255,113,206,0.6)" />
+              <p className="text-sm font-bold" style={{ color: '#ff71ce' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: '#01cdfe', textShadow: '0 0 8px #01cdfe' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,200,240,0.65)' }}>{bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links.length === 0
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,113,206,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                : links.map(link => (
+                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                    style={{ background: 'rgba(255,113,206,0.07)', borderRadius: radius, border: '1px solid rgba(255,113,206,0.22)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#0f0221') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,230,255,0.9)' }}>{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,113,206,0.4)' }} aria-hidden="true"></i>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (theme === 'bosque') {
+      return (
+        <div className="relative overflow-hidden" style={{ background: 'radial-gradient(ellipse at 30% 15%,#1a4a1a,transparent 55%),radial-gradient(ellipse at 70% 85%,#0a3010,transparent 55%),#050e07', minHeight: 520 }}>
+          <div className="absolute" style={{ top: -100, left: -60, width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle,rgba(40,180,60,0.18),transparent 70%)' }}></div>
+          <div className="absolute" style={{ bottom: -80, right: -40, width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle,rgba(20,120,40,0.2),transparent 70%)' }}></div>
+          <div className="relative z-10 p-4 pb-6">
+            <div className="text-center mb-5">
+              <Avatar size={16} border="rgba(100,255,100,0.4)" />
+              <p className="text-sm font-bold" style={{ color: '#a7f3d0' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(160,255,160,0.7)' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(180,240,180,0.6)' }}>{bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links.length === 0
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(100,200,100,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                : links.map(link => (
+                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                    style={{ background: 'rgba(40,160,60,0.07)', borderRadius: radius, border: '1px solid rgba(80,180,80,0.16)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#050e07') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(220,255,220,0.9)' }}>{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(100,200,100,0.4)' }} aria-hidden="true"></i>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     // light (default)
     return (
       <div className="p-4 pb-6 relative overflow-hidden" style={{ background: bg, minHeight: 520 }}>
