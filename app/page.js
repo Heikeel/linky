@@ -197,6 +197,9 @@ export default function Home() {
         }
       `}</style>
 
+      {/* Nebulosa como fondo fijo de toda la página */}
+      <div style={{ position: 'fixed', inset: 0, backgroundImage: 'url(/cta-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.18, zIndex: 0, pointerEvents: 'none' }} />
+
       <Particles />
 
       {/* ── HEADER ── */}
@@ -219,9 +222,8 @@ export default function Home() {
       {/* ══ HERO ══ */}
       <section style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
         {/* AI-generated background */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/hero-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', opacity: 0.85, zIndex: 0 }} />
-        {/* dark overlay so text stays readable */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(6,6,15,.75) 35%, rgba(6,6,15,.2) 100%)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/steps-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.75, zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(6,6,15,.8) 35%, rgba(6,6,15,.25) 100%)', zIndex: 0 }} />
         <Blob style={{ top: '-10%', left: '-8%' }} color={C1} size={520} delay={0} />
         <Blob style={{ bottom: '-15%', right: '-6%' }} color={C2} size={480} delay={6} />
 
@@ -364,8 +366,6 @@ export default function Home() {
 
       {/* ══ STEPS ══ */}
       <section style={{ padding: '100px 80px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/steps-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.55, zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.6)', zIndex: 0 }} />
         <Blob style={{ top: '-10%', right: '5%' }} color={C1} size={400} delay={10} />
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
           <Reveal from="up">
@@ -398,8 +398,6 @@ export default function Home() {
 
       {/* ══ CTA ══ */}
       <section className="lk-cta-wrap" style={{ padding: '100px 80px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/cta-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.5, zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.6)', zIndex: 0 }} />
         <Blob style={{ top: '-20%', left: '50%', transform: 'translateX(-50%)' }} color={C1} size={580} delay={0} />
         <Reveal from="scale" style={{ position: 'relative', zIndex: 1, maxWidth: 540, margin: '0 auto' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(108,99,255,.18)', color: C1, marginBottom: 28, border: '1px solid rgba(108,99,255,.2)' }}>
