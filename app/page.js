@@ -65,11 +65,11 @@ function Reveal({ children, delay = 0, from = 'up', style, className }) {
 
 /* ─── Phone mockup ─── */
 const LINKS = [
-  { icon: 'ti-brand-instagram', name: 'Instagram',   color: '#e1306c' },
-  { icon: 'ti-brand-youtube',   name: 'YouTube',     color: '#ff4444' },
-  { icon: 'ti-brand-tiktok',    name: 'TikTok',      color: '#fff' },
-  { icon: 'ti-brand-spotify',   name: 'Spotify',     color: '#1db954' },
-  { icon: 'ti-link',            name: 'Mi portfolio', color: C1 },
+  { icon: 'ti-brand-tiktok',    name: 'TikTok',       color: '#fff' },
+  { icon: 'ti-brand-spotify',   name: 'Spotify',      color: '#1db954' },
+  { icon: 'ti-brand-x',         name: 'Twitter / X',  color: '#fff' },
+  { icon: 'ti-brand-twitch',    name: 'Twitch',       color: '#9146ff' },
+  { icon: 'ti-shopping-cart',   name: 'Mi tienda',    color: C2 },
 ]
 const PHONE_BGS = ['#0f0f1a', 'linear-gradient(160deg,#0f0c29,#302b63)', 'linear-gradient(160deg,#11998e,#38ef7d20)', 'linear-gradient(160deg,#1a0533,#6c63ff22)']
 
@@ -137,7 +137,7 @@ const THEMES = [
 
 /* ═══════════════════════════════════════════ PAGE ═══════════════════════════════════════════ */
 export default function Home() {
-  const [visibleLinks, setVisibleLinks]   = useState(5)
+  const [visibleLinks, setVisibleLinks]   = useState(0)
   const [phoneBgIdx,   setPhoneBgIdx]     = useState(0)
   const [headerSolid,  setHeaderSolid]    = useState(false)
   const linksSectionRef  = useRef(null)
@@ -316,7 +316,7 @@ export default function Home() {
 
       {/* ══ THEMES SECTION ══ */}
       <section ref={themesSectionRef} style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/themes-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'top center', opacity: 0.65, zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/themes-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center 30%', opacity: 0.65, zIndex: 0 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.55)', zIndex: 0 }} />
         <Blob style={{ top: '15%', left: '20%' }} color={C1} size={400} delay={8} />
         <Blob style={{ bottom: '10%', right: '10%' }} color={C2} size={360} delay={2} />
@@ -331,13 +331,8 @@ export default function Home() {
               <span style={{ background: `linear-gradient(90deg,${C1},${C2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>tus reglas.</span>
             </h2>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,.48)', lineHeight: 1.75, marginBottom: 28, maxWidth: 400 }}>
-              7 temas visuales únicos — desde minimalista hasta galaxia animada. Cada uno completamente personalizable.
+              Temas visuales únicos — desde minimalista hasta galaxia animada. Cada uno completamente personalizable.
             </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {THEMES.map((t, i) => (
-                <div key={t.label} style={{ padding: '6px 14px', borderRadius: 999, fontSize: 12, fontWeight: 600, background: i === phoneBgIdx ? t.bg : 'rgba(255,255,255,.07)', color: '#fff', border: '1px solid rgba(255,255,255,.1)', transition: 'background .5s' }}>{t.label}</div>
-              ))}
-            </div>
           </Reveal>
 
           <Reveal from="right" delay={100} className="lk-tcards" style={{ flexShrink: 0, position: 'relative', width: 340, height: 320 }}>
