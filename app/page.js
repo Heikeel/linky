@@ -316,7 +316,7 @@ export default function Home() {
 
       {/* ══ THEMES SECTION ══ */}
       <section ref={themesSectionRef} style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/themes-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center top', opacity: 0.6, zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/themes-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'top center', opacity: 0.65, zIndex: 0 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.55)', zIndex: 0 }} />
         <Blob style={{ top: '15%', left: '20%' }} color={C1} size={400} delay={8} />
         <Blob style={{ bottom: '10%', right: '10%' }} color={C2} size={360} delay={2} />
@@ -394,27 +394,6 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* ══ CTA ══ */}
-      <section className="lk-cta-wrap" style={{ padding: '100px 80px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <Blob style={{ top: '-20%', left: '50%', transform: 'translateX(-50%)' }} color={C1} size={580} delay={0} />
-        <Reveal from="scale" style={{ position: 'relative', zIndex: 1, maxWidth: 540, margin: '0 auto' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(108,99,255,.18)', color: C1, marginBottom: 28, border: '1px solid rgba(108,99,255,.2)' }}>
-            <i className="ti ti-sparkles" /> Es gratis
-          </div>
-          <h2 style={{ fontSize: 54, fontWeight: 900, lineHeight: 1.08, marginBottom: 20, letterSpacing: '-1.5px' }}>
-            ¿Listo para tu<br />
-            <span style={{ background: `linear-gradient(90deg,${C1},${C2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>página Linky?</span>
-          </h2>
-          <p style={{ fontSize: 17, color: 'rgba(255,255,255,.42)', marginBottom: 40, lineHeight: 1.7 }}>
-            Crea tu página de links hoy mismo. Sin tarjeta de crédito.
-          </p>
-          <Link href="/register" className="lk-cta" style={{ display: 'inline-block', padding: '20px 48px', borderRadius: 16, fontSize: 18, fontWeight: 700, color: '#fff', background: `linear-gradient(135deg,${C1},${C2})`, textDecoration: 'none', boxShadow: `0 14px 48px rgba(108,99,255,.5)` }}>
-            Crear mi Linky gratis <span className="lk-bob">→</span>
-          </Link>
-          <div style={{ marginTop: 22, fontSize: 13, color: 'rgba(255,255,255,.22)' }}>Sin tarjeta · Sin compromisos · Siempre gratis</div>
-        </Reveal>
       </section>
 
       {/* ── FOOTER ── */}
