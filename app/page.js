@@ -313,7 +313,9 @@ export default function Home() {
       </section>
 
       {/* ══ THEMES SECTION ══ */}
-      <section ref={themesSectionRef} style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,.25)' }}>
+      <section ref={themesSectionRef} style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/themes-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center top', opacity: 0.6, zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.55)', zIndex: 0 }} />
         <Blob style={{ top: '15%', left: '20%' }} color={C1} size={400} delay={8} />
         <Blob style={{ bottom: '10%', right: '10%' }} color={C2} size={360} delay={2} />
 
@@ -362,6 +364,8 @@ export default function Home() {
 
       {/* ══ STEPS ══ */}
       <section style={{ padding: '100px 80px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/steps-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.55, zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.6)', zIndex: 0 }} />
         <Blob style={{ top: '-10%', right: '5%' }} color={C1} size={400} delay={10} />
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
           <Reveal from="up">
@@ -394,6 +398,8 @@ export default function Home() {
 
       {/* ══ CTA ══ */}
       <section className="lk-cta-wrap" style={{ padding: '100px 80px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/cta-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.5, zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.6)', zIndex: 0 }} />
         <Blob style={{ top: '-20%', left: '50%', transform: 'translateX(-50%)' }} color={C1} size={580} delay={0} />
         <Reveal from="scale" style={{ position: 'relative', zIndex: 1, maxWidth: 540, margin: '0 auto' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(108,99,255,.18)', color: C1, marginBottom: 28, border: '1px solid rgba(108,99,255,.2)' }}>
