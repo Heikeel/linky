@@ -64,16 +64,16 @@ function Reveal({ children, delay = 0, from = 'up', style, className }) {
 }
 
 /* ─── Phone mockup ─── */
-const LINKS = [
+const LINKS_SECTION2 = [
+  { icon: 'ti-brand-instagram', name: 'Instagram',    color: '#e1306c' },
+  { icon: 'ti-brand-youtube',   name: 'YouTube',      color: '#ff4444' },
   { icon: 'ti-brand-tiktok',    name: 'TikTok',       color: '#fff' },
   { icon: 'ti-brand-spotify',   name: 'Spotify',      color: '#1db954' },
-  { icon: 'ti-brand-x',         name: 'Twitter / X',  color: '#fff' },
-  { icon: 'ti-brand-twitch',    name: 'Twitch',       color: '#9146ff' },
   { icon: 'ti-shopping-cart',   name: 'Mi tienda',    color: C2 },
 ]
 const PHONE_BGS = ['#0f0f1a', 'linear-gradient(160deg,#0f0c29,#302b63)', 'linear-gradient(160deg,#11998e,#38ef7d20)', 'linear-gradient(160deg,#1a0533,#6c63ff22)']
 
-function Phone({ visibleLinks = 5, bgIdx = 0, scale = 1 }) {
+function Phone({ visibleLinks = 5, bgIdx = 0, scale = 1, name = 'Sara', handle = '@sara.creates', bio = 'Artista · España', avatar = 'S', avatarGrad = 'linear-gradient(135deg,#e1306c,#a855f7)', links = LINKS_SECTION2 }) {
   return (
     <div style={{
       width: 210, height: 430, borderRadius: 38, flexShrink: 0,
@@ -89,18 +89,18 @@ function Phone({ visibleLinks = 5, bgIdx = 0, scale = 1 }) {
         transition: 'background .8s ease',
       }}>
         <div style={{ position: 'absolute', top: 14, left: '50%', transform: 'translateX(-50%)', width: 50, height: 5, borderRadius: 3, background: 'rgba(0,0,0,.3)' }} />
-        <div style={{ width: 60, height: 60, borderRadius: '50%', background: `linear-gradient(135deg,${C1},${C2})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 22, fontWeight: 800, marginBottom: 8, boxShadow: `0 6px 20px rgba(108,99,255,.4)` }}>M</div>
-        <div style={{ fontWeight: 700, fontSize: 13, color: '#fff', marginBottom: 2 }}>Mike</div>
-        <div style={{ fontSize: 11, color: C1, fontWeight: 600, marginBottom: 4 }}>@mike</div>
-        <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', marginBottom: 16, textAlign: 'center', lineHeight: 1.4 }}>Creador · México</div>
-        {LINKS.map((l, i) => (
+        <div style={{ width: 60, height: 60, borderRadius: '50%', background: avatarGrad, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 22, fontWeight: 800, marginBottom: 8, boxShadow: `0 6px 20px rgba(108,99,255,.4)` }}>{avatar}</div>
+        <div style={{ fontWeight: 700, fontSize: 13, color: '#fff', marginBottom: 2 }}>{name}</div>
+        <div style={{ fontSize: 11, color: C1, fontWeight: 600, marginBottom: 4 }}>{handle}</div>
+        <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', marginBottom: 16, textAlign: 'center', lineHeight: 1.4 }}>{bio}</div>
+        {links.map((l, i) => (
           <div key={l.name} style={{
             width: '100%', padding: '8px 12px', borderRadius: 10,
             background: 'rgba(255,255,255,.07)', border: '1px solid rgba(255,255,255,.1)',
             display: 'flex', alignItems: 'center', gap: 9, marginBottom: 6,
             opacity: i < visibleLinks ? 1 : 0,
             transform: i < visibleLinks ? 'none' : 'translateY(8px)',
-            transition: `opacity .4s ease ${i * 80}ms, transform .4s ease ${i * 80}ms`,
+            transition: `opacity .25s ease ${i * 40}ms, transform .25s ease ${i * 40}ms`,
           }}>
             <i className={`ti ${l.icon}`} style={{ color: l.color, fontSize: 14 }} />
             <span style={{ fontSize: 11, fontWeight: 600, color: '#fff' }}>{l.name}</span>
@@ -151,10 +151,11 @@ export default function Home() {
         raf = null
         setHeaderSolid(scrollY > 60)
 
-        // Links section: reveal links progressively
+        // Links section: reveal links as section enters viewport
         if (linksSectionRef.current) {
           const r = linksSectionRef.current.getBoundingClientRect()
-          const p = Math.max(0, Math.min(1, 1 - r.bottom / (r.height + innerHeight) * 1.4))
+          // start when top hits 80% of viewport, complete after scrolling 45% of viewport height
+          const p = Math.max(0, Math.min(1, (innerHeight * 0.8 - r.top) / (innerHeight * 0.45)))
           setVisibleLinks(Math.round(p * 5))
         }
 
