@@ -87,11 +87,63 @@ const PROFILES = [
       { icon: 'ti-shopping-cart',   name: 'Mi tienda',  color: C2 },
     ],
   },
+  {
+    name: 'Alex', handle: '@alex.fitness', bio: 'Coach · Argentina', avatar: 'A',
+    avatarGrad: 'linear-gradient(135deg,#f7971e,#f44336)',
+    links: [
+      { icon: 'ti-brand-youtube',   name: 'YouTube',     color: '#ff4444' },
+      { icon: 'ti-brand-instagram', name: 'Instagram',   color: '#e1306c' },
+      { icon: 'ti-link',            name: 'Mi programa', color: '#f7971e' },
+      { icon: 'ti-brand-whatsapp',  name: 'WhatsApp',    color: '#25d366' },
+      { icon: 'ti-brand-tiktok',    name: 'TikTok',      color: '#fff' },
+    ],
+  },
+  {
+    name: 'Mia', handle: '@mia.music', bio: 'Cantante · Colombia', avatar: 'M',
+    avatarGrad: 'linear-gradient(135deg,#11998e,#38ef7d)',
+    links: [
+      { icon: 'ti-brand-spotify',   name: 'Spotify',     color: '#1db954' },
+      { icon: 'ti-brand-youtube',   name: 'YouTube',     color: '#ff4444' },
+      { icon: 'ti-brand-apple',     name: 'Apple Music', color: '#fc3c44' },
+      { icon: 'ti-brand-soundcloud',name: 'SoundCloud',  color: '#ff5500' },
+      { icon: 'ti-brand-tiktok',    name: 'TikTok',      color: '#fff' },
+    ],
+  },
+  {
+    name: 'Luca', handle: '@luca.photo', bio: 'Fotógrafo · Italia', avatar: 'L',
+    avatarGrad: 'linear-gradient(135deg,#c471ed,#f64f59)',
+    links: [
+      { icon: 'ti-brand-instagram', name: 'Instagram',  color: '#e1306c' },
+      { icon: 'ti-link',            name: 'Portfolio',  color: '#c471ed' },
+      { icon: 'ti-brand-behance',   name: 'Behance',    color: '#1769ff' },
+      { icon: 'ti-brand-vsco',      name: 'VSCO',       color: '#fff' },
+      { icon: 'ti-shopping-cart',   name: 'Prints',     color: C2 },
+    ],
+  },
+  {
+    name: 'Yuki', handle: '@yuki.design', bio: 'UI Designer · Japón', avatar: 'Y',
+    avatarGrad: 'linear-gradient(135deg,#4facfe,#00f2fe)',
+    links: [
+      { icon: 'ti-brand-dribbble',  name: 'Dribbble',   color: '#ea4c89' },
+      { icon: 'ti-brand-behance',   name: 'Behance',    color: '#1769ff' },
+      { icon: 'ti-brand-figma',     name: 'Figma',      color: '#a259ff' },
+      { icon: 'ti-brand-linkedin',  name: 'LinkedIn',   color: '#0a66c2' },
+      { icon: 'ti-link',            name: 'Portfolio',  color: '#4facfe' },
+    ],
+  },
 ]
 const PHONE_BGS = ['#0f0f1a', 'linear-gradient(160deg,#0f0c29,#302b63)', 'linear-gradient(160deg,#11998e,#38ef7d20)', 'linear-gradient(160deg,#1a0533,#6c63ff22)']
 
 function Phone({ visibleLinks = 5, bgIdx = 0, scale = 1, profileIdx = 0 }) {
-  const prof = PROFILES[profileIdx] || PROFILES[0]
+  const [displayed, setDisplayed] = useState(profileIdx)
+  const [fading, setFading] = useState(false)
+  useEffect(() => {
+    if (profileIdx === displayed) return
+    setFading(true)
+    const t = setTimeout(() => { setDisplayed(profileIdx); setFading(false) }, 350)
+    return () => clearTimeout(t)
+  }, [profileIdx])
+  const prof = PROFILES[displayed] || PROFILES[0]
   const { name, handle, bio, avatar, avatarGrad, links } = prof
   return (
     <div style={{
@@ -106,6 +158,7 @@ function Phone({ visibleLinks = 5, bgIdx = 0, scale = 1, profileIdx = 0 }) {
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         paddingTop: 40, paddingBottom: 18, paddingLeft: 16, paddingRight: 16,
         transition: 'background .8s ease',
+        opacity: fading ? 0 : 1, transitionProperty: 'background, opacity',
       }}>
         <div style={{ position: 'absolute', top: 14, left: '50%', transform: 'translateX(-50%)', width: 50, height: 5, borderRadius: 3, background: 'rgba(0,0,0,.3)' }} />
         <div style={{ width: 60, height: 60, borderRadius: '50%', background: avatarGrad, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 22, fontWeight: 800, marginBottom: 8, boxShadow: `0 6px 20px rgba(108,99,255,.4)` }}>{avatar}</div>
@@ -158,7 +211,7 @@ const THEMES = [
 export default function Home() {
   const [visibleLinks, setVisibleLinks]   = useState(0)
   const [phoneBgIdx,   setPhoneBgIdx]     = useState(0)
-
+  const [profileBase,  setProfileBase]    = useState(0)
   const [headerSolid,  setHeaderSolid]    = useState(false)
   const linksSectionRef  = useRef(null)
   const themesSectionRef = useRef(null)
@@ -189,6 +242,14 @@ export default function Home() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Pick a random profile pair on each page load
+  useEffect(() => {
+    setProfileBase(Math.floor(Math.random() * PROFILES.length))
+  }, [])
+
+  const p1Idx = profileBase % PROFILES.length
+  const p2Idx = (profileBase + 1) % PROFILES.length
 
   return (
     <div style={{ background: BG, color: '#fff', overflowX: 'hidden' }}>
@@ -280,7 +341,7 @@ export default function Home() {
           <Reveal from="scale" delay={100} className="lk-phone lk-float" style={{ flexShrink: 0, position: 'relative' }}>
             <div style={{ position: 'absolute', inset: -50, borderRadius: '50%', background: `radial-gradient(circle,${C1}45,transparent 70%)`, filter: 'blur(40px)' }} />
             <div style={{ position: 'relative' }}>
-              <Phone visibleLinks={5} bgIdx={0} profileIdx={0} />
+              <Phone visibleLinks={5} bgIdx={0} profileIdx={p1Idx} />
             </div>
           </Reveal>
         </div>
@@ -328,7 +389,7 @@ export default function Home() {
           <Reveal from="right" delay={80} className="lk-phone" style={{ flexShrink: 0, position: 'relative' }}>
             <div style={{ position: 'absolute', inset: -40, borderRadius: '50%', background: `radial-gradient(circle,${C2}30,transparent 70%)`, filter: 'blur(50px)' }} />
             <div style={{ position: 'relative' }}>
-              <Phone visibleLinks={visibleLinks} bgIdx={0} profileIdx={1} />
+              <Phone visibleLinks={visibleLinks} bgIdx={0} profileIdx={p2Idx} />
             </div>
           </Reveal>
         </div>
