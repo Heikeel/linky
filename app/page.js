@@ -278,8 +278,10 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Nebulosa como fondo fijo de toda la página */}
-      <div style={{ position: 'fixed', inset: 0, backgroundImage: 'url(/cta-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.18, zIndex: 0, pointerEvents: 'none' }} />
+      {/* Video como fondo fijo de toda la página */}
+      <video autoPlay muted loop playsInline style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35, zIndex: 0, pointerEvents: 'none' }}>
+        <source src="/linky-bg.mp4" type="video/mp4" />
+      </video>
 
       <Particles />
 
@@ -302,9 +304,7 @@ export default function Home() {
 
       {/* ══ HERO ══ */}
       <section style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-        {/* AI-generated background */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/steps-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.75, zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(6,6,15,.8) 35%, rgba(6,6,15,.25) 100%)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(6,6,15,.7) 35%, rgba(6,6,15,.15) 100%)', zIndex: 0 }} />
         <Blob style={{ top: '-10%', left: '-8%' }} color={C1} size={520} delay={0} />
         <Blob style={{ bottom: '-15%', right: '-6%' }} color={C2} size={480} delay={6} />
 
@@ -355,8 +355,7 @@ export default function Home() {
 
       {/* ══ LINKS SECTION ══ */}
       <section ref={linksSectionRef} style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/links-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.55, zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.5)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.45)', zIndex: 0 }} />
         <Blob style={{ top: '5%', right: '-5%' }} color={C2} size={440} delay={4} />
 
         <div className="lk-cols" style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '80px', maxWidth: 1200, width: '100%', margin: '0 auto', gap: 80 }}>
@@ -397,8 +396,7 @@ export default function Home() {
 
       {/* ══ THEMES SECTION ══ */}
       <section ref={themesSectionRef} style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/themes-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center 30%', opacity: 0.65, zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.55)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,6,15,.45)', zIndex: 0 }} />
         <Blob style={{ top: '15%', left: '20%' }} color={C1} size={400} delay={8} />
         <Blob style={{ bottom: '10%', right: '10%' }} color={C2} size={360} delay={2} />
 
