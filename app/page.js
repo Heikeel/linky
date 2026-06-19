@@ -158,7 +158,7 @@ const THEMES = [
 export default function Home() {
   const [visibleLinks, setVisibleLinks]   = useState(0)
   const [phoneBgIdx,   setPhoneBgIdx]     = useState(0)
-  const [profileIdx,   setProfileIdx]     = useState(0)
+
   const [headerSolid,  setHeaderSolid]    = useState(false)
   const linksSectionRef  = useRef(null)
   const themesSectionRef = useRef(null)
@@ -171,14 +171,11 @@ export default function Home() {
         raf = null
         setHeaderSolid(scrollY > 60)
 
-        // Links section: reveal links + switch profile halfway through
+        // Links section: reveal links progressively
         if (linksSectionRef.current) {
           const r = linksSectionRef.current.getBoundingClientRect()
           const p = Math.max(0, Math.min(1, (innerHeight * 0.8 - r.top) / (innerHeight * 0.45)))
           setVisibleLinks(Math.round(p * 5))
-          // switch profile at 50% scroll progress through section
-          const full = Math.max(0, Math.min(1, 1 - r.bottom / (r.height + innerHeight) * 1.1))
-          setProfileIdx(full >= 0.5 ? 1 : 0)
         }
 
         // Themes section: change phone bg on scroll
@@ -283,7 +280,7 @@ export default function Home() {
           <Reveal from="scale" delay={100} className="lk-phone lk-float" style={{ flexShrink: 0, position: 'relative' }}>
             <div style={{ position: 'absolute', inset: -50, borderRadius: '50%', background: `radial-gradient(circle,${C1}45,transparent 70%)`, filter: 'blur(40px)' }} />
             <div style={{ position: 'relative' }}>
-              <Phone visibleLinks={5} bgIdx={0} />
+              <Phone visibleLinks={5} bgIdx={0} profileIdx={0} />
             </div>
           </Reveal>
         </div>
@@ -331,7 +328,7 @@ export default function Home() {
           <Reveal from="right" delay={80} className="lk-phone" style={{ flexShrink: 0, position: 'relative' }}>
             <div style={{ position: 'absolute', inset: -40, borderRadius: '50%', background: `radial-gradient(circle,${C2}30,transparent 70%)`, filter: 'blur(50px)' }} />
             <div style={{ position: 'relative' }}>
-              <Phone visibleLinks={visibleLinks} bgIdx={0} profileIdx={profileIdx} />
+              <Phone visibleLinks={visibleLinks} bgIdx={0} profileIdx={1} />
             </div>
           </Reveal>
         </div>
