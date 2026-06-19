@@ -196,15 +196,13 @@ function ThemeCard({ theme, index }) {
 /* ───────────────────────── Page ───────────────────────── */
 
 export default function Home() {
-  const [dark, setDark] = useState(false)
-
-  const bg          = dark ? '#0f0f13'                : '#f4f3ff'
-  const text        = dark ? '#fff'                   : '#111827'
-  const muted       = dark ? 'rgba(255,255,255,0.5)'  : '#6b7280'
-  const cardBg      = dark ? '#1a1a2e'                : '#fff'
-  const border      = dark ? 'rgba(255,255,255,0.08)' : '#e5e7eb'
-  const pillBg      = dark ? 'rgba(108,99,255,0.2)'   : '#ece9ff'
-  const headerBg    = dark ? 'rgba(15,15,19,0.85)'    : 'rgba(244,243,255,0.85)'
+  const bg       = '#0f0f13'
+  const text     = '#fff'
+  const muted    = 'rgba(255,255,255,0.5)'
+  const cardBg   = '#1a1a2e'
+  const border   = 'rgba(255,255,255,0.08)'
+  const pillBg   = 'rgba(108,99,255,0.2)'
+  const headerBg = 'rgba(15,15,19,0.85)'
 
   return (
     <div style={{ background: bg, color: text, transition: 'background 0.4s, color 0.4s', minHeight: '100vh', overflowX: 'hidden' }}>
@@ -262,22 +260,9 @@ export default function Home() {
       }}>
         <div style={{ fontSize: 22, fontWeight: 800, color: ACCENT }}>Linky</div>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <button
-            onClick={() => setDark(d => !d)}
-            aria-label="Cambiar tema"
-            className="lk-ghost"
-            style={{
-              width: 38, height: 38, borderRadius: '50%', border: 'none', cursor: 'pointer',
-              background: dark ? 'rgba(255,255,255,0.1)' : '#ece9ff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: dark ? '#fff' : ACCENT, fontSize: 18,
-            }}
-          >
-            <i className={`ti ${dark ? 'ti-sun' : 'ti-moon'}`} aria-hidden="true" />
-          </button>
           <Link href="/login" className="lk-ghost lk-header-login" style={{
             padding: '8px 18px', borderRadius: 10, fontSize: 14, fontWeight: 500,
-            color: dark ? 'rgba(255,255,255,0.8)' : '#374151',
+            color: 'rgba(255,255,255,0.8)',
             border: `1px solid ${border}`, background: cardBg, textDecoration: 'none',
           }}>
             Iniciar sesión
@@ -347,7 +332,7 @@ export default function Home() {
                   background: `radial-gradient(circle, ${ACCENT}50 0%, transparent 70%)`,
                   filter: 'blur(40px)',
                 }} />
-                <PhoneMockup darkMode={dark} />
+                <PhoneMockup darkMode={true} />
               </div>
             </Parallax>
           </Reveal>
@@ -355,7 +340,7 @@ export default function Home() {
       </section>
 
       {/* ── SECCIÓN 2 — Crea en minutos ── */}
-      <section className="lk-s2" style={{ background: dark ? '#1a1a2e' : ACCENT, padding: '80px', overflow: 'hidden' }}>
+      <section className="lk-s2" style={{ background: '#1a1a2e', padding: '80px', overflow: 'hidden' }}>
         <div className="lk-s2-inner" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80 }}>
           <Reveal variant="left" style={{ flex: 1 }}>
             <Tilt max={8}>
@@ -422,7 +407,7 @@ export default function Home() {
       </section>
 
       {/* ── SECCIÓN 3 — Temas ── */}
-      <section className="lk-s3" style={{ background: dark ? '#0d0d18' : '#1a1a2e', padding: '80px', overflow: 'hidden', position: 'relative' }}>
+      <section className="lk-s3" style={{ background: '#0d0d18', padding: '80px', overflow: 'hidden', position: 'relative' }}>
         <div aria-hidden style={{ position: 'absolute', top: '20%', left: '30%', width: 360, height: 360, borderRadius: '50%', background: 'radial-gradient(circle, rgba(108,99,255,0.3), transparent 70%)', filter: 'blur(70px)', animation: 'lk-blob 20s ease-in-out infinite' }} />
         <div className="lk-s3-inner" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60, position: 'relative', zIndex: 1 }}>
           <Reveal variant="left" style={{ flex: 1 }}>
@@ -482,7 +467,7 @@ export default function Home() {
                   <div style={{
                     padding: 32, borderRadius: 24, textAlign: 'left', height: '100%',
                     background: cardBg, border: `1px solid ${border}`,
-                    boxShadow: dark ? 'none' : '0 4px 20px rgba(0,0,0,0.06)',
+                    boxShadow: 'none',
                   }}>
                     <div style={{ fontSize: 12, fontWeight: 800, color: ACCENT, marginBottom: 16, letterSpacing: '0.05em' }}>{step.num}</div>
                     <div style={{
@@ -504,7 +489,7 @@ export default function Home() {
       {/* ── CTA FINAL ── */}
       <section className="lk-cta-sec" style={{
         padding: '80px', textAlign: 'center', position: 'relative', overflow: 'hidden',
-        background: dark ? '#1a1a2e' : 'linear-gradient(135deg, #f4f3ff, #ede9ff)',
+        background: '#1a1a2e',
       }}>
         <div aria-hidden style={{ position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)', width: 500, height: 500, borderRadius: '50%', background: `radial-gradient(circle, ${ACCENT}30, transparent 70%)`, filter: 'blur(70px)', animation: 'lk-blob 16s ease-in-out infinite' }} />
         <Reveal variant="scale" style={{ maxWidth: 580, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -529,7 +514,7 @@ export default function Home() {
       <footer className="lk-footer" style={{
         padding: '24px 40px', textAlign: 'center', fontSize: 13, color: muted,
         borderTop: `1px solid ${border}`,
-        background: dark ? '#0f0f13' : '#f4f3ff',
+        background: '#0f0f13',
       }}>
         Linky · Hecho con ♥
       </footer>
