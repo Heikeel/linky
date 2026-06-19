@@ -1,152 +1,96 @@
 'use client'
-
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
-const ACCENT = '#6c63ff'
+const C1 = '#6c63ff'
+const C2 = '#a855f7'
+const BG = '#06060f'
 
-/* ───────────────────────── Animation primitives ───────────────────────── */
-
-// Revela su contenido al entrar al viewport. variant controla el gesto de entrada.
-function Reveal({ children, delay = 0, variant = 'up', style, className }) {
+/* ─────────────────────── Particle Canvas ─────────────────────── */
+function Particles() {
   const ref = useRef(null)
-  const [shown, setShown] = useState(false)
-
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setShown(true); obs.disconnect() } },
-      { threshold: 0.12 }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
+    const cvs = ref.current, ctx = cvs.getContext('2d')
+    let raf, pts = []
+    const resize = () => {
+      cvs.width = innerWidth; cvs.height = innerHeight
+      pts = Array.from({ length: 90 }, () => ({
+        x: Math.random() * cvs.width,
+        y: Math.random() * cvs.height,
+        r: Math.random() * 1.6 + 0.3,
+        vx: (Math.random() - .5) * .22,
+        vy: (Math.random() - .5) * .22,
+        a: Math.random() * .45 + .06,
+        c: Math.random() > .6 ? C2 : C1,
+      }))
+    }
+    const tick = () => {
+      ctx.clearRect(0, 0, cvs.width, cvs.height)
+      pts.forEach(p => {
+        ctx.globalAlpha = p.a; ctx.fillStyle = p.c
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill()
+        p.x += p.vx; p.y += p.vy
+        if (p.x < 0) p.x = cvs.width; if (p.x > cvs.width) p.x = 0
+        if (p.y < 0) p.y = cvs.height; if (p.y > cvs.height) p.y = 0
+      })
+      ctx.globalAlpha = 1
+      raf = requestAnimationFrame(tick)
+    }
+    resize(); tick()
+    window.addEventListener('resize', resize)
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize) }
   }, [])
-
-  const hidden = {
-    up:    'translateY(48px)',
-    left:  'translateX(-56px)',
-    right: 'translateX(56px)',
-    scale: 'scale(0.86)',
-    blur:  'translateY(36px)',
-  }[variant]
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        ...style,
-        opacity: shown ? 1 : 0,
-        filter: shown ? 'blur(0px)' : (variant === 'blur' ? 'blur(14px)' : 'blur(0px)'),
-        transform: shown ? 'none' : hidden,
-        transition: `opacity 0.8s ease ${delay}ms, transform 0.9s cubic-bezier(0.22,1,0.36,1) ${delay}ms, filter 0.8s ease ${delay}ms`,
-        willChange: 'opacity, transform',
-      }}
-    >
-      {children}
-    </div>
-  )
+  return <canvas ref={ref} style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none', opacity: .75 }} />
 }
 
-// Mueve su contenido a distinta velocidad que el scroll (parallax). Escribe el
-// transform directamente en el DOM para no re-renderizar en cada frame.
-function Parallax({ children, speed = 0.15, style, className }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    let raf = null
-    const update = () => {
-      const rect = el.getBoundingClientRect()
-      const offset = rect.top + rect.height / 2 - window.innerHeight / 2
-      el.style.transform = `translate3d(0, ${(-offset * speed).toFixed(1)}px, 0)`
-      raf = null
-    }
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    update()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [speed])
-  return <div ref={ref} className={className} style={style}>{children}</div>
-}
+/* ─────────────────────── Phone Mockup ─────────────────────── */
+const LINKS = [
+  { icon: 'ti-brand-instagram', name: 'Instagram', color: '#e1306c' },
+  { icon: 'ti-brand-youtube',   name: 'YouTube',   color: '#ff4444' },
+  { icon: 'ti-brand-tiktok',    name: 'TikTok',    color: '#fff' },
+  { icon: 'ti-brand-spotify',   name: 'Spotify',   color: '#1db954' },
+  { icon: 'ti-link',            name: 'Mi portfolio', color: C1 },
+]
 
-// Tarjeta que se inclina siguiendo el cursor (efecto 3D tipo Apple).
-function Tilt({ children, max = 10, style }) {
-  const ref = useRef(null)
-  function onMove(e) {
-    const el = ref.current
-    if (!el) return
-    const r = el.getBoundingClientRect()
-    const px = (e.clientX - r.left) / r.width - 0.5
-    const py = (e.clientY - r.top) / r.height - 0.5
-    el.style.transform = `perspective(900px) rotateX(${(-py * max).toFixed(2)}deg) rotateY(${(px * max).toFixed(2)}deg) scale(1.03)`
-  }
-  function reset() {
-    const el = ref.current
-    if (el) el.style.transform = 'perspective(900px) rotateX(0) rotateY(0) scale(1)'
-  }
+const PHONE_THEMES = [
+  '#0f0f1a',
+  'linear-gradient(160deg,#0f0c29,#302b63)',
+  'linear-gradient(160deg,#11998e,#38ef7d20)',
+  'linear-gradient(160deg,#1a0533,#6c63ff22)',
+]
+
+function PhoneMockup({ visibleLinks = 5, themeIdx = 0 }) {
   return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
-      style={{ ...style, transition: 'transform 0.25s ease', willChange: 'transform' }}
-    >
-      {children}
-    </div>
-  )
-}
-
-/* ───────────────────────── Mockups ───────────────────────── */
-
-function PhoneMockup({ darkMode }) {
-  const phoneBg    = darkMode ? '#1a1a2e' : '#fff'
-  const linkBg     = darkMode ? 'rgba(255,255,255,0.07)' : '#f5f3ff'
-  const linkBorder = darkMode ? 'rgba(255,255,255,0.1)'  : '#ede9fe'
-  const textColor  = darkMode ? '#fff'                   : '#1f2937'
-  const mutedColor = darkMode ? 'rgba(255,255,255,0.45)' : '#6b7280'
-
-  return (
-    <div className="lk-float" style={{
-      width: 220, height: 430, borderRadius: 36, flexShrink: 0,
-      background: 'linear-gradient(135deg, #6c63ff 0%, #a855f7 100%)',
-      boxShadow: darkMode
-        ? '0 40px 100px rgba(108,99,255,0.5), 0 0 0 1px rgba(108,99,255,0.3)'
-        : '0 40px 80px rgba(108,99,255,0.3)',
-      padding: 3, position: 'relative',
+    <div style={{
+      width: 230, height: 462, borderRadius: 40, flexShrink: 0,
+      background: `linear-gradient(145deg,${C1},${C2})`,
+      boxShadow: `0 50px 130px rgba(108,99,255,.5), 0 0 0 1px rgba(108,99,255,.2)`,
+      padding: 3,
     }}>
-      <div style={{ position: 'absolute', top: 14, left: '50%', transform: 'translateX(-50%)', width: 56, height: 5, borderRadius: 3, background: 'rgba(0,0,0,0.2)', zIndex: 10 }} />
       <div style={{
-        width: '100%', height: '100%', borderRadius: 34, background: phoneBg,
+        width: '100%', height: '100%', borderRadius: 38,
+        background: PHONE_THEMES[themeIdx],
         overflow: 'hidden', display: 'flex', flexDirection: 'column',
-        alignItems: 'center', paddingTop: 36, paddingBottom: 20, paddingLeft: 16, paddingRight: 16,
+        alignItems: 'center', paddingTop: 44, paddingBottom: 20, paddingLeft: 18, paddingRight: 18,
+        transition: 'background 1s ease',
       }}>
-        <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'linear-gradient(135deg, #6c63ff, #a855f7)', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 22, fontWeight: 700 }}>M</div>
-        <div style={{ fontWeight: 700, fontSize: 14, color: textColor, marginBottom: 2 }}>Mike</div>
-        <div style={{ fontSize: 11, color: ACCENT, marginBottom: 5, fontWeight: 600 }}>@mike</div>
-        <div style={{ fontSize: 10, color: mutedColor, marginBottom: 16, textAlign: 'center', lineHeight: 1.4 }}>Creador de contenido · México</div>
-        {[
-          { icon: 'ti-brand-instagram', name: 'Instagram', color: '#e1306c' },
-          { icon: 'ti-brand-youtube',   name: 'YouTube',   color: '#ff0000' },
-          { icon: 'ti-brand-tiktok',    name: 'TikTok',    color: darkMode ? '#fff' : '#000' },
-          { icon: 'ti-brand-spotify',   name: 'Spotify',   color: '#1db954' },
-        ].map((l, i) => (
-          <div key={l.name} className="lk-linkrow" style={{
-            width: '100%', padding: '9px 12px', borderRadius: 10,
-            background: linkBg, marginBottom: 7,
-            display: 'flex', alignItems: 'center', gap: 10,
-            border: `1px solid ${linkBorder}`,
-            animation: `lk-pop 0.5s ease ${0.4 + i * 0.12}s both`,
+        <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', width: 54, height: 5, borderRadius: 3, background: 'rgba(0,0,0,.35)' }} />
+        <div style={{ width: 66, height: 66, borderRadius: '50%', background: `linear-gradient(135deg,${C1},${C2})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 24, fontWeight: 800, marginBottom: 10, boxShadow: `0 8px 24px rgba(108,99,255,.4)` }}>M</div>
+        <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 2 }}>Mike</div>
+        <div style={{ fontSize: 11, color: C1, fontWeight: 600, marginBottom: 5 }}>@mike</div>
+        <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', marginBottom: 18, textAlign: 'center', lineHeight: 1.4 }}>Creador de contenido · México</div>
+        {LINKS.map((l, i) => (
+          <div key={l.name} style={{
+            width: '100%', padding: '9px 13px', borderRadius: 11,
+            background: 'rgba(255,255,255,.07)', border: '1px solid rgba(255,255,255,.1)',
+            display: 'flex', alignItems: 'center', gap: 10, marginBottom: 7,
+            opacity: i < visibleLinks ? 1 : 0,
+            transform: i < visibleLinks ? 'none' : 'translateY(10px)',
+            transition: `opacity .45s ease ${i * 90}ms, transform .45s ease ${i * 90}ms`,
           }}>
-            <i className={`ti ${l.icon}`} style={{ color: l.color, fontSize: 15 }} aria-hidden="true" />
-            <span style={{ fontSize: 11, fontWeight: 600, color: textColor }}>{l.name}</span>
-            <i className="ti ti-chevron-right" style={{ color: mutedColor, fontSize: 10, marginLeft: 'auto' }} aria-hidden="true" />
+            <i className={`ti ${l.icon}`} style={{ color: l.color, fontSize: 15 }} />
+            <span style={{ fontSize: 11, fontWeight: 600, color: '#fff' }}>{l.name}</span>
+            <i className="ti ti-chevron-right" style={{ color: 'rgba(255,255,255,.25)', fontSize: 10, marginLeft: 'auto' }} />
           </div>
         ))}
       </div>
@@ -154,370 +98,468 @@ function PhoneMockup({ darkMode }) {
   )
 }
 
-// Fondos coloridos variados estilo mosaico — sin nombres, puro color.
-const THEMES_SHOWCASE = [
-  { bg: 'linear-gradient(160deg, #ff6ec4, #7873f5)', accent: '#fff',    dark: true,  tilt: -4 },
-  { bg: 'linear-gradient(160deg, #11998e, #38ef7d)', accent: '#fff',    dark: true,  tilt:  3 },
-  { bg: '#f5f5f7',                                    accent: '#6c63ff', dark: false, tilt: -2 },
-  { bg: 'linear-gradient(160deg, #0f0c29, #302b63, #24243e)', accent: '#ff0080', dark: true, tilt: 4 },
-  { bg: 'linear-gradient(160deg, #f7971e, #ffd200)', accent: '#fff',    dark: true,  tilt:  2 },
-  { bg: 'linear-gradient(160deg, #2193b0, #6dd5ed)', accent: '#fff',    dark: true,  tilt: -3 },
-]
-
-function ThemeCard({ theme, index }) {
+/* ─────────────────────── Scene wrapper (sticky) ─────────────────────── */
+function Scene({ h = '220vh', children, style }) {
   return (
-    <div
-      className="lk-float lk-themecard"
-      style={{
-        width: 100, borderRadius: 20, padding: 12,
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        background: theme.bg, flexShrink: 0,
-        '--tilt': `${theme.tilt}deg`,
-        transform: `rotate(${theme.tilt}deg)`,
-        boxShadow: '0 12px 36px rgba(0,0,0,0.3)',
-        border: theme.dark ? '1px solid rgba(255,255,255,0.14)' : '1px solid rgba(0,0,0,0.06)',
-        animationDelay: `${index * 0.4}s`,
-      }}
-    >
-      <div style={{ width: 36, height: 36, borderRadius: '50%', background: theme.dark ? 'rgba(255,255,255,0.85)' : theme.accent, marginBottom: 8 }} />
-      <div style={{ width: 52, height: 7, borderRadius: 3, background: theme.dark ? 'rgba(255,255,255,0.85)' : '#1f2937', marginBottom: 4 }} />
-      <div style={{ width: 36, height: 5, borderRadius: 2.5, background: theme.dark ? 'rgba(255,255,255,0.5)' : '#9ca3af', marginBottom: 12 }} />
-      {[1, 2, 3].map(i => (
-        <div key={i} style={{
-          width: '100%', height: 22, borderRadius: 7, marginBottom: 6,
-          background: theme.dark ? 'rgba(255,255,255,0.22)' : '#f5f3ff',
-          border: theme.dark ? '1px solid rgba(255,255,255,0.25)' : '1px solid #e5e7eb',
-        }} />
-      ))}
+    <div style={{ height: h, position: 'relative', ...style }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+        {children}
+      </div>
     </div>
   )
 }
 
-/* ───────────────────────── Page ───────────────────────── */
+/* ─────────────────────── Gradient blobs ─────────────────────── */
+function Blob({ top, left, right, bottom, size = 500, color = C1, delay = 0 }) {
+  return (
+    <div aria-hidden style={{
+      position: 'absolute', top, left, right, bottom,
+      width: size, height: size, borderRadius: '50%',
+      background: `radial-gradient(circle, ${color}30, transparent 70%)`,
+      filter: 'blur(80px)',
+      animation: `blob ${18 + delay}s ease-in-out ${delay}s infinite`,
+      pointerEvents: 'none',
+    }} />
+  )
+}
 
+/* ─────────────────────── THEME CARDS (section 3) ─────────────────────── */
+const THEME_CARDS = [
+  { bg: 'linear-gradient(160deg,#0f0c29,#302b63,#24243e)', label: 'Cosmos' },
+  { bg: 'linear-gradient(160deg,#ff6ec4,#7873f5)', label: 'Tornasol' },
+  { bg: 'linear-gradient(160deg,#0d1117,#00ff4120)', label: 'Matrix' },
+  { bg: 'linear-gradient(160deg,#1a1a2e,#e94560)', label: 'Sunset' },
+  { bg: 'linear-gradient(160deg,#020024,#090979,#00d4ff)', label: 'Océano' },
+  { bg: 'linear-gradient(160deg,#f7971e,#ffd200)', label: 'Solar' },
+]
+
+/* ─────────────────────── PAGE ─────────────────────── */
 export default function Home() {
-  const bg       = '#0f0f13'
-  const text     = '#fff'
-  const muted    = 'rgba(255,255,255,0.5)'
-  const cardBg   = '#1a1a2e'
-  const border   = 'rgba(255,255,255,0.08)'
-  const pillBg   = 'rgba(108,99,255,0.2)'
-  const headerBg = 'rgba(15,15,19,0.85)'
+  const [visibleLinks, setVisibleLinks] = useState(0)
+  const [themeIdx, setThemeIdx] = useState(0)
+  const [headerSolid, setHeaderSolid] = useState(false)
+
+  // Scene refs (wrapper divs — not sticky inner)
+  const heroWrap   = useRef(null)
+  const linksWrap  = useRef(null)
+  const themesWrap = useRef(null)
+  const stepsWrap  = useRef(null)
+
+  // Animated element refs
+  const heroTag    = useRef(null)
+  const heroH1     = useRef(null)
+  const heroSub    = useRef(null)
+  const heroBtn    = useRef(null)
+  const heroPhone  = useRef(null)
+  const linksLeft  = useRef(null)
+  const linksPhone = useRef(null)
+  const themesLeft = useRef(null)
+  const themeCards = useRef(null)
+  const step1 = useRef(null)
+  const step2 = useRef(null)
+  const step3 = useRef(null)
+
+  useEffect(() => {
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
+    const prog = (wrap) => {
+      if (!wrap.current) return 0
+      const el = wrap.current
+      return clamp((scrollY - el.offsetTop) / (el.offsetHeight - innerHeight), 0, 1)
+    }
+
+    let raf = null
+    const onScroll = () => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = null
+        const sy = scrollY
+
+        setHeaderSolid(sy > 40)
+
+        /* ── Scene 1: Hero ── */
+        const p1 = prog(heroWrap)
+        const fadeOut = clamp((p1 - .55) / .35, 0, 1)
+        const slideUp = fadeOut * 60
+
+        const applyFade = (r, d = 0) => {
+          if (!r.current) return
+          const enter = clamp((p1 - d) / .25, 0, 1)
+          const opacity = clamp(enter - fadeOut * 1.6, 0, 1)
+          r.current.style.opacity = opacity
+          r.current.style.transform = `translateY(${(1 - enter) * 40 - slideUp}px)`
+        }
+        applyFade(heroTag,   0)
+        applyFade(heroH1,    .04)
+        applyFade(heroSub,   .09)
+        applyFade(heroBtn,   .13)
+
+        if (heroPhone.current) {
+          const enter = clamp(p1 / .3, 0, 1)
+          const op = clamp(enter - fadeOut * 1.4, 0, 1)
+          heroPhone.current.style.opacity = op
+          heroPhone.current.style.transform = `translateY(${(1 - enter) * 80 - slideUp * .6}px) scale(${.88 + enter * .12})`
+        }
+
+        /* ── Scene 2: Links animate ── */
+        const p2 = prog(linksWrap)
+        const newCount = Math.round(p2 * 5)
+        setVisibleLinks(newCount)
+
+        if (linksLeft.current) {
+          const op = clamp(p2 / .25, 0, 1)
+          linksLeft.current.style.opacity = op
+          linksLeft.current.style.transform = `translateX(${(1 - op) * -50}px)`
+        }
+        if (linksPhone.current) {
+          const op = clamp(p2 / .2, 0, 1)
+          linksPhone.current.style.opacity = op
+          linksPhone.current.style.transform = `translateX(${(1 - op) * 50}px)`
+        }
+
+        /* ── Scene 3: Themes ── */
+        const p3 = prog(themesWrap)
+        const ti = Math.floor(p3 * PHONE_THEMES.length)
+        setThemeIdx(Math.min(ti, PHONE_THEMES.length - 1))
+
+        if (themesLeft.current) {
+          const op = clamp(p3 / .2, 0, 1)
+          themesLeft.current.style.opacity = op
+          themesLeft.current.style.transform = `translateY(${(1 - op) * 40}px)`
+        }
+        if (themeCards.current) {
+          const op = clamp(p3 / .25, 0, 1)
+          themeCards.current.style.opacity = op
+          themeCards.current.style.transform = `translateX(${(1 - op) * 60}px)`
+        }
+
+        /* ── Scene 4: Steps ── */
+        const p4 = prog(stepsWrap)
+        const applyStep = (r, threshold) => {
+          if (!r.current) return
+          const op = clamp((p4 - threshold) / .2, 0, 1)
+          r.current.style.opacity = op
+          r.current.style.transform = `translateY(${(1 - op) * 44}px)`
+        }
+        applyStep(step1, .05)
+        applyStep(step2, .3)
+        applyStep(step3, .55)
+      })
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <div style={{ background: bg, color: text, transition: 'background 0.4s, color 0.4s', minHeight: '100vh', overflowX: 'hidden' }}>
+    <div style={{ background: BG, color: '#fff', overflowX: 'hidden' }}>
 
-      {/* keyframes globales para todo el movimiento */}
       <style>{`
-        @keyframes lk-float      { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
-        @keyframes lk-floatcard  { 0%,100% { transform: rotate(var(--tilt)) translateY(0); } 50% { transform: rotate(var(--tilt)) translateY(-12px); } }
-        @keyframes lk-blob       { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(40px,-30px) scale(1.1); } 66% { transform: translate(-30px,25px) scale(0.95); } }
-        @keyframes lk-gradient   { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes lk-pop        { from { opacity: 0; transform: translateY(10px) scale(0.96); } to { opacity: 1; transform: none; } }
-        @keyframes lk-spin       { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-        @keyframes lk-bob        { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
-        .lk-float     { animation: lk-float 6s ease-in-out infinite; }
-        .lk-themecard { animation: lk-floatcard 7s ease-in-out infinite; }
-        .lk-cta { transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease; }
-        .lk-cta:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 16px 44px rgba(108,99,255,0.5) !important; }
-        .lk-ghost { transition: transform 0.25s ease, background 0.25s ease; }
-        .lk-ghost:hover { transform: translateY(-2px); }
-        .lk-linkrow { transition: transform 0.2s ease; }
-        .lk-feat { transition: transform 0.25s ease; }
-        .lk-feat:hover { transform: translateX(6px); }
-        .lk-arrow { display: inline-block; animation: lk-bob 1.6s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) {
-          .lk-float, .lk-themecard, .lk-arrow { animation: none !important; }
-        }
-        @media (max-width: 768px) {
-          .lk-header       { padding: 14px 20px !important; }
-          .lk-header-login { display: none !important; }
-          .lk-hero-inner   { flex-direction: column !important; padding: 52px 24px 40px !important; gap: 36px !important; }
-          .lk-hero-phone   { display: none !important; }
-          .lk-hero-h1      { font-size: 36px !important; line-height: 1.15 !important; }
-          .lk-hero-p       { font-size: 15px !important; }
-          .lk-s2           { padding: 52px 24px !important; }
-          .lk-s2-inner     { flex-direction: column !important; gap: 40px !important; }
-          .lk-s2-h2        { font-size: 30px !important; }
-          .lk-s3           { padding: 52px 24px !important; }
-          .lk-s3-inner     { flex-direction: column !important; gap: 36px !important; }
-          .lk-s3-h2        { font-size: 30px !important; }
-          .lk-theme-cards  { display: none !important; }
-          .lk-s4           { padding: 52px 24px !important; }
-          .lk-three-grid   { grid-template-columns: 1fr !important; gap: 16px !important; }
-          .lk-cta-sec      { padding: 52px 24px !important; }
-          .lk-cta-h2       { font-size: 30px !important; }
-          .lk-footer       { padding: 20px !important; }
+        @keyframes blob { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(40px,-30px) scale(1.08)} 66%{transform:translate(-28px,24px) scale(.94)} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+        @keyframes spin  { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+        @keyframes shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+        @keyframes cardFloat { 0%,100%{transform:rotate(var(--t)) translateY(0)} 50%{transform:rotate(var(--t)) translateY(-10px)} }
+        .lk-cta { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s; }
+        .lk-cta:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 18px 50px rgba(108,99,255,.55) !important; }
+        .lk-ghost { transition: background .2s, transform .2s; }
+        .lk-ghost:hover { background: rgba(108,99,255,.15) !important; transform: translateY(-1px); }
+        .lk-float { animation: float 6s ease-in-out infinite; }
+        .lk-bob { display:inline-block; animation: bob 1.6s ease-in-out infinite; }
+        .lk-step { transition: box-shadow .3s; }
+        .lk-step:hover { box-shadow: 0 0 0 1px rgba(108,99,255,.4), 0 20px 60px rgba(108,99,255,.15) !important; }
+        @media(max-width:768px){
+          .lk-hero-cols { flex-direction:column !important; padding:80px 24px 40px !important; gap:40px !important; }
+          .lk-hero-h1   { font-size:38px !important; }
+          .lk-hero-phone{ display:none !important; }
+          .lk-2cols     { flex-direction:column !important; padding:60px 24px !important; gap:40px !important; }
+          .lk-steps-grid{ grid-template-columns:1fr !important; }
+          .lk-theme-grid{ display:none !important; }
+          .lk-cta-sec   { padding:60px 24px !important; }
         }
       `}</style>
 
+      {/* Fixed particles */}
+      <Particles />
+
       {/* ── HEADER ── */}
-      <header className="lk-header" style={{
+      <header style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '18px 40px', position: 'sticky', top: 0, zIndex: 50,
-        background: headerBg, backdropFilter: 'blur(16px)',
-        borderBottom: `1px solid ${border}`,
+        padding: '18px 48px',
+        background: headerSolid ? 'rgba(6,6,15,.88)' : 'transparent',
+        backdropFilter: headerSolid ? 'blur(20px)' : 'none',
+        borderBottom: headerSolid ? '1px solid rgba(255,255,255,.06)' : 'none',
+        transition: 'background .4s, border-color .4s, backdrop-filter .4s',
       }}>
-        <div style={{ fontSize: 22, fontWeight: 800, color: ACCENT }}>Linky</div>
+        <div style={{ fontSize: 22, fontWeight: 800, background: `linear-gradient(90deg,${C1},${C2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Linky</div>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <Link href="/login" className="lk-ghost lk-header-login" style={{
-            padding: '8px 18px', borderRadius: 10, fontSize: 14, fontWeight: 500,
-            color: 'rgba(255,255,255,0.8)',
-            border: `1px solid ${border}`, background: cardBg, textDecoration: 'none',
-          }}>
-            Iniciar sesión
-          </Link>
+          <Link href="/login" className="lk-ghost" style={{
+            padding: '8px 20px', borderRadius: 10, fontSize: 14, fontWeight: 500,
+            color: 'rgba(255,255,255,.75)', border: '1px solid rgba(255,255,255,.1)',
+            background: 'rgba(255,255,255,.04)', textDecoration: 'none',
+          }}>Iniciar sesión</Link>
           <Link href="/register" className="lk-cta" style={{
-            padding: '8px 18px', borderRadius: 10, fontSize: 14, fontWeight: 600,
-            color: '#fff', background: ACCENT, textDecoration: 'none',
-            boxShadow: '0 2px 14px rgba(108,99,255,0.4)',
-          }}>
-            Crear cuenta gratis
-          </Link>
+            padding: '8px 20px', borderRadius: 10, fontSize: 14, fontWeight: 600,
+            color: '#fff', background: C1, textDecoration: 'none',
+            boxShadow: `0 2px 16px rgba(108,99,255,.4)`,
+          }}>Crear cuenta gratis</Link>
         </div>
       </header>
 
-      {/* ── HERO ── */}
-      <section style={{ position: 'relative', overflow: 'hidden' }}>
-        {/* blobs animados de fondo */}
-        <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-          <div style={{ position: 'absolute', top: '-10%', left: '-8%', width: 460, height: 460, borderRadius: '50%', background: `radial-gradient(circle, ${ACCENT}40, transparent 70%)`, filter: 'blur(60px)', animation: 'lk-blob 18s ease-in-out infinite' }} />
-          <div style={{ position: 'absolute', bottom: '-15%', right: '-6%', width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle, rgba(168,85,247,0.35), transparent 70%)', filter: 'blur(60px)', animation: 'lk-blob 22s ease-in-out infinite reverse' }} />
-        </div>
+      {/* ══════════════════════════════════════════════════════
+          SCENE 1 — HERO
+      ══════════════════════════════════════════════════════ */}
+      <div ref={heroWrap} style={{ height: '280vh', position: 'relative' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* blobs */}
+          <Blob top="-10%" left="-8%" color={C1} size={520} delay={0} />
+          <Blob bottom="-15%" right="-6%" color={C2} size={480} delay={6} />
 
-        <div className="lk-hero-inner" style={{
-          position: 'relative', zIndex: 1,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '90px 80px', maxWidth: 1200, margin: '0 auto', gap: 60,
-        }}>
-          <Reveal variant="left" style={{ flex: 1 }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600,
-              background: pillBg, color: ACCENT, marginBottom: 28,
-            }}>
-              <i className="ti ti-sparkles" aria-hidden="true" /> Tu link en bio, reinventado
-            </div>
-
-            <h1 className="lk-hero-h1" style={{ fontSize: 58, fontWeight: 800, lineHeight: 1.1, marginBottom: 22, color: text }}>
-              Tu presencia digital,<br />
-              <span style={{
-                background: 'linear-gradient(90deg, #6c63ff, #a855f7, #6c63ff)',
-                backgroundSize: '200% auto', WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                animation: 'lk-gradient 5s linear infinite',
-              }}>en un solo link.</span>
-            </h1>
-
-            <p className="lk-hero-p" style={{ fontSize: 18, color: muted, marginBottom: 36, lineHeight: 1.7, maxWidth: 480 }}>
-              Crea tu página personalizada con todos tus links, temas animados y colores únicos. Compártela desde Instagram, TikTok o donde quieras.
-            </p>
-
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              <Link href="/register" className="lk-cta" style={{
-                padding: '16px 32px', borderRadius: 14, fontSize: 16, fontWeight: 700,
-                color: '#fff', background: ACCENT, textDecoration: 'none',
-                boxShadow: '0 8px 32px rgba(108,99,255,0.4)',
-              }}>
-                Empezar gratis <span className="lk-arrow">→</span>
-              </Link>
-            </div>
-          </Reveal>
-
-          <Reveal variant="scale" delay={200} className="lk-hero-phone" style={{ flexShrink: 0 }}>
-            <Parallax speed={0.12}>
-              <div style={{ position: 'relative' }}>
-                <div style={{
-                  position: 'absolute', inset: -40, borderRadius: '50%',
-                  background: `radial-gradient(circle, ${ACCENT}50 0%, transparent 70%)`,
-                  filter: 'blur(40px)',
-                }} />
-                <PhoneMockup darkMode={true} />
+          <div className="lk-hero-cols" style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 80px', maxWidth: 1200, width: '100%', gap: 60 }}>
+            {/* Left */}
+            <div style={{ flex: 1 }}>
+              <div ref={heroTag} style={{ opacity: 0, display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(108,99,255,.18)', color: C1, marginBottom: 28, border: '1px solid rgba(108,99,255,.25)' }}>
+                <i className="ti ti-sparkles" /> Tu link en bio, reinventado
               </div>
-            </Parallax>
-          </Reveal>
-        </div>
-      </section>
 
-      {/* ── SECCIÓN 2 — Crea en minutos ── */}
-      <section className="lk-s2" style={{ background: '#1a1a2e', padding: '80px', overflow: 'hidden' }}>
-        <div className="lk-s2-inner" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80 }}>
-          <Reveal variant="left" style={{ flex: 1 }}>
-            <Tilt max={8}>
-              <div style={{
-                borderRadius: 24, padding: 28,
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                display: 'flex', flexDirection: 'column', gap: 10,
-              }}>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
-                  {['Perfil', 'Links', 'Colores', 'Movimiento'].map((t, i) => (
-                    <div key={t} style={{
-                      padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                      background: i === 1 ? '#fff' : 'rgba(255,255,255,0.15)',
-                      color: i === 1 ? ACCENT : 'rgba(255,255,255,0.7)',
-                    }}>{t}</div>
-                  ))}
-                </div>
-                {['Instagram', 'YouTube', 'TikTok', 'Mi portfolio'].map((n, i) => (
-                  <div key={n} style={{
-                    padding: '12px 16px', borderRadius: 12,
-                    background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)',
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    animation: `lk-pop 0.5s ease ${i * 0.1}s both`,
-                  }}>
-                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
-                    <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{n}</span>
-                    <div style={{ marginLeft: 'auto', width: 24, height: 24, borderRadius: 6, background: 'rgba(255,255,255,0.15)' }} />
+              <h1 ref={heroH1} className="lk-hero-h1" style={{ opacity: 0, fontSize: 62, fontWeight: 900, lineHeight: 1.08, marginBottom: 22, letterSpacing: '-1.5px' }}>
+                Tu presencia<br />digital,{' '}
+                <span style={{ background: `linear-gradient(90deg,${C1},${C2},${C1})`, backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', animation: 'shimmer 4s linear infinite' }}>en un solo link.</span>
+              </h1>
+
+              <p ref={heroSub} style={{ opacity: 0, fontSize: 18, color: 'rgba(255,255,255,.55)', marginBottom: 36, lineHeight: 1.7, maxWidth: 460 }}>
+                Crea tu página personalizada con todos tus links, temas animados y colores únicos. Compártela desde cualquier red social.
+              </p>
+
+              <div ref={heroBtn} style={{ opacity: 0, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                <Link href="/register" className="lk-cta" style={{
+                  padding: '16px 34px', borderRadius: 14, fontSize: 16, fontWeight: 700,
+                  color: '#fff', background: C1, textDecoration: 'none',
+                  boxShadow: `0 10px 36px rgba(108,99,255,.45)`,
+                }}>
+                  Empezar gratis <span className="lk-bob">→</span>
+                </Link>
+                <Link href="/login" className="lk-ghost" style={{
+                  padding: '16px 28px', borderRadius: 14, fontSize: 16, fontWeight: 500,
+                  color: 'rgba(255,255,255,.6)', textDecoration: 'none',
+                  border: '1px solid rgba(255,255,255,.12)', background: 'transparent',
+                }}>Ver demo</Link>
+              </div>
+            </div>
+
+            {/* Right: Phone */}
+            <div ref={heroPhone} className="lk-hero-phone lk-float" style={{ opacity: 0, flexShrink: 0, position: 'relative' }}>
+              {/* glow halo */}
+              <div style={{ position: 'absolute', inset: -50, borderRadius: '50%', background: `radial-gradient(circle,${C1}50,transparent 70%)`, filter: 'blur(40px)' }} />
+              <div style={{ position: 'relative' }}>
+                <PhoneMockup visibleLinks={5} themeIdx={0} />
+              </div>
+            </div>
+          </div>
+
+          {/* scroll cue */}
+          <div style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,.2)', fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase' }}>
+            Scroll
+            <div style={{ width: 1, height: 40, background: 'linear-gradient(to bottom, rgba(255,255,255,.25), transparent)', animation: 'bob 2s ease-in-out infinite' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════
+          SCENE 2 — LINKS ANIMATE
+      ══════════════════════════════════════════════════════ */}
+      <div ref={linksWrap} style={{ height: '260vh', position: 'relative' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to bottom, transparent, rgba(108,99,255,.04) 50%, transparent)' }}>
+          <Blob top="10%" right="-5%" color={C2} size={440} delay={4} />
+
+          <div className="lk-2cols" style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 80px', maxWidth: 1200, width: '100%', gap: 80 }}>
+            {/* Left text */}
+            <div ref={linksLeft} style={{ opacity: 0, flex: 1 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(168,85,247,.18)', color: C2, marginBottom: 24, border: '1px solid rgba(168,85,247,.25)' }}>
+                <i className="ti ti-link" /> Todos tus links
+              </div>
+              <h2 style={{ fontSize: 52, fontWeight: 900, lineHeight: 1.1, marginBottom: 18, letterSpacing: '-1px' }}>
+                Un solo lugar<br />
+                <span style={{ color: C2 }}>para todo.</span>
+              </h2>
+              <p style={{ fontSize: 17, color: 'rgba(255,255,255,.5)', lineHeight: 1.75, marginBottom: 32, maxWidth: 400 }}>
+                Instagram, YouTube, TikTok, tu portfolio, tu tienda — todos en una sola página elegante que puedes compartir en segundos.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  { icon: 'ti-brand-instagram', text: '46+ redes sociales soportadas' },
+                  { icon: 'ti-palette',          text: 'Ícono y color personalizados por link' },
+                  { icon: 'ti-device-mobile',    text: 'Preview en tiempo real en el editor' },
+                ].map(f => (
+                  <div key={f.text} style={{ display: 'flex', alignItems: 'center', gap: 14, color: 'rgba(255,255,255,.7)' }}>
+                    <div style={{ width: 38, height: 38, borderRadius: 11, background: 'rgba(108,99,255,.15)', border: '1px solid rgba(108,99,255,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <i className={`ti ${f.icon}`} style={{ color: C1, fontSize: 18 }} />
+                    </div>
+                    <span style={{ fontSize: 15 }}>{f.text}</span>
                   </div>
                 ))}
               </div>
-            </Tilt>
-          </Reveal>
+            </div>
 
-          <Reveal variant="right" delay={120} style={{ flex: 1 }}>
-            <h2 className="lk-s2-h2" style={{ fontSize: 46, fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 18 }}>
-              Crea y personaliza<br />en minutos
-            </h2>
-            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, marginBottom: 30 }}>
-              Editor visual intuitivo con preview en tiempo real. Elige temas animados, paletas de colores y ajusta cada detalle de tu página.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 32 }}>
-              {[
-                { icon: 'ti-palette',  text: '7 temas únicos: Galaxia, Meteoros, Tornasol y más' },
-                { icon: 'ti-activity', text: '6 fondos animados: Aurora, Destellos, Rayos...' },
-                { icon: 'ti-link',     text: '46+ redes sociales soportadas' },
-              ].map(f => (
-                <div key={f.text} className="lk-feat" style={{ display: 'flex', alignItems: 'center', gap: 14, color: 'rgba(255,255,255,0.85)' }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <i className={`ti ${f.icon}`} style={{ fontSize: 18 }} aria-hidden="true" />
+            {/* Right: Phone with animated links */}
+            <div ref={linksPhone} style={{ opacity: 0, flexShrink: 0 }}>
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', inset: -40, borderRadius: '50%', background: `radial-gradient(circle,${C2}35,transparent 70%)`, filter: 'blur(50px)' }} />
+                <div style={{ position: 'relative' }}>
+                  <PhoneMockup visibleLinks={visibleLinks} themeIdx={0} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════
+          SCENE 3 — THEMES
+      ══════════════════════════════════════════════════════ */}
+      <div ref={themesWrap} style={{ height: '280vh', position: 'relative' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.35)' }}>
+          <Blob top="20%" left="25%" color={C1} size={400} delay={8} />
+          <Blob bottom="10%" right="15%" color={C2} size={380} delay={2} />
+
+          <div className="lk-2cols" style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 80px', maxWidth: 1200, width: '100%', gap: 80 }}>
+            {/* Left text */}
+            <div ref={themesLeft} style={{ opacity: 0, flex: 1 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(108,99,255,.18)', color: C1, marginBottom: 24, border: '1px solid rgba(108,99,255,.2)' }}>
+                <i className="ti ti-palette" /> Temas únicos
+              </div>
+              <h2 style={{ fontSize: 52, fontWeight: 900, lineHeight: 1.1, marginBottom: 18, letterSpacing: '-1px' }}>
+                Tu estilo,<br />
+                <span style={{ background: `linear-gradient(90deg,${C1},${C2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>tus reglas.</span>
+              </h2>
+              <p style={{ fontSize: 17, color: 'rgba(255,255,255,.5)', lineHeight: 1.75, marginBottom: 32, maxWidth: 400 }}>
+                7 temas visuales únicos — desde minimalista hasta galaxia animada. Cada uno completamente personalizable con tus colores.
+              </p>
+              {/* Theme pills */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                {THEME_CARDS.map((t, i) => (
+                  <div key={t.label} style={{
+                    padding: '7px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600,
+                    background: i === themeIdx % THEME_CARDS.length ? t.bg : 'rgba(255,255,255,.06)',
+                    color: '#fff', border: '1px solid rgba(255,255,255,.1)',
+                    transition: 'background .5s',
+                  }}>{t.label}</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: floating theme cards + phone */}
+            <div ref={themeCards} className="lk-theme-grid" style={{ opacity: 0, flexShrink: 0, position: 'relative', width: 340 }}>
+              {THEME_CARDS.map((t, i) => {
+                const angles = [-12, 8, -6, 14, -10, 5]
+                const pos = [
+                  { top: 0,   left: 0   },
+                  { top: 30,  left: 120 },
+                  { top: 120, left: 60  },
+                  { top: 60,  left: 210 },
+                  { top: 180, left: 10  },
+                  { top: 160, left: 180 },
+                ]
+                return (
+                  <div key={t.label} style={{
+                    position: 'absolute', ...pos[i],
+                    width: 90, height: 130, borderRadius: 18,
+                    background: t.bg, boxShadow: '0 14px 40px rgba(0,0,0,.4)',
+                    border: '1px solid rgba(255,255,255,.14)',
+                    '--t': `${angles[i]}deg`,
+                    transform: `rotate(${angles[i]}deg)`,
+                    animation: `cardFloat ${6 + i * .8}s ease-in-out ${i * .5}s infinite`,
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 10,
+                  }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,.8)', marginBottom: 8 }} />
+                    <div style={{ width: 48, height: 6, borderRadius: 3, background: 'rgba(255,255,255,.7)', marginBottom: 4 }} />
+                    <div style={{ width: 32, height: 4, borderRadius: 2, background: 'rgba(255,255,255,.4)', marginBottom: 12 }} />
+                    {[1,2,3].map(j => <div key={j} style={{ width: '100%', height: 18, borderRadius: 6, background: 'rgba(255,255,255,.18)', border: '1px solid rgba(255,255,255,.2)', marginBottom: 5 }} />)}
                   </div>
-                  <span style={{ fontSize: 15 }}>{f.text}</span>
+                )
+              })}
+              <div style={{ height: 320 }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════
+          SCENE 4 — STEPS
+      ══════════════════════════════════════════════════════ */}
+      <div ref={stepsWrap} style={{ height: '240vh', position: 'relative' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Blob top="-5%" right="10%" color={C1} size={420} delay={10} />
+
+          <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, width: '100%', padding: '0 80px', textAlign: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(108,99,255,.18)', color: C1, marginBottom: 24, border: '1px solid rgba(108,99,255,.2)' }}>
+              <i className="ti ti-rocket" /> Simple y rápido
+            </div>
+            <h2 style={{ fontSize: 52, fontWeight: 900, lineHeight: 1.1, marginBottom: 16, letterSpacing: '-1px' }}>Listo en 3 pasos.</h2>
+            <p style={{ fontSize: 17, color: 'rgba(255,255,255,.45)', marginBottom: 56 }}>Sin configuraciones complicadas. Tu página en menos de 2 minutos.</p>
+
+            <div className="lk-steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+              {[
+                { ref: step1, num: '01', icon: 'ti-user-plus', title: 'Crea tu cuenta', desc: 'Regístrate gratis con email o Google. Elige tu nombre de usuario único en segundos.' },
+                { ref: step2, num: '02', icon: 'ti-palette',   title: 'Personaliza',    desc: 'Agrega tus links, elige temas animados, colores y ajusta cada detalle visualmente.' },
+                { ref: step3, num: '03', icon: 'ti-share',     title: 'Compártela',     desc: 'Pon tu link Linky en el bio de todas tus redes sociales y lleva tráfico a todo.' },
+              ].map(s => (
+                <div key={s.num} ref={s.ref} className="lk-step" style={{
+                  opacity: 0,
+                  padding: 32, borderRadius: 24, textAlign: 'left',
+                  background: 'rgba(255,255,255,.04)',
+                  border: '1px solid rgba(255,255,255,.07)',
+                  boxShadow: '0 4px 30px rgba(0,0,0,.3)',
+                }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: C1, marginBottom: 18, letterSpacing: '.08em' }}>{s.num}</div>
+                  <div style={{ width: 50, height: 50, borderRadius: 14, background: 'rgba(108,99,255,.15)', border: '1px solid rgba(108,99,255,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                    <i className={`ti ${s.icon}`} style={{ color: C1, fontSize: 22 }} />
+                  </div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{s.title}</h3>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,.45)', lineHeight: 1.7 }}>{s.desc}</p>
                 </div>
               ))}
             </div>
-            <Link href="/register" className="lk-cta" style={{
-              display: 'inline-block', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700,
-              background: '#fff', color: ACCENT, textDecoration: 'none',
-            }}>
-              Empezar gratis <span className="lk-arrow">→</span>
-            </Link>
-          </Reveal>
+          </div>
         </div>
-      </section>
+      </div>
 
-      {/* ── SECCIÓN 3 — Temas ── */}
-      <section className="lk-s3" style={{ background: '#0d0d18', padding: '80px', overflow: 'hidden', position: 'relative' }}>
-        <div aria-hidden style={{ position: 'absolute', top: '20%', left: '30%', width: 360, height: 360, borderRadius: '50%', background: 'radial-gradient(circle, rgba(108,99,255,0.3), transparent 70%)', filter: 'blur(70px)', animation: 'lk-blob 20s ease-in-out infinite' }} />
-        <div className="lk-s3-inner" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60, position: 'relative', zIndex: 1 }}>
-          <Reveal variant="left" style={{ flex: 1 }}>
-            <h2 className="lk-s3-h2" style={{ fontSize: 46, fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 18 }}>
-              Tu estilo,<br />
-              <span style={{ color: ACCENT }}>tus reglas.</span>
-            </h2>
-            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 32, maxWidth: 380 }}>
-              Elige entre 7 temas visuales únicos — desde minimalista hasta galaxia animada. Cada uno completamente personalizable.
-            </p>
-            <Link href="/register" className="lk-cta" style={{
-              display: 'inline-block', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 700,
-              background: ACCENT, color: '#fff', textDecoration: 'none',
-              boxShadow: '0 8px 32px rgba(108,99,255,0.4)',
-            }}>
-              Elegir mi tema <span className="lk-arrow">→</span>
-            </Link>
-          </Reveal>
-
-          <Parallax speed={0.08} className="lk-theme-cards" style={{ maxWidth: 560 }}>
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              {THEMES_SHOWCASE.map((t, i) => (
-                <Reveal key={i} variant="scale" delay={i * 80}><ThemeCard theme={t} index={i} /></Reveal>
-              ))}
-            </div>
-          </Parallax>
-        </div>
-      </section>
-
-      {/* ── SECCIÓN 4 — Cómo funciona ── */}
-      <section className="lk-s4" style={{ padding: '80px', background: bg }}>
-        <div style={{ maxWidth: 960, margin: '0 auto', textAlign: 'center' }}>
-          <Reveal variant="up">
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600,
-              background: pillBg, color: ACCENT, marginBottom: 20,
-            }}>
-              <i className="ti ti-rocket" aria-hidden="true" /> Simple y rápido
-            </div>
-            <h2 style={{ fontSize: 46, fontWeight: 800, color: text, lineHeight: 1.15, marginBottom: 16 }}>
-              Listo en 3 pasos
-            </h2>
-            <p style={{ fontSize: 17, color: muted, marginBottom: 56, maxWidth: 460, margin: '0 auto 56px' }}>
-              Sin configuraciones complicadas. Tu página en menos de 2 minutos.
-            </p>
-          </Reveal>
-
-          <div className="lk-three-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-            {[
-              { num: '01', icon: 'ti-user-plus',  title: 'Crea tu cuenta',       desc: 'Regístrate gratis con email o Google. Elige tu nombre de usuario único.' },
-              { num: '02', icon: 'ti-palette',    title: 'Personaliza tu página', desc: 'Agrega tus links, elige temas animados, colores y ajusta cada detalle.' },
-              { num: '03', icon: 'ti-share',      title: 'Compártela',            desc: 'Pon tu link de Linky en el bio de todas tus redes sociales y listo.' },
-            ].map((step, i) => (
-              <Reveal key={step.num} variant="up" delay={i * 130}>
-                <Tilt max={6} style={{ height: '100%' }}>
-                  <div style={{
-                    padding: 32, borderRadius: 24, textAlign: 'left', height: '100%',
-                    background: cardBg, border: `1px solid ${border}`,
-                    boxShadow: 'none',
-                  }}>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: ACCENT, marginBottom: 16, letterSpacing: '0.05em' }}>{step.num}</div>
-                    <div style={{
-                      width: 48, height: 48, borderRadius: 14, background: pillBg,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16,
-                    }}>
-                      <i className={`ti ${step.icon}`} style={{ color: ACCENT, fontSize: 22 }} aria-hidden="true" />
-                    </div>
-                    <h3 style={{ fontSize: 18, fontWeight: 700, color: text, marginBottom: 10 }}>{step.title}</h3>
-                    <p style={{ fontSize: 14, color: muted, lineHeight: 1.65 }}>{step.desc}</p>
-                  </div>
-                </Tilt>
-              </Reveal>
-            ))}
+      {/* ══════════════════════════════════════════════════════
+          SCENE 5 — CTA FINAL
+      ══════════════════════════════════════════════════════ */}
+      <section className="lk-cta-sec" style={{ position: 'relative', padding: '120px 80px', textAlign: 'center', overflow: 'hidden' }}>
+        <Blob top="-30%" left="50%" style={{ transform: 'translateX(-50%)' }} color={C1} size={600} delay={0} />
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 560, margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, background: 'rgba(108,99,255,.18)', color: C1, marginBottom: 28, border: '1px solid rgba(108,99,255,.2)' }}>
+            <i className="ti ti-sparkles" /> Es gratis
+          </div>
+          <h2 style={{ fontSize: 56, fontWeight: 900, lineHeight: 1.08, marginBottom: 20, letterSpacing: '-1.5px' }}>
+            ¿Listo para tu<br />
+            <span style={{ background: `linear-gradient(90deg,${C1},${C2})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>página Linky?</span>
+          </h2>
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,.45)', marginBottom: 40, lineHeight: 1.7 }}>
+            Crea tu página de links personalizada hoy mismo. Sin tarjeta de crédito.
+          </p>
+          <Link href="/register" className="lk-cta" style={{
+            display: 'inline-block', padding: '20px 48px', borderRadius: 16, fontSize: 18, fontWeight: 700,
+            color: '#fff', background: `linear-gradient(135deg,${C1},${C2})`, textDecoration: 'none',
+            boxShadow: `0 14px 48px rgba(108,99,255,.5)`,
+          }}>
+            Crear mi Linky gratis <span className="lk-bob">→</span>
+          </Link>
+          <div style={{ marginTop: 24, fontSize: 13, color: 'rgba(255,255,255,.25)' }}>
+            Sin tarjeta · Sin compromisos · Siempre gratis
           </div>
         </div>
       </section>
 
-      {/* ── CTA FINAL ── */}
-      <section className="lk-cta-sec" style={{
-        padding: '80px', textAlign: 'center', position: 'relative', overflow: 'hidden',
-        background: '#1a1a2e',
-      }}>
-        <div aria-hidden style={{ position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)', width: 500, height: 500, borderRadius: '50%', background: `radial-gradient(circle, ${ACCENT}30, transparent 70%)`, filter: 'blur(70px)', animation: 'lk-blob 16s ease-in-out infinite' }} />
-        <Reveal variant="scale" style={{ maxWidth: 580, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <h2 className="lk-cta-h2" style={{ fontSize: 46, fontWeight: 800, color: text, lineHeight: 1.15, marginBottom: 18 }}>
-            ¿Listo para tu<br />
-            <span style={{ color: ACCENT }}>página Linky?</span>
-          </h2>
-          <p style={{ fontSize: 17, color: muted, marginBottom: 36, lineHeight: 1.7 }}>
-            Crea tu página de links personalizada hoy. Es gratis.
-          </p>
-          <Link href="/register" className="lk-cta" style={{
-            display: 'inline-block', padding: '18px 40px', borderRadius: 16, fontSize: 17, fontWeight: 700,
-            color: '#fff', background: ACCENT, textDecoration: 'none',
-            boxShadow: '0 12px 40px rgba(108,99,255,0.4)',
-          }}>
-            Crear mi Linky gratis <span className="lk-arrow">→</span>
-          </Link>
-        </Reveal>
-      </section>
-
       {/* ── FOOTER ── */}
-      <footer className="lk-footer" style={{
-        padding: '24px 40px', textAlign: 'center', fontSize: 13, color: muted,
-        borderTop: `1px solid ${border}`,
-        background: '#0f0f13',
-      }}>
+      <footer style={{ padding: '28px 48px', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,.18)', borderTop: '1px solid rgba(255,255,255,.05)', background: 'rgba(0,0,0,.3)', position: 'relative', zIndex: 1 }}>
         Linky · Hecho con ♥
       </footer>
+
     </div>
   )
 }
