@@ -842,6 +842,74 @@ function ThemeOlas({ profile, links, isOwner, username, products }) {
   )
 }
 
+function ThemeStars({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#a78bfa'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#05060f')
+
+  return (
+    <>
+      <style>{`
+        .stars-bg { background: #05060f url('/stars.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .stars-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);transition:all .3s; }
+        .stars-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .stars-name { color:#fff;text-shadow:0 0 24px rgba(167,139,250,0.6); }
+      `}</style>
+
+      <div className="stars-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(255,255,255,0.2)', boxShadow: '0 0 30px rgba(255,255,255,0.15)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(167,139,250,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="stars-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>{profile.bio}</p>}
+            </div>
+
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`stars-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export default function ProfilePage({ profile, links, isOwner, username, products }) {
   const theme = profile.theme || 'light'
   const p = { profile, links, isOwner, username, products }
@@ -853,5 +921,6 @@ export default function ProfilePage({ profile, links, isOwner, username, product
   if (theme === 'matrix')    return <ThemeMatrix    {...p} />
   if (theme === 'sunset')    return <ThemeSunset    {...p} />
   if (theme === 'olas')      return <ThemeOlas      {...p} />
+  if (theme === 'stars')     return <ThemeStars     {...p} />
   return <ThemeLight {...p} />
 }

@@ -16,6 +16,7 @@ const ANIMATED_THEMES = [
   { id: 'cosmos',   label: 'Galaxia',          desc: 'Nebulosa · estrellas' },
   { id: 'cometas',  label: 'Meteoros',         desc: 'Cielo nocturno · cometas' },
   { id: 'matrix',   label: 'Matrix',           desc: 'Binarios cayendo · verde neón' },
+  { id: 'stars',    label: 'Stars ✦',          desc: 'Cielo estrellado · noche real' },
   { id: 'sunset',   label: 'Atardecer',        desc: 'Cálido · olas al caer el sol' },
   { id: 'olas',     label: 'Olas',             desc: 'Océano profundo · burbujas' },
 ]
