@@ -219,12 +219,12 @@ export default function PhonePreview({ profile, links }) {
       return (
         <>
           <style>{`
-            @keyframes pv-shoot { 0%{transform:rotate(-35deg) translateX(0);opacity:1} 80%{opacity:1} 100%{transform:rotate(-35deg) translateX(-260px);opacity:0} }
+            @keyframes pv-shoot { 0%{transform:translateX(280px) translateY(-80px) rotate(-35deg);opacity:0} 5%{opacity:1} 85%{opacity:1} 100%{transform:translateX(-80px) translateY(180px) rotate(-35deg);opacity:0} }
             @keyframes pv-twinkle2 { 0%,100%{opacity:0.9} 50%{opacity:0.2} }
-            .pv-comet { position:absolute;width:70px;height:2px;background:linear-gradient(90deg,#fff 0%,rgba(155,211,255,0.6) 60%,transparent 100%);filter:drop-shadow(0 0 3px #9bd3ff);transform-origin:right center; }
-            .pv-c1 { top:80px;right:-10px;animation:pv-shoot 4s linear infinite; }
-            .pv-c2 { top:200px;right:60px;animation:pv-shoot 4s linear infinite 1.8s; }
-            .pv-c3 { top:140px;right:20px;animation:pv-shoot 4s linear infinite 3.2s; }
+            .pv-comet { position:absolute;width:70px;height:2px;background:linear-gradient(90deg,#fff 0%,rgba(155,211,255,0.6) 60%,transparent 100%);filter:drop-shadow(0 0 3px #9bd3ff);top:100px;left:20px; }
+            .pv-c1 { animation:pv-shoot 4s linear infinite; }
+            .pv-c2 { animation:pv-shoot 4s linear infinite 1.5s; }
+            .pv-c3 { animation:pv-shoot 4s linear infinite 3s; }
             .pv-stars2 { animation:pv-twinkle2 4s ease-in-out infinite; }
           `}</style>
           <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg,#080b1a 0%,#0d1330 50%,#10183d 100%)', minHeight: 520 }}>
