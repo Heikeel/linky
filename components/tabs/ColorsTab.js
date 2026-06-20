@@ -46,7 +46,7 @@ export default function ColorsTab({ data, onChange }) {
   const [basePalette, setBasePalette] = useState(null)
 
   const palettes = theme === 'dark' ? PALETTES_DARK : PALETTES_LIGHT
-  const showPalettes = theme === 'light' || theme === 'gradient' || theme === 'dark'
+  const showPalettes = theme === 'light' || theme === 'gradient' || theme === 'dark' || theme === 'custom'
   const iconOverride = !!data.icon_color
   const isAnimatedTheme = ANIMATED_IDS.includes(theme)
   const bgMotion = data.bg_motion || 'none'
@@ -99,15 +99,8 @@ export default function ColorsTab({ data, onChange }) {
         </div>
       </div>
 
-      <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Con movimiento</p>
-        <div className="flex flex-col gap-2">
-          {ANIMATED_THEMES.map(t => <ThemeButton key={t.id} t={t} />)}
-        </div>
-      </div>
-
       {showPalettes && (
-        <div className="border-t border-gray-100 pt-4 flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
               {theme === 'dark' ? 'Paletas oscuras' : 'Paletas de colores'}
@@ -150,6 +143,13 @@ export default function ColorsTab({ data, onChange }) {
           )}
         </div>
       )}
+
+      <div>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Con movimiento</p>
+        <div className="flex flex-col gap-2">
+          {ANIMATED_THEMES.map(t => <ThemeButton key={t.id} t={t} />)}
+        </div>
+      </div>
 
       {ANIMATED_IDS.includes(theme) && (
         <div className="border-t border-gray-100 pt-4">
