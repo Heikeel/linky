@@ -910,6 +910,195 @@ function ThemeStars({ profile, links, isOwner, username, products }) {
   )
 }
 
+function ThemeDesert({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#f97316'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#05060f')
+  return (
+    <>
+      <style>{`
+        .desert-bg { background: #0a0300 url('/desert.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .desert-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,140,0,0.15);transition:all .3s; }
+        .desert-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .desert-name { color:#fff;text-shadow:0 0 24px rgba(249,115,22,0.7); }
+      `}</style>
+      <div className="desert-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(249,115,22,0.4)', boxShadow: '0 0 30px rgba(249,115,22,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(249,115,22,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="desert-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`desert-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeAurora({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#4ade80'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#05060f')
+  return (
+    <>
+      <style>{`
+        .aurora-bg { background: #020b05 url('/aurora.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .aurora-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(74,222,128,0.15);transition:all .3s; }
+        .aurora-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .aurora-name { color:#fff;text-shadow:0 0 24px rgba(74,222,128,0.6); }
+      `}</style>
+      <div className="aurora-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(74,222,128,0.4)', boxShadow: '0 0 30px rgba(74,222,128,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(74,222,128,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="aurora-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`aurora-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeOcean({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#22d3ee'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#05060f')
+  return (
+    <>
+      <style>{`
+        .ocean-bg { background: #000d12 url('/ocean.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .ocean-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(34,211,238,0.15);transition:all .3s; }
+        .ocean-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .ocean-name { color:#fff;text-shadow:0 0 24px rgba(34,211,238,0.6); }
+      `}</style>
+      <div className="ocean-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(34,211,238,0.4)', boxShadow: '0 0 30px rgba(34,211,238,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(34,211,238,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="ocean-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`ocean-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export default function ProfilePage({ profile, links, isOwner, username, products }) {
   const theme = profile.theme || 'light'
   const p = { profile, links, isOwner, username, products }
@@ -922,5 +1111,8 @@ export default function ProfilePage({ profile, links, isOwner, username, product
   if (theme === 'sunset')    return <ThemeSunset    {...p} />
   if (theme === 'olas')      return <ThemeOlas      {...p} />
   if (theme === 'stars')     return <ThemeStars     {...p} />
+  if (theme === 'desert')    return <ThemeDesert    {...p} />
+  if (theme === 'aurora')    return <ThemeAurora    {...p} />
+  if (theme === 'ocean')     return <ThemeOcean     {...p} />
   return <ThemeLight {...p} />
 }
