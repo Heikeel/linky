@@ -11,10 +11,6 @@ const THEMES = [
   { id: 'custom',   label: 'Personalizado',    desc: 'Elige cada color tú mismo' },
 ]
 
-const STATIC_SPECIAL_THEMES = [
-  { id: 'stars',    label: 'Stars ✦',          desc: 'Cielo estrellado · noche real' },
-]
-
 const ANIMATED_THEMES = [
   { id: 'tornasol', label: 'Burbuja tornasol', desc: 'Iridiscente · holográfico' },
   { id: 'cosmos',   label: 'Galaxia',          desc: 'Nebulosa · estrellas' },
@@ -31,7 +27,8 @@ const FIELDS = [
   { key: 'muted',      label: 'Texto suave',   hint: 'Bio y subtítulos' },
 ]
 
-const ANIMATED_IDS = [...STATIC_SPECIAL_THEMES, ...ANIMATED_THEMES].map(t => t.id)
+const ESPECIALES_IDS = ['stars']
+const ANIMATED_IDS = [...ESPECIALES_IDS, ...ANIMATED_THEMES.map(t => t.id)]
 
 const BG_MOTIONS = [
   { id: 'aurora',   label: 'Aurora',    icon: 'ti-sparkles' },
@@ -103,14 +100,7 @@ export default function ColorsTab({ data, onChange }) {
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Especiales · sin movimiento</p>
-        <div className="flex flex-col gap-2">
-          {STATIC_SPECIAL_THEMES.map(t => <ThemeButton key={t.id} t={t} />)}
-        </div>
-      </div>
-
-      <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Especiales · con movimiento</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Con movimiento</p>
         <div className="flex flex-col gap-2">
           {ANIMATED_THEMES.map(t => <ThemeButton key={t.id} t={t} />)}
         </div>
