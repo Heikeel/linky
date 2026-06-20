@@ -26,17 +26,9 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [origin, setOrigin] = useState('')
-  const [darkEditor, setDarkEditor] = useState(() =>
-    typeof window !== 'undefined' && localStorage.getItem('linky-editor-dark') === 'true'
-  )
+  const [darkEditor] = useState(true)
 
   useEffect(() => { setOrigin(window.location.origin) }, [])
-
-  function toggleDark() {
-    const next = !darkEditor
-    setDarkEditor(next)
-    localStorage.setItem('linky-editor-dark', next)
-  }
 
   function updateProfile(changes) {
     setProfile(prev => ({ ...prev, ...changes }))
@@ -157,14 +149,6 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
           <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `1px solid ${D ? 'rgba(255,255,255,0.07)' : '#f3f4f6'}` }}>
             <div className="text-lg font-bold" style={{ color: '#6c63ff' }}>Linky</div>
             <div className="flex gap-2 items-center">
-              <button
-                onClick={toggleDark}
-                title={D ? 'Modo claro' : 'Modo oscuro'}
-                className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
-                style={{ background: D ? 'rgba(255,255,255,0.08)' : '#f3f4f6', color: D ? 'rgba(255,255,255,0.55)' : '#9ca3af' }}
-              >
-                <i className={`ti ${D ? 'ti-sun' : 'ti-moon'} text-sm`} aria-hidden="true"></i>
-              </button>
               <a
                 href={`/${profile.username}`}
                 target="_blank"
