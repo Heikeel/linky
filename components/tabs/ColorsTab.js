@@ -144,6 +144,57 @@ export default function ColorsTab({ data, onChange }) {
               </div>
             </div>
           )}
+
+          <div>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Color del texto</p>
+            <p className="text-xs text-gray-400 mb-3">Tonos neutros para títulos y links</p>
+            <div className="flex gap-2 flex-wrap">
+              {NEUTRALS.map(n => (
+                <button
+                  key={n.value}
+                  onClick={() => onChange({ text_color: n.value })}
+                  title={n.name}
+                  className={`w-8 h-8 rounded-full border-2 shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200 ${
+                    data.text_color === n.value ? 'border-purple-500 ring-purple-300' : 'border-white'
+                  }`}
+                  style={{ background: n.value }}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Color de los logos</p>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <span className="text-xs text-gray-400">{iconOverride ? 'Activado' : 'Por marca'}</span>
+                <button
+                  onClick={() => onChange({ icon_color: iconOverride ? null : '#6b7280' })}
+                  className={`relative w-9 h-5 rounded-full transition-colors ${iconOverride ? 'bg-purple-500' : 'bg-gray-300'}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${iconOverride ? 'translate-x-4' : ''}`} />
+                </button>
+              </label>
+            </div>
+            <p className="text-xs text-gray-400 mb-3">
+              {iconOverride ? 'Todos los logos en un mismo color' : 'Cada red social usa su color original'}
+            </p>
+            {iconOverride && (
+              <div className="flex gap-2 flex-wrap">
+                {NEUTRALS.map(n => (
+                  <button
+                    key={n.value}
+                    onClick={() => onChange({ icon_color: n.value })}
+                    title={n.name}
+                    className={`w-8 h-8 rounded-full border-2 shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200 ${
+                      data.icon_color === n.value ? 'border-purple-500 ring-purple-300' : 'border-white'
+                    }`}
+                    style={{ background: n.value }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -221,59 +272,6 @@ export default function ColorsTab({ data, onChange }) {
         </div>
       )}
 
-      {/* Colores neutros — texto y logos */}
-      <div className="border-t border-gray-100 pt-4 flex flex-col gap-4">
-        <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Color del texto</p>
-          <p className="text-xs text-gray-400 mb-3">Tonos neutros para títulos y links</p>
-          <div className="flex gap-2 flex-wrap">
-            {NEUTRALS.map(n => (
-              <button
-                key={n.value}
-                onClick={() => onChange({ text_color: n.value })}
-                title={n.name}
-                className={`w-8 h-8 rounded-full border-2 shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200 ${
-                  data.text_color === n.value ? 'border-purple-500 ring-purple-300' : 'border-white'
-                }`}
-                style={{ background: n.value }}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-1">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Color de los logos</p>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <span className="text-xs text-gray-400">{iconOverride ? 'Activado' : 'Por marca'}</span>
-              <button
-                onClick={() => onChange({ icon_color: iconOverride ? null : '#6b7280' })}
-                className={`relative w-9 h-5 rounded-full transition-colors ${iconOverride ? 'bg-purple-500' : 'bg-gray-300'}`}
-              >
-                <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${iconOverride ? 'translate-x-4' : ''}`} />
-              </button>
-            </label>
-          </div>
-          <p className="text-xs text-gray-400 mb-3">
-            {iconOverride ? 'Todos los logos en un mismo color' : 'Cada red social usa su color original'}
-          </p>
-          {iconOverride && (
-            <div className="flex gap-2 flex-wrap">
-              {NEUTRALS.map(n => (
-                <button
-                  key={n.value}
-                  onClick={() => onChange({ icon_color: n.value })}
-                  title={n.name}
-                  className={`w-8 h-8 rounded-full border-2 shadow-sm hover:scale-110 transition-transform ring-1 ring-gray-200 ${
-                    data.icon_color === n.value ? 'border-purple-500 ring-purple-300' : 'border-white'
-                  }`}
-                  style={{ background: n.value }}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   )
 }
