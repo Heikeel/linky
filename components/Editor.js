@@ -68,25 +68,40 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
       return
     }
 
-    await supabase.from('links').delete().eq('profile_id', userId)
-    if (links.length > 0) {
-      const { error: linksError } = await supabase.from('links').insert(
-        links.map((l, i) => ({
+    // Solo borrar links que el usuario eliminó explícitamente
+    const currentIds = links.filter(l => !l.id?.startsWith('tmp_')).map(l => l.id)
+    const removedIds = (initialLinks || []).map(l => l.id).filter(id => !currentIds.includes(id))
+    if (removedIds.length > 0) {
+      await supabase.from('links').delete().in('id', removedIds)
+    }
+
+    // Insertar links nuevos (id temporal)
+    const newLinks = links.filter(l => l.id?.startsWith('tmp_'))
+    if (newLinks.length > 0) {
+      const { error: insertError } = await supabase.from('links').insert(
+        newLinks.map((l, i) => ({
           profile_id:  userId,
           network_id:  l.network_id,
           name:        l.name,
           url:         l.url || '',
           icon:        l.icon,
           color:       l.color,
-          order_index: i,
+          order_index: currentIds.length + i,
           active:      true,
         }))
       )
-      if (linksError) {
-        alert('Error al guardar links: ' + linksError.message)
+      if (insertError) {
+        alert('Error al guardar links: ' + insertError.message)
         setSaving(false)
         return
       }
+    }
+
+    // Actualizar URLs y orden de links existentes
+    const existingLinks = links.filter(l => !l.id?.startsWith('tmp_'))
+    for (let i = 0; i < existingLinks.length; i++) {
+      const l = existingLinks[i]
+      await supabase.from('links').update({ url: l.url || '', order_index: i }).eq('id', l.id)
     }
 
     setSaving(false)
