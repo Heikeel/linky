@@ -1099,6 +1099,510 @@ function ThemeOcean({ profile, links, isOwner, username, products }) {
   )
 }
 
+function ThemeGlaciar({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#38bdf8'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#001520')
+  return (
+    <>
+      <style>{`
+        .glaciar-bg { background: #001520 url('/glaciar.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .glaciar-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(56,189,248,0.2);transition:all .3s; }
+        .glaciar-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .glaciar-name { color:#fff;text-shadow:0 0 24px rgba(56,189,248,0.7); }
+      `}</style>
+      <div className="glaciar-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(56,189,248,0.5)', boxShadow: '0 0 30px rgba(56,189,248,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(56,189,248,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="glaciar-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`glaciar-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeAbismo({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#06b6d4'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#000d12')
+  return (
+    <>
+      <style>{`
+        .abismo-bg { background: #000d12 url('/abismo.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .abismo-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(6,182,212,0.2);transition:all .3s; }
+        .abismo-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .abismo-name { color:#fff;text-shadow:0 0 24px rgba(6,182,212,0.7); }
+      `}</style>
+      <div className="abismo-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(6,182,212,0.5)', boxShadow: '0 0 30px rgba(6,182,212,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(6,182,212,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="abismo-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`abismo-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeMontana({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#f97316'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#0d0a05')
+  return (
+    <>
+      <style>{`
+        .montana-bg { background: #0d0a05 url('/montana.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .montana-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(249,115,22,0.2);transition:all .3s; }
+        .montana-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .montana-name { color:#fff;text-shadow:0 0 24px rgba(249,115,22,0.7); }
+      `}</style>
+      <div className="montana-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(249,115,22,0.5)', boxShadow: '0 0 30px rgba(249,115,22,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(249,115,22,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="montana-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`montana-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeNeon({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#c084fc'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#05020f')
+  return (
+    <>
+      <style>{`
+        .neon-bg { background: #05020f url('/neon.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .neon-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(192,132,252,0.25);transition:all .3s; }
+        .neon-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .neon-name { color:#fff;text-shadow:0 0 24px rgba(192,132,252,0.8); }
+      `}</style>
+      <div className="neon-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(192,132,252,0.5)', boxShadow: '0 0 30px rgba(192,132,252,0.4)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(192,132,252,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="neon-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`neon-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeZen({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#86efac'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#050f07')
+  return (
+    <>
+      <style>{`
+        .zen-bg { background: #050f07 url('/zen.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .zen-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(134,239,172,0.2);transition:all .3s; }
+        .zen-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .zen-name { color:#fff;text-shadow:0 0 24px rgba(134,239,172,0.6); }
+      `}</style>
+      <div className="zen-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(134,239,172,0.4)', boxShadow: '0 0 30px rgba(134,239,172,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(134,239,172,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="zen-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`zen-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeTormenta({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#94a3b8'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#05080f')
+  return (
+    <>
+      <style>{`
+        .tormenta-bg { background: #05080f url('/tormenta.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .tormenta-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(148,163,184,0.2);transition:all .3s; }
+        .tormenta-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .tormenta-name { color:#fff;text-shadow:0 0 24px rgba(148,163,184,0.7); }
+      `}</style>
+      <div className="tormenta-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(148,163,184,0.4)', boxShadow: '0 0 30px rgba(148,163,184,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(148,163,184,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="tormenta-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`tormenta-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeMarte({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#ef4444'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#150500')
+  return (
+    <>
+      <style>{`
+        .marte-bg { background: #150500 url('/marte.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .marte-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(239,68,68,0.2);transition:all .3s; }
+        .marte-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .marte-name { color:#fff;text-shadow:0 0 24px rgba(239,68,68,0.7); }
+      `}</style>
+      <div className="marte-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(239,68,68,0.5)', boxShadow: '0 0 30px rgba(239,68,68,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(239,68,68,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="marte-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`marte-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeLoto({ profile, links, isOwner, username, products }) {
+  const accent = profile.accent || '#f0abfc'
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#0a0510')
+  return (
+    <>
+      <style>{`
+        .loto-bg { background: #0a0510 url('/loto.jpg') center/cover no-repeat fixed; min-height:100vh; }
+        .loto-card { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(240,171,252,0.2);transition:all .3s; }
+        .loto-card:hover { background:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .loto-name { color:#fff;text-shadow:0 0 24px rgba(240,171,252,0.7); }
+      `}</style>
+      <div className="loto-bg relative">
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(240,171,252,0.4)', boxShadow: '0 0 30px rgba(240,171,252,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: accent, boxShadow: '0 0 30px rgba(240,171,252,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="loto-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`loto-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <ProductsSection products={products} dark={true} paypalEmail={profile.paypal_email} />
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-all" style={{ background: accent }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 function ThemeNebulosa({ profile, links, isOwner, username, products }) {
   const accent = profile.accent || '#a855f7'
   const anim   = profile.animation || 'bounce'
@@ -1246,5 +1750,13 @@ export default function ProfilePage({ profile, links, isOwner, username, product
   if (theme === 'ocean')     return <ThemeOcean     {...p} />
   if (theme === 'sakura')    return <ThemeSakura    {...p} />
   if (theme === 'nebulosa')  return <ThemeNebulosa  {...p} />
+  if (theme === 'glaciar')   return <ThemeGlaciar   {...p} />
+  if (theme === 'abismo')    return <ThemeAbismo    {...p} />
+  if (theme === 'montana')   return <ThemeMontana   {...p} />
+  if (theme === 'neon')      return <ThemeNeon      {...p} />
+  if (theme === 'zen')       return <ThemeZen       {...p} />
+  if (theme === 'tormenta')  return <ThemeTormenta  {...p} />
+  if (theme === 'marte')     return <ThemeMarte     {...p} />
+  if (theme === 'loto')      return <ThemeLoto      {...p} />
   return <ThemeLight {...p} />
 }
