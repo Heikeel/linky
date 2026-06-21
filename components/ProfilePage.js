@@ -1,9 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 import { safeIconColor, generateStars } from '@/lib/colorUtils'
 import AnimatedBg from '@/components/AnimatedBg'
+
+function useAnalytics(profileId, isOwner) {
+  const track = useCallback(async (type, linkId = null) => {
+    if (isOwner) return
+    const supabase = createClient()
+    await supabase.from('analytics').insert({ profile_id: profileId, link_id: linkId, type })
+  }, [profileId, isOwner])
+
+  useEffect(() => { track('view') }, [track])
+
+  return track
+}
 
 function ShareButton({ dark }) {
   const [copied, setCopied] = useState(false)
@@ -1846,31 +1859,43 @@ function ThemeSakura({ profile, links, isOwner, username }) {
 }
 
 export default function ProfilePage({ profile, links, isOwner, username }) {
+  const track = useAnalytics(profile.id, isOwner)
+
+  function handleClick(e) {
+    const anchor = e.target.closest('a[href]')
+    if (!anchor) return
+    const href = anchor.getAttribute('href')
+    const link = links?.find(l => l.url && href === l.url)
+    if (link) track('click', link.id)
+  }
+
   const theme = profile.theme || 'light'
   const p = { profile, links, isOwner, username }
-  if (theme === 'dark')      return <ThemeDark      {...p} />
-  if (theme === 'gradient')  return <ThemeGradient  {...p} />
-  if (theme === 'tornasol')  return <ThemeTornasol  {...p} />
-  if (theme === 'cosmos')    return <ThemeCosmos    {...p} />
-  if (theme === 'cometas')   return <ThemeCometas   {...p} />
-  if (theme === 'matrix')    return <ThemeMatrix    {...p} />
-  if (theme === 'sunset')    return <ThemeSunset    {...p} />
-  if (theme === 'olas')      return <ThemeOlas      {...p} />
-  if (theme === 'lava')      return <ThemeLava      {...p} />
-  if (theme === 'polvo')     return <ThemePolvo     {...p} />
-  if (theme === 'cristal')   return <ThemeCristal   {...p} />
-  if (theme === 'lluvia')    return <ThemeLluvia    {...p} />
-  if (theme === 'stars')     return <ThemeStars     {...p} />
-  if (theme === 'desert')    return <ThemeDesert    {...p} />
-  if (theme === 'aurora')    return <ThemeAurora    {...p} />
-  if (theme === 'ocean')     return <ThemeOcean     {...p} />
-  if (theme === 'sakura')    return <ThemeSakura    {...p} />
-  if (theme === 'nebulosa')  return <ThemeNebulosa  {...p} />
-  if (theme === 'glaciar')   return <ThemeGlaciar   {...p} />
-  if (theme === 'montana')   return <ThemeMontana   {...p} />
-  if (theme === 'zen')       return <ThemeZen       {...p} />
-  if (theme === 'tormenta')  return <ThemeTormenta  {...p} />
-  if (theme === 'marte')     return <ThemeMarte     {...p} />
-  if (theme === 'loto')      return <ThemeLoto      {...p} />
-  return <ThemeLight {...p} />
+  const wrap = el => <div onClick={handleClick}>{el}</div>
+
+  if (theme === 'dark')      return wrap(<ThemeDark      {...p} />)
+  if (theme === 'gradient')  return wrap(<ThemeGradient  {...p} />)
+  if (theme === 'tornasol')  return wrap(<ThemeTornasol  {...p} />)
+  if (theme === 'cosmos')    return wrap(<ThemeCosmos    {...p} />)
+  if (theme === 'cometas')   return wrap(<ThemeCometas   {...p} />)
+  if (theme === 'matrix')    return wrap(<ThemeMatrix    {...p} />)
+  if (theme === 'sunset')    return wrap(<ThemeSunset    {...p} />)
+  if (theme === 'olas')      return wrap(<ThemeOlas      {...p} />)
+  if (theme === 'lava')      return wrap(<ThemeLava      {...p} />)
+  if (theme === 'polvo')     return wrap(<ThemePolvo     {...p} />)
+  if (theme === 'cristal')   return wrap(<ThemeCristal   {...p} />)
+  if (theme === 'lluvia')    return wrap(<ThemeLluvia    {...p} />)
+  if (theme === 'stars')     return wrap(<ThemeStars     {...p} />)
+  if (theme === 'desert')    return wrap(<ThemeDesert    {...p} />)
+  if (theme === 'aurora')    return wrap(<ThemeAurora    {...p} />)
+  if (theme === 'ocean')     return wrap(<ThemeOcean     {...p} />)
+  if (theme === 'sakura')    return wrap(<ThemeSakura    {...p} />)
+  if (theme === 'nebulosa')  return wrap(<ThemeNebulosa  {...p} />)
+  if (theme === 'glaciar')   return wrap(<ThemeGlaciar   {...p} />)
+  if (theme === 'montana')   return wrap(<ThemeMontana   {...p} />)
+  if (theme === 'zen')       return wrap(<ThemeZen       {...p} />)
+  if (theme === 'tormenta')  return wrap(<ThemeTormenta  {...p} />)
+  if (theme === 'marte')     return wrap(<ThemeMarte     {...p} />)
+  if (theme === 'loto')      return wrap(<ThemeLoto      {...p} />)
+  return wrap(<ThemeLight {...p} />)
 }

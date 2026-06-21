@@ -8,11 +8,13 @@ import ProfileTab from '@/components/tabs/ProfileTab'
 import LinksTab from '@/components/tabs/LinksTab'
 import ColorsTab from '@/components/tabs/ColorsTab'
 import MotionTab from '@/components/tabs/MotionTab'
+import StatsTab from '@/components/tabs/StatsTab'
 const TABS = [
   { id: 'profile', label: 'Perfil',     icon: 'ti-user' },
   { id: 'links',   label: 'Links',      icon: 'ti-link' },
   { id: 'colors',  label: 'Temas',      icon: 'ti-palette' },
   { id: 'motion',  label: 'Movimiento', icon: 'ti-activity' },
+  { id: 'stats',   label: 'Stats',      icon: 'ti-chart-bar' },
 ]
 
 export default function Editor({ profile: initialProfile, links: initialLinks, userId }) {
@@ -193,7 +195,8 @@ export default function Editor({ profile: initialProfile, links: initialLinks, u
             {tab === 'profile'    && <ProfileTab    data={profile} onChange={updateProfile} userId={userId} />}
             {tab === 'links'      && <LinksTab      links={links} onLinksChange={handleLinksChange} />}
             {tab === 'colors'     && <ColorsTab     data={profile} onChange={updateProfile} />}
-            {tab === 'motion'  && <MotionTab  data={profile} onChange={updateProfile} />}
+            {tab === 'motion'     && <MotionTab     data={profile} onChange={updateProfile} />}
+            {tab === 'stats'      && <StatsTab      userId={userId} links={links} />}
           </div>
 
           <div className="p-4 flex items-center justify-between" style={{ borderTop: `1px solid ${D ? 'rgba(255,255,255,0.07)' : '#f3f4f6'}` }}>
