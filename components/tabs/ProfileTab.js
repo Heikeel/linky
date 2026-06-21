@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useCallback, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 function CropModal({ src, onConfirm, onCancel }) {
   const canvasRef = useRef()
@@ -148,6 +149,7 @@ function CropModal({ src, onConfirm, onCancel }) {
 export default function ProfileTab({ data, onChange, userId }) {
   const fileRef = useRef()
   const [cropSrc, setCropSrc] = useState(null)
+  const [uploading, setUploading] = useState(false)
 
   function handlePhoto(e) {
     const file = e.target.files?.[0]
@@ -159,12 +161,35 @@ export default function ProfileTab({ data, onChange, userId }) {
     reader.readAsDataURL(file)
   }
 
+  async function handleCropConfirm(dataUrl) {
+    setCropSrc(null)
+    setUploading(true)
+    try {
+      const res = await fetch(dataUrl)
+      const blob = await res.blob()
+      const supabase = createClient()
+      const path = `${userId}/avatar.jpg`
+      const { error } = await supabase.storage.from('avatars').upload(path, blob, {
+        contentType: 'image/jpeg',
+        upsert: true,
+      })
+      if (error) throw error
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path)
+      const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`
+      onChange({ avatar_url: publicUrl })
+    } catch (err) {
+      alert('Error al subir la foto: ' + err.message)
+    } finally {
+      setUploading(false)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-5">
       {cropSrc && (
         <CropModal
           src={cropSrc}
-          onConfirm={url => { onChange({ avatar_url: url }); setCropSrc(null) }}
+          onConfirm={handleCropConfirm}
           onCancel={() => setCropSrc(null)}
         />
       )}
@@ -172,7 +197,7 @@ export default function ProfileTab({ data, onChange, userId }) {
       <div className="flex items-center gap-4">
         <div
           className="relative w-20 h-20 rounded-full cursor-pointer flex-shrink-0 overflow-hidden border-2 border-gray-200 hover:border-purple-400 transition-colors"
-          onClick={() => fileRef.current?.click()}
+          onClick={() => !uploading && fileRef.current?.click()}
         >
           {data.avatar_url ? (
             <img src={data.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
@@ -181,9 +206,15 @@ export default function ProfileTab({ data, onChange, userId }) {
               {(data.name || '?').charAt(0).toUpperCase()}
             </div>
           )}
-          <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-            <i className="ti ti-camera text-white text-lg" aria-hidden="true"></i>
-          </div>
+          {uploading ? (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : (
+            <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+              <i className="ti ti-camera text-white text-lg" aria-hidden="true"></i>
+            </div>
+          )}
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-700">Foto de perfil</p>
