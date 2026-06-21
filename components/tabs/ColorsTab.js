@@ -198,14 +198,14 @@ export default function ColorsTab({ data, onChange }) {
       )}
 
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Animados CSS</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Animados</p>
         <div className="flex flex-col gap-2">
           {ANIMATED_THEMES.map(t => <ThemeButton key={t.id} t={t} />)}
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Video en vivo</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Live</p>
         <div className="flex flex-col gap-2">
           <ThemeButton t={{ id: 'sakura',   label: 'Sakura',   desc: 'Cerezos japoneses · video al vivo' }} />
           <ThemeButton t={{ id: 'nebulosa', label: 'Nebulosa', desc: 'Galaxia morada · espacio profundo' }} />
@@ -213,7 +213,7 @@ export default function ColorsTab({ data, onChange }) {
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Fotografía</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Paisajes</p>
         <div className="flex flex-col gap-2">
           <ThemeButton t={{ id: 'stars',    label: 'Stars ✦',  desc: 'Cielo estrellado · noche real' }} />
           <ThemeButton t={{ id: 'desert',   label: 'Desierto', desc: 'Dunas al atardecer · cálido' }} />
