@@ -23,6 +23,17 @@ function CropModal({ src, onConfirm, onCancel }) {
     img.src = src
   }, [src])
 
+  function clampOffset(ox, oy, sc) {
+    const img = imgRef.current
+    if (!img) return { x: ox, y: oy }
+    const maxX = Math.max(0, (img.width * sc - SIZE) / 2)
+    const maxY = Math.max(0, (img.height * sc - SIZE) / 2)
+    return {
+      x: Math.max(-maxX, Math.min(maxX, ox)),
+      y: Math.max(-maxY, Math.min(maxY, oy)),
+    }
+  }
+
   const draw = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas || !imgRef.current) return
@@ -34,20 +45,10 @@ function CropModal({ src, onConfirm, onCancel }) {
     const x = SIZE / 2 - w / 2 + offset.x
     const y = SIZE / 2 - h / 2 + offset.y
     ctx.drawImage(img, x, y, w, h)
-    // dark overlay with circular cutout
-    ctx.fillStyle = 'rgba(0,0,0,0.5)'
-    ctx.fillRect(0, 0, SIZE, SIZE)
-    ctx.globalCompositeOperation = 'destination-out'
-    ctx.beginPath()
-    ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 4, 0, Math.PI * 2)
-    ctx.fill()
-    ctx.globalCompositeOperation = 'source-over'
-    // circle border
+    // square border
     ctx.strokeStyle = 'white'
     ctx.lineWidth = 2
-    ctx.beginPath()
-    ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 4, 0, Math.PI * 2)
-    ctx.stroke()
+    ctx.strokeRect(1, 1, SIZE - 2, SIZE - 2)
   }, [scale, offset])
 
   useEffect(() => { draw() }, [draw])
@@ -58,7 +59,8 @@ function CropModal({ src, onConfirm, onCancel }) {
   }
   function onMouseMove(e) {
     if (!dragging) return
-    setOffset({ x: e.clientX - dragStart.current.x, y: e.clientY - dragStart.current.y })
+    const raw = { x: e.clientX - dragStart.current.x, y: e.clientY - dragStart.current.y }
+    setOffset(clampOffset(raw.x, raw.y, scale))
   }
   function onMouseUp() { setDragging(false) }
 
@@ -70,28 +72,31 @@ function CropModal({ src, onConfirm, onCancel }) {
   function onTouchMove(e) {
     if (!dragging) return
     const t = e.touches[0]
-    setOffset({ x: t.clientX - dragStart.current.x, y: t.clientY - dragStart.current.y })
+    const raw = { x: t.clientX - dragStart.current.x, y: t.clientY - dragStart.current.y }
+    setOffset(clampOffset(raw.x, raw.y, scale))
   }
 
   function onWheel(e) {
     e.preventDefault()
-    setScale(s => Math.min(5, Math.max(0.2, s - e.deltaY * 0.001)))
+    setScale(s => {
+      const next = Math.min(5, Math.max(0.2, s - e.deltaY * 0.001))
+      setOffset(prev => clampOffset(prev.x, prev.y, next))
+      return next
+    })
   }
 
   function confirm() {
+    const OUT = 1200
     const canvas = document.createElement('canvas')
-    canvas.width = 400
-    canvas.height = 400
+    canvas.width = OUT
+    canvas.height = OUT
     const ctx = canvas.getContext('2d')
     const img = imgRef.current
-    const ratio = 400 / SIZE
+    const ratio = OUT / SIZE
     const w = img.width * scale * ratio
     const h = img.height * scale * ratio
-    const x = 200 - w / 2 + offset.x * ratio
-    const y = 200 - h / 2 + offset.y * ratio
-    ctx.beginPath()
-    ctx.arc(200, 200, 200, 0, Math.PI * 2)
-    ctx.clip()
+    const x = OUT / 2 - w / 2 + offset.x * ratio
+    const y = OUT / 2 - h / 2 + offset.y * ratio
     ctx.drawImage(img, x, y, w, h)
     onConfirm(canvas.toDataURL('image/jpeg', 0.9))
   }
@@ -105,7 +110,7 @@ function CropModal({ src, onConfirm, onCancel }) {
           ref={canvasRef}
           width={SIZE}
           height={SIZE}
-          className="rounded-full cursor-grab active:cursor-grabbing"
+          className="rounded-lg cursor-grab active:cursor-grabbing"
           style={{ userSelect: 'none' }}
           onMouseDown={onMouseDown}
           onMouseMove={onMouseMove}
