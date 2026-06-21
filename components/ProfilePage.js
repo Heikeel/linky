@@ -864,29 +864,40 @@ function ThemePolvo({ profile, links, isOwner, username }) {
   return (
     <>
       <style>{`
-        @keyframes polvo-drift { 0%{transform:translateY(0) translateX(0);opacity:0} 10%{opacity:1} 90%{opacity:0.6} 100%{transform:translateY(-110vh) translateX(var(--dx));opacity:0} }
+        @keyframes polvo-drift { 0%{transform:translateY(0) translateX(0);opacity:var(--op)} 85%{opacity:var(--op)} 100%{transform:translateY(-110vh) translateX(var(--dx));opacity:0} }
         @keyframes polvo-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        @keyframes polvo-glow { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+        @keyframes polvo-glow { 0%,100%{opacity:0.5} 50%{opacity:0.9} }
         .polvo-bg { background:linear-gradient(160deg,#0d0a00 0%,#1a1200 40%,#0d0800 70%,#1a1000 100%);min-height:100vh; }
-        .polvo-aura { position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 60%,rgba(212,175,55,0.08) 0%,transparent 65%);animation:polvo-glow 8s ease-in-out infinite; }
-        .polvo-particle { position:fixed;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,#ffd700,#ffaa00); }
+        .polvo-aura { position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 60%,rgba(212,175,55,0.14) 0%,transparent 65%);animation:polvo-glow 8s ease-in-out infinite; }
+        .polvo-particle { position:fixed;border-radius:50%;pointer-events:none;z-index:0; }
         .polvo-card { background:rgba(212,175,55,0.06);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(212,175,55,0.18);transition:all .3s; }
         .polvo-card:hover { background:rgba(212,175,55,0.12);transform:translateY(-1px); }
         .polvo-name { background:linear-gradient(90deg,#ffd700,#fff8dc,#ffaa00,#ffd700,#ffeaa0,#ffd700);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:polvo-shimmer 6s linear infinite; }
       `}</style>
       <div className="polvo-bg relative overflow-hidden">
         <div className="polvo-aura"></div>
-        {[...Array(18)].map((_, i) => (
+        {[...Array(30)].map((_, i) => {
+          const colors = [
+            'radial-gradient(circle,#ffd700,#ffaa00)',
+            'radial-gradient(circle,#fff8a0,#ffd700)',
+            'radial-gradient(circle,#ffcc00,#ff8800)',
+            'radial-gradient(circle,#ffe066,#ffb300)',
+            'radial-gradient(circle,#ffffff,#ffd700)',
+          ]
+          const dur = 7 + (i % 8) * 1.5
+          return (
           <div key={i} className="polvo-particle" style={{
-            left: `${Math.sin(i * 2.4) * 45 + 50}%`,
-            bottom: `-${(i % 5) * 5}px`,
-            width: `${2 + (i % 3)}px`, height: `${2 + (i % 3)}px`,
-            opacity: 0.7 + (i % 3) * 0.1,
-            ['--dx']: `${(i % 2 === 0 ? 1 : -1) * (10 + i * 3)}px`,
-            animation: `polvo-drift ${12 + i * 2}s ease-in infinite`,
-            animationDelay: `${i * 1.1}s`,
+            left: `${(i * 7.3) % 100}%`,
+            bottom: 0,
+            width: `${1.5 + (i % 4)}px`, height: `${1.5 + (i % 4)}px`,
+            background: colors[i % colors.length],
+            ['--op']: `${0.6 + (i % 4) * 0.1}`,
+            ['--dx']: `${(i % 2 === 0 ? 1 : -1) * (8 + i % 5 * 6)}px`,
+            animation: `polvo-drift ${dur}s linear infinite`,
+            animationDelay: `-${((i * 2.1) % dur).toFixed(1)}s`,
           }} />
-        ))}
+          )
+        })}
         <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
           <div className="w-full max-w-sm">
             <div className="text-center mb-10">
