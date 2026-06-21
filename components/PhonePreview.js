@@ -492,6 +492,36 @@ export default function PhonePreview({ profile, links }) {
       )
     }
 
+    if (theme === 'sakura') {
+      return (
+        <div className="relative overflow-hidden" style={{ background: '#1a0510', minHeight: 520 }}>
+          <video src="/sakura.mp4" autoPlay muted loop playsInline
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.55 }} />
+          <div className="relative z-10 p-4 pb-6">
+            <div className="text-center mb-5">
+              <Avatar size={16} border="rgba(249,168,212,0.5)" />
+              <p className="text-sm font-bold text-white" style={{ textShadow: '0 0 20px rgba(249,168,212,0.7)' }}>{name}</p>
+              {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>@{username}</p>}
+              {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,255,255,0.6)' }}>{bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links.length === 0
+                ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                : links.map(link => (
+                  <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                    style={{ background: 'rgba(255,255,255,0.08)', borderRadius: radius, border: '1px solid rgba(249,168,212,0.2)', backdropFilter: 'blur(16px)' }}>
+                    <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#1a0510') }} aria-hidden="true"></i>
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,255,255,0.9)' }}>{link.name}</span>
+                    <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,255,255,0.3)' }} aria-hidden="true"></i>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     // light (default)
     return (
       <div className="p-4 pb-6 relative overflow-hidden" style={{ background: bg, minHeight: 520 }}>

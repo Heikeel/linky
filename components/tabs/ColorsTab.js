@@ -27,7 +27,7 @@ const FIELDS = [
   { key: 'muted',      label: 'Texto suave',   hint: 'Bio y subtítulos' },
 ]
 
-const ANIMATED_IDS = ['stars', 'desert', 'aurora', 'ocean', ...ANIMATED_THEMES.map(t => t.id)]
+const ANIMATED_IDS = ['stars', 'desert', 'aurora', 'ocean', 'sakura', ...ANIMATED_THEMES.map(t => t.id)]
 
 const BG_MOTIONS = [
   { id: 'aurora',   label: 'Aurora',    icon: 'ti-sparkles' },
@@ -205,6 +205,7 @@ export default function ColorsTab({ data, onChange }) {
           <ThemeButton t={{ id: 'desert', label: 'Desierto',   desc: 'Dunas al atardecer · cálido' }} />
           <ThemeButton t={{ id: 'aurora', label: 'Aurora',     desc: 'Luces del norte · lago' }} />
           <ThemeButton t={{ id: 'ocean',  label: 'Océano',     desc: 'Profundidad marina · bioluminiscencia' }} />
+          <ThemeButton t={{ id: 'sakura', label: 'Sakura 🌸',  desc: 'Cerezos japoneses · video al vivo' }} />
         </div>
       </div>
 
