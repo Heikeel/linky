@@ -6,11 +6,28 @@ export async function generateMetadata({ params }) {
   const { username } = await params
   const supabase = await createClient()
   const { data: profile } = await supabase
-    .from('profiles').select('name, bio').eq('username', username).single()
+    .from('profiles').select('name, bio, avatar_url').eq('username', username).single()
   if (!profile) return { title: 'Página no encontrada' }
+
+  const title = `${profile.name || username} | Linky`
+  const description = profile.bio || `Los links de ${profile.name || username}`
+  const images = profile.avatar_url ? [{ url: profile.avatar_url }] : []
+
   return {
-    title: `${profile.name || username} | Linky`,
-    description: profile.bio || `Los links de ${profile.name || username}`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://mylinky-eta.vercel.app/${username}`,
+      images,
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+      images: profile.avatar_url ? [profile.avatar_url] : [],
+    },
   }
 }
 
