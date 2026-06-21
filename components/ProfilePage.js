@@ -1024,7 +1024,7 @@ function ThemeLluvia({ profile, links, isOwner, username }) {
   return (
     <>
       <style>{`
-        @keyframes lluvia-drop { 0%{transform:translateY(-100px);opacity:0} 5%{opacity:1} 95%{opacity:0.6} 100%{transform:translateY(110vh);opacity:0} }
+        @keyframes lluvia-drop { 0%{transform:translateY(-100px);opacity:0.7} 100%{transform:translateY(110vh);opacity:0.7} }
         @keyframes lluvia-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
         @keyframes lluvia-pulse { 0%,100%{opacity:0.15} 50%{opacity:0.35} }
         .lluvia-bg { background:linear-gradient(180deg,#020408 0%,#040810 45%,#020c14 100%);min-height:100vh; }
@@ -1036,15 +1036,16 @@ function ThemeLluvia({ profile, links, isOwner, username }) {
       `}</style>
       <div className="lluvia-bg relative overflow-hidden">
         <div className="lluvia-glow"></div>
-        {[...Array(20)].map((_, i) => (
-          <div key={i} className="lluvia-drop" style={{
+        {[...Array(20)].map((_, i) => {
+          const dur = 1.2 + (i % 5) * 0.4
+          return <div key={i} className="lluvia-drop" style={{
             left: `${(i * 5.1) % 100}%`,
             height: `${60 + (i % 4) * 25}px`,
             opacity: 0.4 + (i % 3) * 0.2,
-            animation: `lluvia-drop ${1.2 + (i % 5) * 0.4}s linear infinite`,
-            animationDelay: `${(i * 0.31) % 2}s`,
+            animation: `lluvia-drop ${dur}s linear infinite`,
+            animationDelay: `-${((i * 0.18) % dur).toFixed(2)}s`,
           }} />
-        ))}
+        })}
         <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
           <div className="w-full max-w-sm">
             <div className="text-center mb-10">

@@ -423,14 +423,16 @@ export default function PhonePreview({ profile, links }) {
       return (
         <>
           <style>{`
-            @keyframes pv-polvo-drift { 0%{transform:translateY(0);opacity:0.9} 85%{opacity:0.7} 100%{transform:translateY(-380px);opacity:0} }
+            @keyframes pv-polvo-drift { 0%{transform:translateY(0);opacity:var(--op,0.8)} 85%{opacity:var(--op,0.8)} 100%{transform:translateY(-380px);opacity:0} }
             @keyframes pv-polvo-name { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
             .pv-polvo-name { background:linear-gradient(90deg,#ffd700,#fff8dc,#ffaa00,#ffd700);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:pv-polvo-name 6s linear infinite; }
           `}</style>
           <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#0d0a00,#1a1200,#0d0800)', minHeight: 520 }}>
-            {[...Array(12)].map((_, i) => (
-              <div key={i} style={{ position: 'absolute', left: `${(i * 8.5) % 100}%`, bottom: 0, width: `${2 + i % 2}px`, height: `${2 + i % 2}px`, borderRadius: '50%', background: 'radial-gradient(circle,#ffd700,#ffaa00)', animation: `pv-polvo-drift ${8 + i * 1.5}s linear infinite`, animationDelay: `-${((i * 2.3) % (8 + i * 1.5)).toFixed(1)}s` }} />
-            ))}
+            {[...Array(22)].map((_, i) => {
+              const pvColors = ['radial-gradient(circle,#ffd700,#ffaa00)','radial-gradient(circle,#fff8a0,#ffd700)','radial-gradient(circle,#ffcc00,#ff8800)','radial-gradient(circle,#ffe066,#ffb300)','radial-gradient(circle,#ffffff,#ffd700)']
+              const dur = 6 + (i % 6) * 1.2
+              return <div key={i} style={{ position: 'absolute', left: `${(i * 7.3) % 100}%`, bottom: 0, width: `${1.5 + i % 3}px`, height: `${1.5 + i % 3}px`, borderRadius: '50%', background: pvColors[i % pvColors.length], ['--op']: `${0.6 + (i % 4) * 0.1}`, animation: `pv-polvo-drift ${dur}s linear infinite`, animationDelay: `-${((i * 2.1) % dur).toFixed(1)}s` }} />
+            })}
             <div className="relative z-10 p-4 pb-6">
               <div className="text-center mb-5">
                 <Avatar size={16} border="rgba(212,175,55,0.5)" glow="rgba(212,175,55,0.4)" />
