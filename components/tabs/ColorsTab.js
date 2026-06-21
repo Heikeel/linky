@@ -12,11 +12,15 @@ const THEMES = [
 ]
 
 const ANIMATED_THEMES = [
-  { id: 'tornasol', label: 'Burbuja tornasol', desc: 'Iridiscente · holográfico' },
-  { id: 'cosmos',   label: 'Galaxia',          desc: 'Nebulosa · estrellas' },
-  { id: 'cometas',  label: 'Meteoros',         desc: 'Cielo nocturno · cometas' },
-  { id: 'sunset',   label: 'Atardecer',        desc: 'Cálido · olas al caer el sol' },
-  { id: 'olas',     label: 'Olas',             desc: 'Océano profundo · burbujas' },
+  { id: 'tornasol', label: 'Tornasol', desc: 'Iridiscente · holográfico' },
+  { id: 'cosmos',   label: 'Galaxia',  desc: 'Nebulosa · estrellas' },
+  { id: 'cometas',  label: 'Meteoros', desc: 'Cielo nocturno · cometas' },
+  { id: 'sunset',   label: 'Atardecer',desc: 'Cálido · olas al caer el sol' },
+  { id: 'olas',     label: 'Olas',     desc: 'Océano profundo · burbujas' },
+  { id: 'lava',     label: 'Lava',     desc: 'Burbujas de magma · naranja oscuro' },
+  { id: 'polvo',    label: 'Polvo',    desc: 'Partículas doradas flotando' },
+  { id: 'cristal',  label: 'Cristal',  desc: 'Prisma arcoiris · luz refractada' },
+  { id: 'lluvia',   label: 'Lluvia',   desc: 'Gotas cyan · reflejo neon' },
 ]
 
 const FIELDS = [

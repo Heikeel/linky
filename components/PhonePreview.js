@@ -380,6 +380,160 @@ export default function PhonePreview({ profile, links }) {
       )
     }
 
+    if (theme === 'lava') {
+      return (
+        <>
+          <style>{`
+            @keyframes pv-lava-blob { 0%,100%{transform:translateY(0) scale(1);border-radius:60% 40% 55% 45%/45% 55% 40% 60%} 50%{transform:translateY(-15px) scale(1.05);border-radius:40% 60% 45% 55%/55% 45% 60% 40%} }
+            @keyframes pv-lava-name { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+            .pv-lb1 { position:absolute;width:200px;height:200px;top:-40px;left:-50px;background:radial-gradient(circle,#ff4500,#c23000);filter:blur(35px);animation:pv-lava-blob 14s ease-in-out infinite;opacity:0.6; }
+            .pv-lb2 { position:absolute;width:180px;height:180px;bottom:-30px;right:-40px;background:radial-gradient(circle,#ff6a00,#ee0979);filter:blur(30px);animation:pv-lava-blob 18s ease-in-out infinite reverse;opacity:0.5; }
+            .pv-lava-name { background:linear-gradient(90deg,#ff8c00,#ff4500,#ffcc00,#ff4500,#ff8c00);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:pv-lava-name 5s linear infinite; }
+          `}</style>
+          <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg,#0d0200,#1a0500,#2d0800)', minHeight: 520 }}>
+            <div className="pv-lb1"></div>
+            <div className="pv-lb2"></div>
+            <div className="relative z-10 p-4 pb-6">
+              <div className="text-center mb-5">
+                <Avatar size={16} border="rgba(255,100,0,0.5)" glow="rgba(255,80,0,0.5)" />
+                <p className="pv-lava-name text-sm font-bold">{name}</p>
+                {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,180,100,0.6)' }}>@{username}</p>}
+                {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,200,150,0.6)' }}>{bio}</p>}
+              </div>
+              <div className="flex flex-col" style={{ gap }}>
+                {links.length === 0
+                  ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,150,80,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                  : links.map(link => (
+                    <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                      style={{ background: 'rgba(255,80,0,0.07)', borderRadius: radius, border: '1px solid rgba(255,100,0,0.2)', backdropFilter: 'blur(16px)' }}>
+                      <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#1a0500') }} aria-hidden="true"></i>
+                      <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,220,180,0.9)' }}>{link.name}</span>
+                      <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,150,80,0.35)' }} aria-hidden="true"></i>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </>
+      )
+    }
+
+    if (theme === 'polvo') {
+      return (
+        <>
+          <style>{`
+            @keyframes pv-polvo-drift { 0%{transform:translateY(0);opacity:0} 10%{opacity:1} 90%{opacity:0.5} 100%{transform:translateY(-380px);opacity:0} }
+            @keyframes pv-polvo-name { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+            .pv-polvo-name { background:linear-gradient(90deg,#ffd700,#fff8dc,#ffaa00,#ffd700);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:pv-polvo-name 6s linear infinite; }
+          `}</style>
+          <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#0d0a00,#1a1200,#0d0800)', minHeight: 520 }}>
+            {[...Array(12)].map((_, i) => (
+              <div key={i} style={{ position: 'absolute', left: `${(i * 8.5) % 100}%`, bottom: 0, width: `${2 + i % 2}px`, height: `${2 + i % 2}px`, borderRadius: '50%', background: 'radial-gradient(circle,#ffd700,#ffaa00)', animation: `pv-polvo-drift ${8 + i * 1.5}s ease-in infinite`, animationDelay: `${i * 0.8}s` }} />
+            ))}
+            <div className="relative z-10 p-4 pb-6">
+              <div className="text-center mb-5">
+                <Avatar size={16} border="rgba(212,175,55,0.5)" glow="rgba(212,175,55,0.4)" />
+                <p className="pv-polvo-name text-sm font-bold">{name}</p>
+                {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(212,175,55,0.55)' }}>@{username}</p>}
+                {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,230,150,0.6)' }}>{bio}</p>}
+              </div>
+              <div className="flex flex-col" style={{ gap }}>
+                {links.length === 0
+                  ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(212,175,55,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                  : links.map(link => (
+                    <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                      style={{ background: 'rgba(212,175,55,0.06)', borderRadius: radius, border: '1px solid rgba(212,175,55,0.18)', backdropFilter: 'blur(16px)' }}>
+                      <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#0d0a00') }} aria-hidden="true"></i>
+                      <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,240,200,0.9)' }}>{link.name}</span>
+                      <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(212,175,55,0.35)' }} aria-hidden="true"></i>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </>
+      )
+    }
+
+    if (theme === 'cristal') {
+      return (
+        <>
+          <style>{`
+            @keyframes pv-cristal-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+            @keyframes pv-cristal-name { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+            .pv-cp1 { position:absolute;width:260px;height:260px;top:-60px;left:-60px;background:conic-gradient(from 0deg,rgba(255,0,128,0.3),rgba(255,165,0,0.25),rgba(0,255,128,0.25),rgba(0,200,255,0.3),rgba(128,0,255,0.25),rgba(255,0,128,0.3));filter:blur(30px);animation:pv-cristal-spin 25s linear infinite; }
+            .pv-cp2 { position:absolute;width:220px;height:220px;bottom:-50px;right:-50px;background:conic-gradient(from 180deg,rgba(0,200,255,0.25),rgba(128,0,255,0.3),rgba(255,0,128,0.25),rgba(255,200,0,0.25));filter:blur(28px);animation:pv-cristal-spin 30s linear infinite reverse; }
+            .pv-cristal-name { background:linear-gradient(90deg,#ff6eb4,#a78bfa,#67e8f9,#86efac,#fde68a,#ff6eb4);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:pv-cristal-name 5s linear infinite; }
+          `}</style>
+          <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg,#050510,#0a0520,#050510)', minHeight: 520 }}>
+            <div className="pv-cp1"></div>
+            <div className="pv-cp2"></div>
+            <div className="relative z-10 p-4 pb-6">
+              <div className="text-center mb-5">
+                <Avatar size={16} border="rgba(255,255,255,0.2)" glow="rgba(180,100,255,0.4)" />
+                <p className="pv-cristal-name text-sm font-bold">{name}</p>
+                {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>@{username}</p>}
+                {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(255,255,255,0.55)' }}>{bio}</p>}
+              </div>
+              <div className="flex flex-col" style={{ gap }}>
+                {links.length === 0
+                  ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>Añade links desde &quot;Links&quot;</div>
+                  : links.map(link => (
+                    <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                      style={{ background: 'rgba(255,255,255,0.04)', borderRadius: radius, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(18px)' }}>
+                      <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#050510') }} aria-hidden="true"></i>
+                      <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(255,255,255,0.88)' }}>{link.name}</span>
+                      <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(255,255,255,0.25)' }} aria-hidden="true"></i>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </>
+      )
+    }
+
+    if (theme === 'lluvia') {
+      return (
+        <>
+          <style>{`
+            @keyframes pv-lluvia-drop { 0%{transform:translateY(-60px);opacity:0} 5%{opacity:1} 95%{opacity:0.5} 100%{transform:translateY(380px);opacity:0} }
+            @keyframes pv-lluvia-name { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+            .pv-lluvia-name { background:linear-gradient(90deg,#00d4ff,#a0f0ff,#00aaff,#00d4ff);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:pv-lluvia-name 5s linear infinite; }
+          `}</style>
+          <div className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg,#020408,#040810,#020c14)', minHeight: 520 }}>
+            {[...Array(16)].map((_, i) => (
+              <div key={i} style={{ position: 'absolute', top: 0, left: `${(i * 6.5) % 100}%`, width: '1px', height: `${45 + i % 3 * 20}px`, background: 'linear-gradient(to bottom,transparent,rgba(100,220,255,0.6),transparent)', borderRadius: '1px', animation: `pv-lluvia-drop ${0.9 + i % 4 * 0.3}s linear infinite`, animationDelay: `${(i * 0.25) % 1.5}s` }} />
+            ))}
+            <div className="relative z-10 p-4 pb-6">
+              <div className="text-center mb-5">
+                <Avatar size={16} border="rgba(0,200,255,0.4)" glow="rgba(0,200,255,0.3)" />
+                <p className="pv-lluvia-name text-sm font-bold">{name}</p>
+                {username && <p className="text-xs font-semibold mt-0.5" style={{ color: 'rgba(0,200,255,0.5)' }}>@{username}</p>}
+                {bio && <p className="text-xs mt-1.5 leading-relaxed px-2" style={{ color: 'rgba(160,240,255,0.55)' }}>{bio}</p>}
+              </div>
+              <div className="flex flex-col" style={{ gap }}>
+                {links.length === 0
+                  ? <div className="text-center py-6 text-xs" style={{ color: 'rgba(0,200,255,0.3)' }}>Añade links desde &quot;Links&quot;</div>
+                  : links.map(link => (
+                    <div key={link.id} className={`flex items-center gap-2.5 px-3 py-2.5 anim-${anim}`}
+                      style={{ background: 'rgba(0,180,255,0.05)', borderRadius: radius, border: '1px solid rgba(0,200,255,0.12)', backdropFilter: 'blur(18px)' }}>
+                      <i className={`ti ${link.icon} text-lg flex-shrink-0`} style={{ color: iconOverride || safeIconColor(link.color, '#020408') }} aria-hidden="true"></i>
+                      <span className="text-xs font-semibold flex-1" style={{ color: 'rgba(200,245,255,0.9)' }}>{link.name}</span>
+                      <i className="ti ti-chevron-right text-xs" style={{ color: 'rgba(0,200,255,0.3)' }} aria-hidden="true"></i>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </>
+      )
+    }
+
     if (theme === 'stars') {
       return (
         <div className="relative overflow-hidden" style={{ background: '#05060f url(/stars.jpg) center/cover no-repeat', minHeight: 520 }}>

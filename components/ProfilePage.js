@@ -785,6 +785,302 @@ function ThemeOlas({ profile, links, isOwner, username }) {
   )
 }
 
+function ThemeLava({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#1a0500')
+  return (
+    <>
+      <style>{`
+        @keyframes lava-shift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes lava-blob { 0%,100%{transform:translateY(0) scale(1);border-radius:60% 40% 55% 45%/45% 55% 40% 60%} 33%{transform:translateY(-30px) scale(1.05);border-radius:40% 60% 45% 55%/55% 45% 60% 40%} 66%{transform:translateY(20px) scale(0.97);border-radius:55% 45% 60% 40%/40% 60% 45% 55%} }
+        @keyframes lava-glow { 0%,100%{opacity:0.5} 50%{opacity:0.85} }
+        .lava-bg { background:linear-gradient(180deg,#0d0200 0%,#1a0500 35%,#2d0800 70%,#1a0500 100%);min-height:100vh; }
+        .lava-blob { position:fixed;filter:blur(55px);pointer-events:none;z-index:0; }
+        .lb1 { width:420px;height:420px;top:-80px;left:-100px;background:radial-gradient(circle,#ff4500,#c23000);animation:lava-blob 14s ease-in-out infinite,lava-glow 7s ease-in-out infinite; }
+        .lb2 { width:350px;height:350px;bottom:-60px;right:-80px;background:radial-gradient(circle,#ff6a00,#ee0979);animation:lava-blob 18s ease-in-out infinite reverse,lava-glow 9s ease-in-out infinite 2s; }
+        .lb3 { width:280px;height:280px;top:45%;left:55%;background:radial-gradient(circle,#ff8c00,#ff4500);animation:lava-blob 12s ease-in-out infinite 3s,lava-glow 6s ease-in-out infinite 1s;opacity:0.4; }
+        .lava-card { background:rgba(255,80,0,0.07);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,100,0,0.2);transition:all .3s; }
+        .lava-card:hover { background:rgba(255,80,0,0.14);transform:translateY(-1px); }
+        .lava-name { background:linear-gradient(90deg,#ff8c00,#ff4500,#ffcc00,#ff4500,#ff8c00);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:lava-shift 5s linear infinite; }
+      `}</style>
+      <div className="lava-bg relative overflow-hidden">
+        <div className="lava-blob lb1"></div>
+        <div className="lava-blob lb2"></div>
+        <div className="lava-blob lb3"></div>
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(255,100,0,0.5)', boxShadow: '0 0 30px rgba(255,80,0,0.5)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'radial-gradient(circle,#ff4500,#c23000)', boxShadow: '0 0 30px rgba(255,80,0,0.5)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="lava-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,180,100,0.6)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,200,150,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`lava-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,220,180,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,150,80,0.35)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,150,80,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white" style={{ background: 'rgba(255,80,0,0.25)', border: '1px solid rgba(255,100,0,0.4)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,80,0,0.1)', color: 'rgba(255,180,100,0.7)', border: '1px solid rgba(255,80,0,0.2)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemePolvo({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#0d0a00')
+  return (
+    <>
+      <style>{`
+        @keyframes polvo-drift { 0%{transform:translateY(0) translateX(0);opacity:0} 10%{opacity:1} 90%{opacity:0.6} 100%{transform:translateY(-110vh) translateX(var(--dx));opacity:0} }
+        @keyframes polvo-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes polvo-glow { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+        .polvo-bg { background:linear-gradient(160deg,#0d0a00 0%,#1a1200 40%,#0d0800 70%,#1a1000 100%);min-height:100vh; }
+        .polvo-aura { position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% 60%,rgba(212,175,55,0.08) 0%,transparent 65%);animation:polvo-glow 8s ease-in-out infinite; }
+        .polvo-particle { position:fixed;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,#ffd700,#ffaa00); }
+        .polvo-card { background:rgba(212,175,55,0.06);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(212,175,55,0.18);transition:all .3s; }
+        .polvo-card:hover { background:rgba(212,175,55,0.12);transform:translateY(-1px); }
+        .polvo-name { background:linear-gradient(90deg,#ffd700,#fff8dc,#ffaa00,#ffd700,#ffeaa0,#ffd700);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:polvo-shimmer 6s linear infinite; }
+      `}</style>
+      <div className="polvo-bg relative overflow-hidden">
+        <div className="polvo-aura"></div>
+        {[...Array(18)].map((_, i) => (
+          <div key={i} className="polvo-particle" style={{
+            left: `${Math.sin(i * 2.4) * 45 + 50}%`,
+            bottom: `-${(i % 5) * 5}px`,
+            width: `${2 + (i % 3)}px`, height: `${2 + (i % 3)}px`,
+            opacity: 0.7 + (i % 3) * 0.1,
+            ['--dx']: `${(i % 2 === 0 ? 1 : -1) * (10 + i * 3)}px`,
+            animation: `polvo-drift ${12 + i * 2}s ease-in infinite`,
+            animationDelay: `${i * 1.1}s`,
+          }} />
+        ))}
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(212,175,55,0.5)', boxShadow: '0 0 30px rgba(212,175,55,0.4)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold" style={{ background: 'radial-gradient(circle,#ffd700,#b8860b)', color: '#0d0a00', boxShadow: '0 0 30px rgba(212,175,55,0.5)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="polvo-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.55)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,230,150,0.6)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`polvo-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,240,200,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(212,175,55,0.35)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(212,175,55,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(212,175,55,0.15)', color: '#ffd700', border: '1px solid rgba(212,175,55,0.35)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(212,175,55,0.08)', color: 'rgba(212,175,55,0.7)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeCristal({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#050510')
+  return (
+    <>
+      <style>{`
+        @keyframes cristal-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes cristal-pulse { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:0.75;transform:scale(1.05)} }
+        @keyframes cristal-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .cristal-bg { background:linear-gradient(135deg,#050510 0%,#0a0520 40%,#050510 70%,#080318 100%);min-height:100vh; }
+        .cristal-prism { position:fixed;pointer-events:none;z-index:0;border-radius:50%;filter:blur(40px); }
+        .cp1 { width:500px;height:500px;top:-120px;left:-120px;background:conic-gradient(from 0deg,rgba(255,0,128,0.25),rgba(255,165,0,0.2),rgba(255,255,0,0.2),rgba(0,255,128,0.2),rgba(0,200,255,0.25),rgba(128,0,255,0.2),rgba(255,0,128,0.25));animation:cristal-spin 25s linear infinite; }
+        .cp2 { width:420px;height:420px;bottom:-100px;right:-100px;background:conic-gradient(from 180deg,rgba(0,200,255,0.2),rgba(128,0,255,0.25),rgba(255,0,128,0.2),rgba(255,200,0,0.2),rgba(0,255,128,0.15),rgba(0,200,255,0.2));animation:cristal-spin 30s linear infinite reverse; }
+        .cp3 { width:300px;height:300px;top:40%;left:50%;background:conic-gradient(from 90deg,rgba(255,100,200,0.15),rgba(100,200,255,0.2),rgba(200,100,255,0.15));animation:cristal-spin 20s linear infinite,cristal-pulse 8s ease-in-out infinite;opacity:0.5; }
+        .cristal-card { background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);transition:all .3s; }
+        .cristal-card:hover { background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.22);transform:translateY(-1px); }
+        .cristal-name { background:linear-gradient(90deg,#ff6eb4,#a78bfa,#67e8f9,#86efac,#fde68a,#ff6eb4);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:cristal-shimmer 5s linear infinite; }
+      `}</style>
+      <div className="cristal-bg relative overflow-hidden">
+        <div className="cristal-prism cp1"></div>
+        <div className="cristal-prism cp2"></div>
+        <div className="cristal-prism cp3"></div>
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(255,255,255,0.2)', boxShadow: '0 0 30px rgba(180,100,255,0.4)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'conic-gradient(from 0deg,#ff6eb4,#a78bfa,#67e8f9,#86efac,#ff6eb4)', boxShadow: '0 0 30px rgba(180,100,255,0.4)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="cristal-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.4)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`cristal-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(255,255,255,0.88)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(255,255,255,0.25)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(255,255,255,0.25)' }}>Sin links por ahora</p>}
+            </div>
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.18)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThemeLluvia({ profile, links, isOwner, username }) {
+  const anim   = profile.animation || 'bounce'
+  const radius = profile.border_radius ?? 12
+  const gap    = profile.link_gap ?? 9
+  const iconColor = c => profile.icon_color || safeIconColor(c, '#020408')
+  return (
+    <>
+      <style>{`
+        @keyframes lluvia-drop { 0%{transform:translateY(-100px);opacity:0} 5%{opacity:1} 95%{opacity:0.6} 100%{transform:translateY(110vh);opacity:0} }
+        @keyframes lluvia-shimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes lluvia-pulse { 0%,100%{opacity:0.15} 50%{opacity:0.35} }
+        .lluvia-bg { background:linear-gradient(180deg,#020408 0%,#040810 45%,#020c14 100%);min-height:100vh; }
+        .lluvia-glow { position:fixed;bottom:0;left:0;right:0;height:40%;pointer-events:none;z-index:0;background:linear-gradient(to top,rgba(0,200,255,0.06),transparent);animation:lluvia-pulse 6s ease-in-out infinite; }
+        .lluvia-drop { position:fixed;top:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(100,220,255,0.6),transparent);pointer-events:none;z-index:0;border-radius:1px; }
+        .lluvia-card { background:rgba(0,180,255,0.05);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(0,200,255,0.12);transition:all .3s; }
+        .lluvia-card:hover { background:rgba(0,180,255,0.1);border-color:rgba(0,220,255,0.25);transform:translateY(-1px); }
+        .lluvia-name { background:linear-gradient(90deg,#00d4ff,#a0f0ff,#00aaff,#00d4ff);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:lluvia-shimmer 5s linear infinite; }
+      `}</style>
+      <div className="lluvia-bg relative overflow-hidden">
+        <div className="lluvia-glow"></div>
+        {[...Array(20)].map((_, i) => (
+          <div key={i} className="lluvia-drop" style={{
+            left: `${(i * 5.1) % 100}%`,
+            height: `${60 + (i % 4) * 25}px`,
+            opacity: 0.4 + (i % 3) * 0.2,
+            animation: `lluvia-drop ${1.2 + (i % 5) * 0.4}s linear infinite`,
+            animationDelay: `${(i * 0.31) % 2}s`,
+          }} />
+        ))}
+        <div className="relative z-10 flex flex-col items-center pt-20 pb-14 px-4 min-h-screen">
+          <div className="w-full max-w-sm">
+            <div className="text-center mb-10">
+              <div className="flex justify-center mb-5">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt={profile.name || username} className="w-24 h-24 rounded-full object-cover" style={{ border: '3px solid rgba(0,200,255,0.4)', boxShadow: '0 0 30px rgba(0,200,255,0.3)' }} />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white" style={{ background: 'radial-gradient(circle,#0070a0,#003050)', boxShadow: '0 0 30px rgba(0,200,255,0.35)' }}>
+                    {(profile.name || username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <h1 className="lluvia-name text-2xl font-bold mb-1">{profile.name || username}</h1>
+              <p className="text-sm font-semibold mb-4" style={{ color: 'rgba(0,200,255,0.5)' }}>@{username}</p>
+              {profile.bio && <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(160,240,255,0.55)' }}>{profile.bio}</p>}
+            </div>
+            <div className="flex flex-col" style={{ gap }}>
+              {links?.map(link => (
+                <a key={link.id} href={link.url || '#'} target="_blank" rel="noopener noreferrer"
+                  className={`lluvia-card flex items-center gap-3 px-4 py-3.5 anim-${anim}`}
+                  style={{ borderRadius: radius, textDecoration: 'none' }}>
+                  <i className={`ti ${link.icon} text-xl flex-shrink-0`} style={{ color: iconColor(link.color) }} aria-hidden="true"></i>
+                  <span className="font-semibold text-sm flex-1" style={{ color: 'rgba(200,245,255,0.9)' }}>{link.name}</span>
+                  <i className="ti ti-chevron-right text-sm" style={{ color: 'rgba(0,200,255,0.3)' }} aria-hidden="true"></i>
+                </a>
+              ))}
+              {(!links || links.length === 0) && <p className="text-center text-sm py-6" style={{ color: 'rgba(0,200,255,0.3)' }}>Sin links por ahora</p>}
+            </div>
+            <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
+              <ShareButton dark={true} />
+              {isOwner ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,180,255,0.1)', color: '#00d4ff', border: '1px solid rgba(0,180,255,0.3)' }}>
+                  <i className="ti ti-edit text-sm" aria-hidden="true"></i> Editar perfil
+                </Link>
+              ) : (
+                <a href="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold" style={{ background: 'rgba(0,180,255,0.06)', color: 'rgba(0,200,255,0.6)', border: '1px solid rgba(0,180,255,0.15)' }}>
+                  Crear mi Linky →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 function ThemeStars({ profile, links, isOwner, username }) {
   const accent = profile.accent || '#a78bfa'
   const anim   = profile.animation || 'bounce'
@@ -1548,6 +1844,10 @@ export default function ProfilePage({ profile, links, isOwner, username }) {
   if (theme === 'matrix')    return <ThemeMatrix    {...p} />
   if (theme === 'sunset')    return <ThemeSunset    {...p} />
   if (theme === 'olas')      return <ThemeOlas      {...p} />
+  if (theme === 'lava')      return <ThemeLava      {...p} />
+  if (theme === 'polvo')     return <ThemePolvo     {...p} />
+  if (theme === 'cristal')   return <ThemeCristal   {...p} />
+  if (theme === 'lluvia')    return <ThemeLluvia    {...p} />
   if (theme === 'stars')     return <ThemeStars     {...p} />
   if (theme === 'desert')    return <ThemeDesert    {...p} />
   if (theme === 'aurora')    return <ThemeAurora    {...p} />
