@@ -36,7 +36,9 @@ export default async function PublicProfilePage({ params }) {
   const supabase = await createClient()
 
   const { data: profile } = await supabase
-    .from('profiles').select('*').eq('username', username).single()
+    .from('profiles')
+    .select('id, username, name, bio, avatar_url, accent, bg, card, text_color, muted, icon_color, theme, bg_motion, animation, border_radius, link_gap')
+    .eq('username', username).single()
 
   if (!profile) notFound()
 

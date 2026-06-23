@@ -85,7 +85,9 @@ export default function LinksTab({ links, onLinksChange }) {
   }
 
   function updateUrl(id, url) {
-    onLinksChange(links.map(l => l.id === id ? { ...l, url } : l))
+    const safe = url.trim()
+    if (safe && !/^https?:\/\//i.test(safe)) return
+    onLinksChange(links.map(l => l.id === id ? { ...l, url: safe } : l))
   }
 
   function openCustomForm(type) {
@@ -97,6 +99,8 @@ export default function LinksTab({ links, onLinksChange }) {
 
   function addCustomLink() {
     if (!customName.trim()) return
+    const safeUrl = customUrl.trim()
+    if (safeUrl && !/^https?:\/\//i.test(safeUrl)) return
     const t = CUSTOM_TYPES.find(c => c.id === customType) || CUSTOM_TYPES[0]
     onLinksChange([...links, {
       id: `tmp_${Date.now()}`,
@@ -104,7 +108,7 @@ export default function LinksTab({ links, onLinksChange }) {
       name: customName.trim(),
       icon: t.icon,
       color: t.color,
-      url: customUrl.trim(),
+      url: safeUrl,
       order_index: links.length,
       active: true,
     }])

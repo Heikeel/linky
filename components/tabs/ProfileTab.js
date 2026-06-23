@@ -160,6 +160,9 @@ export default function ProfileTab({ data, onChange, userId }) {
     const file = e.target.files?.[0]
     e.target.value = ''
     if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) {
+      alert('Solo se permiten imágenes JPG, PNG, WEBP o GIF'); return
+    }
     if (file.size > 20 * 1024 * 1024) { alert('La foto debe ser menor a 20MB'); return }
     const reader = new FileReader()
     reader.onload = ev => setCropSrc(ev.target.result)

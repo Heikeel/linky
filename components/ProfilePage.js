@@ -9,6 +9,12 @@ import AnimatedBg from '@/components/AnimatedBg'
 function useAnalytics(profileId, isOwner) {
   const track = useCallback(async (type, linkId = null) => {
     if (isOwner) return
+    if (type === 'view') {
+      const key = `lk_view_${profileId}`
+      const last = parseInt(localStorage.getItem(key) || '0', 10)
+      if (Date.now() - last < 30_000) return
+      localStorage.setItem(key, Date.now().toString())
+    }
     const supabase = createClient()
     await supabase.from('analytics').insert({ profile_id: profileId, link_id: linkId, type })
   }, [profileId, isOwner])

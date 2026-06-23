@@ -14,10 +14,6 @@ export async function GET(request) {
   const allCookies = cookieStore.getAll()
   const verifierCookie = allCookies.find(c => c.name.includes('code-verifier'))
 
-  // Log for debugging
-  console.log('[auth/callback] code present:', !!code)
-  console.log('[auth/callback] all cookie names:', allCookies.map(c => c.name))
-  console.log('[auth/callback] verifier cookie found:', !!verifierCookie)
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -41,10 +37,7 @@ export async function GET(request) {
   const { error } = await supabase.auth.exchangeCodeForSession(code)
 
   if (error) {
-    console.error('[auth/callback] exchange error:', error.message, error.status, error.code)
-    return NextResponse.redirect(
-      `${origin}/login?error=${encodeURIComponent(error.message)}&code=${error.code || ''}&status=${error.status || ''}`
-    )
+    return NextResponse.redirect(`${origin}/login?error=auth_failed`)
   }
 
   return NextResponse.redirect(`${origin}/dashboard`)
